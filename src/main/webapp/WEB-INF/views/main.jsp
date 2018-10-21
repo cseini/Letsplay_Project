@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<title>야놀자 : 대한민국 대표 종합 숙박어플</title>
-	<link rel="shortcut icon" href="${context}/resources/img/favicon.ico" />
+	<link rel="shortcut icon" href="${context}/resources/img/icon/favicon.ico" />
     <link href="${context}/resources/css/sein.css" rel="stylesheet">
     <link href="${context}/resources/css/hyungjun.css" rel="stylesheet">
     <link href="${context}/resources/css/heetae.css" rel="stylesheet">
