@@ -73,30 +73,10 @@ app.permision = (()=>{
 											$('#content').empty();
 											app.service.content();
 					 							$('<div/>').addClass('menubar').appendTo('.nav_right');
-				 									$('<ul/>').append(
-				 											$('<li/>').append(
-				 													$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
-				 															$('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('avatar'),
-				 								 							$('<a/>').attr({href:'#', id:'mypage', style:'margin-left:5px;'}).html(d.mbr.nickname).addClass('ya_cusor')
-				 													).append($('<ul/>').addClass('mouseOverUl').append(
-										 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')),
-												 							$('<li/>').append($('<a/>').attr({href:'#', id:'reservationList'}).html('예약내역'))		 															
-				 													)))).appendTo('.menubar');
-					 							
+					 							app.service.nav(d.mbr);
 												$('#myinfo').click(e=>{
 													e.preventDefault();
-													$.ajax({
-														url:$.ctx()+'/member/auth',
-														method:'post',
-														contentType:'application/json',
-														data:JSON.stringify({
-															member_id:$.cookie("loginID"),
-															}),
-														success:d=>{
-															mypage(d);
-														},
-														error:(m1,m2,m3)=>{alert(m3);}
-													});
+													mypage(d);
 												})
 											$('#reservationList').click(e=>{
 												e.preventDefault();
@@ -186,396 +166,411 @@ app.permision = (()=>{
 				})
 	}
 	var mypage =d=>{
-		$('#header').empty();
-		$('#content').empty();
-		$('#content').attr({style:'background: #f5f5f5'});
-		$('<div/>').addClass('mypageTableDiv').appendTo('#content');
-		$('<div/>').addClass('mypageBottomNav').appendTo('#content');
-			app.service.myBenefit(d);
-					$('<a/>').addClass('nav-link active').attr({href:'#',id:'myBenefit'}).html('나의혜택').appendTo('#nav-item1').click(e=>{
-						app.service.myBenefit(d);
-					});
-				$('<li/>').addClass('nav-item').attr({id:'nav-item2'}).appendTo('#nav-tabs');
-					$('<a/>').addClass('nav-link active').attr({href:'#',id:'modifyDelete'}).html('개인정보수정/탈퇴').appendTo('#nav-item2').click(e=>{
-						$('.nav-tabsHeadMain').remove();
-						$('.nav-tabsHead').remove();
-					$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain1'}).appendTo('#content');
-							$('<div/>').addClass('nav-tabsHead').html('개인정보 수정').attr({id:'nav-tabsHead1'}).appendTo('#nav-tabsHeadMain1');
-								$('<ul/>').addClass('info_lists').attr({style:'padding-left:130px'}).appendTo('#nav-tabsHead1');
-									$('<li/>').appendTo('.info_lists').attr({id:'modifyNickname'}).html('<b>닉네임</b>');
-										$('<span/>').html(d.mbr.nickname).attr({style:"margin-left: 200px; font-weight normal;"}).appendTo('#modifyNickname')
-										$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyNickname').click(e=>{
-											app.service.myModal();
-											$('<h4/>').html('닉네임 변경하기').appendTo('#modalTitle');
-											$('<div/>').html('현재 닉네임').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-											$('<div/>').html(d.mbr.nickname).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
-											$('<div/>').html('변경 닉네임').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
-											$('<input/>').attr({type:'text', id:'changeNickname', placeholder:'변경하려는 닉네임을 입력해주세요'}).addClass('inputData').appendTo('.modal-body');
-											$('<button/>').addClass('radi_button btn_save').attr({id:'update_password'}).text('수정완료').appendTo('.modal-body').click(e=>{
-												$.ajax({
-													url :$.ctx()+'/member/update',
-													method:'post',
-													contentType:'application/json',
-													data:JSON.stringify({
-														member_id:$.cookie("loginID"),
-														nickname:$('#changeNickname').val()
-													}),
-													success:d=>{
-														$('#modifyAlert').remove();
-														$('<div/>').html('닉네임이 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-													},
-													error:(m1,m2,m3)=>{alert(m3);}
+		$.ajax({
+			url:$.ctx()+'/member/auth',
+			method:'post',
+			contentType:'application/json',
+			data:JSON.stringify({
+				member_id:$.cookie("loginID"),
+				}),
+			success:d=>{
+				$('#header').empty();
+				$('#content').empty();
+				$('#content').attr({style:'background: #f5f5f5'});
+				$('<div/>').addClass('mypageTableDiv').appendTo('#content');
+				$('<div/>').addClass('mypageBottomNav').appendTo('#content');
+					app.service.myBenefit(d);
+							$('<a/>').addClass('nav-link active').attr({href:'#',id:'myBenefit'}).html('나의혜택').appendTo('#nav-item1').click(e=>{
+								app.service.myBenefit(d);
+							});
+						$('<li/>').addClass('nav-item').attr({id:'nav-item2'}).appendTo('#nav-tabs');
+							$('<a/>').addClass('nav-link active').attr({href:'#',id:'modifyDelete'}).html('개인정보수정/탈퇴').appendTo('#nav-item2').click(e=>{
+								$('.nav-tabsHeadMain').remove();
+								$('.nav-tabsHead').remove();
+							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain1'}).appendTo('#content');
+									$('<div/>').addClass('nav-tabsHead').html('개인정보 수정').attr({id:'nav-tabsHead1'}).appendTo('#nav-tabsHeadMain1');
+										$('<ul/>').addClass('info_lists').attr({style:'padding-left:130px'}).appendTo('#nav-tabsHead1');
+											$('<li/>').appendTo('.info_lists').attr({id:'modifyNickname'}).html('<b>닉네임</b>');
+												$('<span/>').html(d.mbr.nickname).attr({style:"margin-left: 200px; font-weight normal;"}).appendTo('#modifyNickname')
+												$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyNickname').click(e=>{
+													app.service.myModal();
+													$('<h4/>').html('닉네임 변경하기').appendTo('#modalTitle');
+													$('<div/>').html('현재 닉네임').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+													$('<div/>').html(d.mbr.nickname).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
+													$('<div/>').html('변경 닉네임').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
+													$('<input/>').attr({type:'text', id:'changeNickname', placeholder:'변경하려는 닉네임을 입력해주세요'}).addClass('inputData').appendTo('.modal-body');
+													$('<button/>').addClass('radi_button btn_save').attr({id:'update_password'}).text('수정완료').appendTo('.modal-body').click(e=>{
+														$.ajax({
+															url :$.ctx()+'/member/update',
+															method:'post',
+															contentType:'application/json',
+															data:JSON.stringify({
+																member_id:$.cookie("loginID"),
+																nickname:$('#changeNickname').val()
+															}),
+															success:s=>{
+																$('#modifyAlert').remove();
+																$('<div/>').html('닉네임이 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																$('#layerpop').on('hidden.bs.modal',()=>{
+																	app.permision.mypage(d);
+																	$('#mypage').html($('#changeNickname').val());
+								                                })
+															},
+															error:(m1,m2,m3)=>{alert(m3);}
+														});
+													});
 												});
-											});
-										});
-									
-								$('<li/>').appendTo('.info_lists').attr({id:'modifyPhone'}).html('<b>휴대폰번호</b>');
-									$('<span/>').html(d.mbr.phone).attr({style:"margin-left: 170px; font-weight normal;"}).appendTo('#modifyPhone')
-									$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPhone').click(e=>{
-										app.service.myModal();
-										$('<h4/>').html('휴대폰 번호 변경하기').appendTo('#modalTitle');
-										$('<div/>').html('현재 휴대폰번호').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-										$('<div/>').html(d.mbr.phone).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
-										$('<div/>').html('변경 휴대폰번호').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
-										$('<input/>').attr({type:'text', id:'changePhone', placeholder:'변경하려는 핸드폰 번호를 입력해주세요.'}).addClass('inputData').appendTo('.modal-body');
-										$('<button/>').addClass('radi_button btn_save').attr({id:'update_phone'}).text('수정완료').appendTo('.modal-body').click(e=>{
-											$.ajax({
-												url :$.ctx()+'/member/update',
-												method:'post',
-												contentType:'application/json',
-												data:JSON.stringify({
-													member_id:$.cookie("loginID"),
-													phone:$('#changePhone').val()
-												}),
-												success:d=>{
-													$('#modifyAlert').remove();
-													$('<div/>').html('휴대폰 번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-												},
-												error:(m1,m2,m3)=>{alert(m3);}
-											});
-										});
-									});
-									
-								$('<li/>').appendTo('.info_lists').attr({id:'modifyPassword'}).html('<b>비밀번호</b>');
-									$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPassword').click(e=>{
-										app.service.myModal();
-										$('<h4/>').html('비밀번호 변경하기').appendTo('#modalTitle');
-										$('<input/>').attr({type:'text', id:'currentPassword', placeholder:'현재 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-										$('<input/>').attr({type:'text', id:'changePassword1', placeholder:'변경하려는 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-										$('<input/>').attr({type:'text', id:'changePassword2', placeholder:'변경하려는 비밀번호를 한번 더 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-										$('<button/>').addClass('radi_button btn_save').attr({id:'update_password'}).text('수정완료').appendTo('.modal-body').click(e=>{
-											let cpw = $('#currentPassword').val();
-											let pw1 = $('#changePassword1').val();
-											let pw2 = $('#changePassword2').val();
 											
-										/*
-										 * 1.현재번호 일치 
-										 * 2.현재번호와 변경비밀번호 달라야 함
-										 * 3.변경비밀번호1과 변경비밀번호2와 달라야 함
-										 */
-											if(!cpw || !pw1 || !pw2 ){	
-												$('#modifyAlert').remove();
-												$('<div/>').html('입력되지 않은 항목이 있습니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-											} else {
-												$.ajax({
-													url :$.ctx()+'/member/login',
-													method:'post',
-													contentType:'application/json',
-													data:JSON.stringify({
-														member_id:$.cookie("loginID"),
-														password:cpw
-													}),
-													success:d=>{
-														if(d.pw_valid==='WRONG'){
+										$('<li/>').appendTo('.info_lists').attr({id:'modifyPhone'}).html('<b>휴대폰번호</b>');
+											$('<span/>').html(d.mbr.phone).attr({style:"margin-left: 170px; font-weight normal;"}).appendTo('#modifyPhone')
+											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPhone').click(e=>{
+												app.service.myModal();
+												$('<h4/>').html('휴대폰 번호 변경하기').appendTo('#modalTitle');
+												$('<div/>').html('현재 휴대폰번호').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+												$('<div/>').html(d.mbr.phone).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
+												$('<div/>').html('변경 휴대폰번호').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
+												$('<input/>').attr({type:'text', id:'changePhone', placeholder:'변경하려는 핸드폰 번호를 입력해주세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<button/>').addClass('radi_button btn_save').attr({id:'update_phone'}).text('수정완료').appendTo('.modal-body').click(e=>{
+													$.ajax({
+														url :$.ctx()+'/member/update',
+														method:'post',
+														contentType:'application/json',
+														data:JSON.stringify({
+															member_id:$.cookie("loginID"),
+															phone:$('#changePhone').val()
+														}),
+														success:d=>{
 															$('#modifyAlert').remove();
-															$('<div/>').html('현재 비밀번호가 틀렸습니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-														}else if(cpw==pw1){
-															$('#modifyAlert').remove();
-															$('<div/>').html('변경하려는 비밀번호가 현재 비밀번호와 동일합니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-														}else if(pw1!=pw2){
-															$('#modifyAlert').remove();
-															$('<div/>').html('변경하려는 비밀번호와 한번 더 입력한 비밀번호가 불일치 합니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-														} else {
-															$.ajax({
-																url :$.ctx()+'/member/update',
-																method:'post',
-																contentType:'application/json',
-																data:JSON.stringify({
-																	member_id:$.cookie("loginID"),
-																	password:pw1
-																}),
-																success:d=>{
-																	$('#modifyAlert').remove();
-																	$('<div/>').html('비밀번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
-																},
-																error:(m1,m2,m3)=>{alert(m3);}
-															});
-														}
-													},
-													error:(m1,m2,m3)=>{alert(m3);}
+															$('<div/>').html('휴대폰 번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+														},
+														error:(m1,m2,m3)=>{alert(m3);}
+													});
 												});
-											}
-										});
-									});	
-									
-					$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
-						$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
-							$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
-							
-					
-					$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain3'}).appendTo('#content');							
-						$('<div/>').addClass('nav-tabsHead').html('회원탈퇴').attr({id:'nav-tabsHead3', style:'padding-bottom:50px'}).appendTo('#nav-tabsHeadMain3');	
-							$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'memberWithdrawal'}).appendTo('#nav-tabsHead3');
-								$('<div/>').html('탈퇴를 하시려면 안내 및 동의를 받아야합니다. 정말 탈퇴하시겠습니까?').appendTo('#memberWithdrawal');
-								$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('탈퇴하기').appendTo('#memberWithdrawal').click(e=>{
-									app.service.myModal();
-									$('<h4/>').html('회원 탈퇴하기').appendTo('#modalTitle');
-									$('<div/>').html('탈퇴진행을 위해 비밀번호를 한 번 더 입력해주세요.').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
-									$('<input/>').attr({type:'text', id:'withdrawlPassword', placeholder:'비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-									$('<button/>').addClass('radi_button btn_save').attr({id:'withdrawal_password'}).text('확인').appendTo('.modal-body').click(e=>{
-										if($('#withdrawlPassword').val()==d.mbr.password){
-											$.ajax({
-												url:$.ctx()+'/member/delete',
-												method:'post',
-												contentType:'application/json',
-												data:JSON.stringify({
-													member_id:$.cookie("loginID"),
-													password:$('#withdrawlPassword').val()
-												}),
-												success:d=>{
-													$('#deleteAlert').remove();
-													$('<div/>').html('탈퇴가 처리되었습니다. 이용해주셔서 감사드립니다.').addClass('validAlert').attr({id:'deleteAlert',style:'padding-bottom:15px;'}).appendTo('.modal-body');
-												},
-												error:(m1,m2,m3)=>{alert(m3);}
 											});
-										}else{
-											$('#deleteAlert').remove();
-											$('<div/>').html('비밀번호가 틀렸습니다. 다시 확인해주세요.').addClass('validSuccessAlert').attr({id:'deleteAlert',style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
-										}
-									});
-								});
-					});
-				
-			$('<table width="1000px" height="450px"/>').addClass('mypageTable').appendTo('.mypageTableDiv');
-				$('<tr/>').attr({id:'tr1'}).appendTo('.mypageTable');
-					$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
-					append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));
-					$('<td  width="30%"/>').html('○ 성별').appendTo('#tr1');
-					$('<td  width="30%"/>').html(d.mbr.gender).appendTo('#tr1');
-				$('<tr/>').attr({id:'tr2'}).appendTo('.mypageTable');
-					$('<td/>').html('○ 나이').appendTo('#tr2');
-					$('<td/>').html(d.mbr.age).appendTo('#tr2');
-				$('<tr/>').attr({id:'tr3'}).appendTo('.mypageTable');
-					$('<td/>').html('○ 휴대폰번호').appendTo('#tr3');
-					$('<td/>').html(d.mbr.phone).appendTo('#tr3');
-				$('<tr/>').attr({id:'tr4'}).appendTo('.mypageTable');
-						/* 모달 끝 */
-					$('<td/>').attr({id:'photoChangeBtn'}).appendTo('#tr4');
-					$('<td/>').html('○ 주소').appendTo('#tr4');
-					$('<td/>').html(d.mbr.address).appendTo('#tr4');
+											
+										$('<li/>').appendTo('.info_lists').attr({id:'modifyPassword'}).html('<b>비밀번호</b>');
+											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPassword').click(e=>{
+												app.service.myModal();
+												$('<h4/>').html('비밀번호 변경하기').appendTo('#modalTitle');
+												$('<input/>').attr({type:'text', id:'currentPassword', placeholder:'현재 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<input/>').attr({type:'text', id:'changePassword1', placeholder:'변경하려는 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<input/>').attr({type:'text', id:'changePassword2', placeholder:'변경하려는 비밀번호를 한번 더 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<button/>').addClass('radi_button btn_save').attr({id:'update_password'}).text('수정완료').appendTo('.modal-body').click(e=>{
+													let cpw = $('#currentPassword').val();
+													let pw1 = $('#changePassword1').val();
+													let pw2 = $('#changePassword2').val();
+													
+												/*
+												 * 1.현재번호 일치 
+												 * 2.현재번호와 변경비밀번호 달라야 함
+												 * 3.변경비밀번호1과 변경비밀번호2와 달라야 함
+												 */
+													if(!cpw || !pw1 || !pw2 ){	
+														$('#modifyAlert').remove();
+														$('<div/>').html('입력되지 않은 항목이 있습니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+													} else {
+														$.ajax({
+															url :$.ctx()+'/member/login',
+															method:'post',
+															contentType:'application/json',
+															data:JSON.stringify({
+																member_id:$.cookie("loginID"),
+																password:cpw
+															}),
+															success:d=>{
+																if(d.pw_valid==='WRONG'){
+																	$('#modifyAlert').remove();
+																	$('<div/>').html('현재 비밀번호가 틀렸습니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																}else if(cpw==pw1){
+																	$('#modifyAlert').remove();
+																	$('<div/>').html('변경하려는 비밀번호가 현재 비밀번호와 동일합니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																}else if(pw1!=pw2){
+																	$('#modifyAlert').remove();
+																	$('<div/>').html('변경하려는 비밀번호와 한번 더 입력한 비밀번호가 불일치 합니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																} else {
+																	$.ajax({
+																		url :$.ctx()+'/member/update',
+																		method:'post',
+																		contentType:'application/json',
+																		data:JSON.stringify({
+																			member_id:$.cookie("loginID"),
+																			password:pw1
+																		}),
+																		success:d=>{
+																			$('#modifyAlert').remove();
+																			$('<div/>').html('비밀번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																		},
+																		error:(m1,m2,m3)=>{alert(m3);}
+																	});
+																}
+															},
+															error:(m1,m2,m3)=>{alert(m3);}
+														});
+													}
+												});
+											});	
+											
+							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
+								$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
+									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
+									
+							
+							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain3'}).appendTo('#content');							
+								$('<div/>').addClass('nav-tabsHead').html('회원탈퇴').attr({id:'nav-tabsHead3', style:'padding-bottom:50px'}).appendTo('#nav-tabsHeadMain3');	
+									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'memberWithdrawal'}).appendTo('#nav-tabsHead3');
+										$('<div/>').html('탈퇴를 하시려면 안내 및 동의를 받아야합니다. 정말 탈퇴하시겠습니까?').appendTo('#memberWithdrawal');
+										$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('탈퇴하기').appendTo('#memberWithdrawal').click(e=>{
+											app.service.myModal();
+											$('<h4/>').html('회원 탈퇴하기').appendTo('#modalTitle');
+											$('<div/>').html('탈퇴진행을 위해 비밀번호를 한 번 더 입력해주세요.').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
+											$('<input/>').attr({type:'text', id:'withdrawlPassword', placeholder:'비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+											$('<button/>').addClass('radi_button btn_save').attr({id:'withdrawal_password'}).text('확인').appendTo('.modal-body').click(e=>{
+												if($('#withdrawlPassword').val()==d.mbr.password){
+													$.ajax({
+														url:$.ctx()+'/member/delete',
+														method:'post',
+														contentType:'application/json',
+														data:JSON.stringify({
+															member_id:$.cookie("loginID"),
+															password:$('#withdrawlPassword').val()
+														}),
+														success:d=>{
+															$('#deleteAlert').remove();
+															$('<div/>').html('탈퇴가 처리되었습니다. 이용해주셔서 감사드립니다.').addClass('validAlert').attr({id:'deleteAlert',style:'padding-bottom:15px;'}).appendTo('.modal-body');
+														},
+														error:(m1,m2,m3)=>{alert(m3);}
+													});
+												}else{
+													$('#deleteAlert').remove();
+													$('<div/>').html('비밀번호가 틀렸습니다. 다시 확인해주세요.').addClass('validSuccessAlert').attr({id:'deleteAlert',style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
+												}
+											});
+										});
+							});
+						
+					$('<table width="1000px" height="450px"/>').addClass('mypageTable').appendTo('.mypageTableDiv');
+						$('<tr/>').attr({id:'tr1'}).appendTo('.mypageTable');
+							$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
+							append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));
+							$('<td  width="30%"/>').html('○ 이름').appendTo('#tr1');
+							$('<td  width="30%"/>').html(d.mbr.name).appendTo('#tr1');
+						$('<tr/>').attr({id:'tr2'}).appendTo('.mypageTable');
+							$('<td/>').html('○ 나이').appendTo('#tr2');
+							$('<td/>').html(d.mbr.age).appendTo('#tr2');
+						$('<tr/>').attr({id:'tr3'}).appendTo('.mypageTable');
+							$('<td/>').html('○ 성별').appendTo('#tr3');
+							$('<td/>').html(d.mbr.gender).appendTo('#tr3');
+						$('<tr/>').attr({id:'tr4'}).appendTo('.mypageTable');
+								/* 모달 끝 */
+							$('<td/>').attr({id:'photoChangeBtn'}).appendTo('#tr4');
+							$('<td/>').html('○ 주소').appendTo('#tr4');
+							$('<td/>').html(d.mbr.address).appendTo('#tr4');
+							
+						$('<tr/>').attr({id:'tr5'}).appendTo('.mypageTable');
+							$('<td text-align: center;/>').html(d.mbr.nickname).appendTo('#tr5');
+							$('<td/>').html('○ 휴대폰번호').appendTo('#tr5');
+							$('<td/>').html(d.mbr.phone).appendTo('#tr5');
+							$('<button/>').addClass('btn btn-primary').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'modal1'}).appendTo('#photoChangeBtn').html('사진변경').click(e=>{
+									app.service.myModal();
+									$('<h4/>').html('사진 변경하기').appendTo('#modalTitle');
+										$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).appendTo('.modal-body');
+											$('<table width="100%" height="150px" border="1px"/>').addClass('table').appendTo('#uploadForm');
+												$('<tbody>').attr({id:'fileTableTbody'}).appendTo('.table');
+													$('<tr/>').attr({id:'fileTableTbodyTr'}).appendTo('#fileTableTbody');
+														$('<td/>').attr({id:'dropZone'}).appendTo('#fileTableTbodyTr');
 					
-				$('<tr/>').attr({id:'tr5'}).appendTo('.mypageTable');
-					$('<td text-align: center;/>').html(d.mbr.nickname).appendTo('#tr5');
-					$('<td/>').html('○ 우편번호').appendTo('#tr5');
-					$('<td/>').html(d.mbr.zipcode).appendTo('#tr5');
-					$('<button/>').addClass('btn btn-primary').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'modal1'}).appendTo('#photoChangeBtn').html('사진변경').click(e=>{
-							app.service.myModal();
-							$('<h4/>').html('사진 변경하기').appendTo('#modalTitle');
-								$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).appendTo('.modal-body');
-									$('<table width="100%" height="150px" border="1px"/>').addClass('table').appendTo('#uploadForm');
-										$('<tbody>').attr({id:'fileTableTbody'}).appendTo('.table');
-											$('<tr/>').attr({id:'fileTableTbodyTr'}).appendTo('#fileTableTbody');
-												$('<td/>').attr({id:'dropZone'}).appendTo('#fileTableTbodyTr');
-			
-										
-					    // 파일 등록
-						/*
-						 * +' <a href="#" onclick="uploadFile(); return false;"
-						 * class="btn bg_01">파일 업로드</a>'
-						 */
-								$('<a/>').attr({href:'#'}).addClass('btn bg_01').text('파일 업로드').appendTo('#uploadForm').click(e=>{
-							        // 등록할 파일 리스트
-							        var uploadFileList = Object.keys(fileList);
-							        // 파일이 있는지 체크
-							        if(uploadFileList.length == 0){
-							            alert("파일이 없습니다.");
-							            return;
-							        }
-							        // 용량을 500MB를 넘을 경우 업로드 불가
-							        if(totalFileSize > maxUploadSize){
-							            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
-							            return;
-							        }
-							        if(confirm("등록 하시겠습니까?")){
-							            // 등록할 파일 리스트를 formData로 데이터 입력
-							            var form = $('#uploadForm');
-							            var formData = new FormData(form);
-							            for(var i = 0; i < uploadFileList.length; i++){
-							                formData.append('files', fileList[uploadFileList[i]]);
-							            }
-							            alert('formData'+ formData);
-							            $.ajax({
-							            	url:$.ctx()+'/member/fileUpload',
-							                method:'POST',
-							                contentType:'application/json',
-							                enctype:'multipart/form-data',
-							                processData:false,
-							                contentType:false,
-							                cache:false,
-							                data:formData,
-							                success:d=>{
-							                    if(result.data.length > 0){
-							                        alert("성공");
-							                        location.reload();
-							                    }else{
-							                        alert("실패");
-							                        location.reload();
-							                    }
+												
+							    // 파일 등록
+								/*
+								 * +' <a href="#" onclick="uploadFile(); return false;"
+								 * class="btn bg_01">파일 업로드</a>'
+								 */
+										$('<a/>').attr({href:'#'}).addClass('btn bg_01').text('파일 업로드').appendTo('#uploadForm').click(e=>{
+									        // 등록할 파일 리스트
+									        var uploadFileList = Object.keys(fileList);
+									        // 파일이 있는지 체크
+									        if(uploadFileList.length == 0){
+									            alert("파일이 없습니다.");
+									            return;
+									        }
+									        // 용량을 500MB를 넘을 경우 업로드 불가
+									        if(totalFileSize > maxUploadSize){
+									            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
+									            return;
+									        }
+									        if(confirm("등록 하시겠습니까?")){
+									            // 등록할 파일 리스트를 formData로 데이터 입력
+									            var form = $('#uploadForm');
+									            var formData = new FormData(form);
+									            for(var i = 0; i < uploadFileList.length; i++){
+									                formData.append('files', fileList[uploadFileList[i]]);
+									            }
+									            alert('formData'+ formData);
+									            $.ajax({
+									            	url:$.ctx()+'/member/fileUpload',
+									                method:'POST',
+									                contentType:'application/json',
+									                enctype:'multipart/form-data',
+									                processData:false,
+									                contentType:false,
+									                cache:false,
+									                data:formData,
+									                success:d=>{
+									                    if(result.data.length > 0){
+									                        alert("성공");
+									                        location.reload();
+									                    }else{
+									                        alert("실패");
+									                        location.reload();
+									                    }
+									                }
+									            });
+									        }
+										});
+								
+						/* file upload 시작 */
+							    // 파일 리스트 번호
+							    var fileIndex = 0;
+							    // 등록할 전체 파일 사이즈
+							    var totalFileSize = 0;
+							    // 파일 리스트
+							    var fileList = new Array();
+							    // 파일 사이즈 리스트
+							    var fileSizeList = new Array();
+							    // 등록 가능한 파일 사이즈 MB
+							    var uploadSize = 50;
+							    // 등록 가능한 총 파일 사이즈 MB
+							    var maxUploadSize = 500;
+							 
+							    $(function (){
+							        fileDropDown();
+							    });
+							 
+							    // 파일 드롭 다운
+							    function fileDropDown(){
+							        var dropZone = $("#dropZone");
+							        // Drag기능
+							        dropZone.on('dragenter',function(e){
+							            e.stopPropagation();
+							            e.preventDefault();
+							            // 드롭다운 영역 css
+							            dropZone.css('background-color','#E3F2FC');
+							        });
+							        dropZone.on('dragleave',function(e){
+							            e.stopPropagation();
+							            e.preventDefault();
+							            // 드롭다운 영역 css
+							            dropZone.css('background-color','#FFFFFF');
+							        });
+							        dropZone.on('dragover',function(e){
+							            e.stopPropagation();
+							            e.preventDefault();
+							            // 드롭다운 영역 css
+							            dropZone.css('background-color','#E3F2FC');
+							        });
+							        dropZone.on('drop',function(e){
+							            e.preventDefault();
+							            // 드롭다운 영역 css
+							            dropZone.css('background-color','#FFFFFF');
+							            
+							            var files = e.originalEvent.dataTransfer.files;
+							            if(files != null){
+							                if(files.length < 1){
+							                    alert("폴더 업로드 불가");
+							                    return;
 							                }
-							            });
+							                selectFile(files)
+							            }else{
+							                alert("ERROR");
+							            }
+							        });
+							    }
+							 
+							    // 파일 선택시
+							    function selectFile(fileObject){
+							        var files = null;
+							 
+							        if(fileObject != null){
+							            // 파일 Drag 이용하여 등록시
+							            files = fileObject;
+							        }else{
+							            // 직접 파일 등록시
+							            files = $('#multipaartFileList_' + fileIndex)[0].files;
 							        }
-								});
-						
-				/* file upload 시작 */
-					    // 파일 리스트 번호
-					    var fileIndex = 0;
-					    // 등록할 전체 파일 사이즈
-					    var totalFileSize = 0;
-					    // 파일 리스트
-					    var fileList = new Array();
-					    // 파일 사이즈 리스트
-					    var fileSizeList = new Array();
-					    // 등록 가능한 파일 사이즈 MB
-					    var uploadSize = 50;
-					    // 등록 가능한 총 파일 사이즈 MB
-					    var maxUploadSize = 500;
-					 
-					    $(function (){
-					        fileDropDown();
-					    });
-					 
-					    // 파일 드롭 다운
-					    function fileDropDown(){
-					        var dropZone = $("#dropZone");
-					        // Drag기능
-					        dropZone.on('dragenter',function(e){
-					            e.stopPropagation();
-					            e.preventDefault();
-					            // 드롭다운 영역 css
-					            dropZone.css('background-color','#E3F2FC');
-					        });
-					        dropZone.on('dragleave',function(e){
-					            e.stopPropagation();
-					            e.preventDefault();
-					            // 드롭다운 영역 css
-					            dropZone.css('background-color','#FFFFFF');
-					        });
-					        dropZone.on('dragover',function(e){
-					            e.stopPropagation();
-					            e.preventDefault();
-					            // 드롭다운 영역 css
-					            dropZone.css('background-color','#E3F2FC');
-					        });
-					        dropZone.on('drop',function(e){
-					            e.preventDefault();
-					            // 드롭다운 영역 css
-					            dropZone.css('background-color','#FFFFFF');
-					            
-					            var files = e.originalEvent.dataTransfer.files;
-					            if(files != null){
-					                if(files.length < 1){
-					                    alert("폴더 업로드 불가");
-					                    return;
-					                }
-					                selectFile(files)
-					            }else{
-					                alert("ERROR");
-					            }
-					        });
-					    }
-					 
-					    // 파일 선택시
-					    function selectFile(fileObject){
-					        var files = null;
-					 
-					        if(fileObject != null){
-					            // 파일 Drag 이용하여 등록시
-					            files = fileObject;
-					        }else{
-					            // 직접 파일 등록시
-					            files = $('#multipaartFileList_' + fileIndex)[0].files;
-					        }
-					        
-					        // 다중파일 등록
-					        if(files != null){
-					            for(var i = 0; i < files.length; i++){
-					                // 파일 이름
-					                var fileName = files[i].name;
-					                var fileNameArr = fileName.split("\.");
-					                // 확장자
-					                var ext = fileNameArr[fileNameArr.length - 1];
-					                // 파일 사이즈(단위 :MB)
-					                var fileSize = files[i].size / 1024 / 1024;
-					                
-					                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-					                    // 확장자 체크
-					                    alert("등록 불가 확장자");
-					                    break;
-					                }else if(fileSize > uploadSize){
-					                    // 파일 사이즈 체크
-					                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
-					                    break;
-					                }else{
-					                    // 전체 파일 사이즈
-					                    totalFileSize += fileSize;
-					                    
-					                    // 파일 배열에 넣기
-					                    fileList[fileIndex] = files[i];
-					                    
-					                    // 파일 사이즈 배열에 넣기
-					                    fileSizeList[fileIndex] = fileSize;
-					 
-					                    // 업로드 파일 목록 생성
-					                    addFileList(fileIndex, fileName, fileSize);
-					 
-					                    // 파일 번호 증가
-					                    fileIndex++;
-					                }
-					            }
-					        }else{
-					            alert("ERROR");
-					        }
-					    }
-					 
-					    // 업로드 파일 목록 생성
-					    function addFileList(fIndex, fileName, fileSize){
-					        var html = "";
-					        html += "<tr id='fileTr_" + fIndex + "'>";
-					        html += "    <td class='left' >";
-					        html +=         fileName + " / " + fileSize + "MB "  + "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>"
-					        html += "    </td>"
-					        html += "</tr>"
-					 
-					        $('#fileTableTbody').append(html);
-					    }
-					 
-					    // 업로드 파일 삭제
-					    function deleteFile(fIndex){
-					        // 전체 파일 사이즈 수정
-					        totalFileSize -= fileSizeList[fIndex];
-					        
-					        // 파일 배열에서 삭제
-					        delete fileList[fIndex];
-					        
-					        // 파일 사이즈 배열 삭제
-					        delete fileSizeList[fIndex];
-					        
-					        // 업로드 파일 테이블 목록에서 삭제
-					        $("#fileTr_" + fIndex).remove();
-					    }
-						
-				/* file upload 끝 */
-					    
+							        
+							        // 다중파일 등록
+							        if(files != null){
+							            for(var i = 0; i < files.length; i++){
+							                // 파일 이름
+							                var fileName = files[i].name;
+							                var fileNameArr = fileName.split("\.");
+							                // 확장자
+							                var ext = fileNameArr[fileNameArr.length - 1];
+							                // 파일 사이즈(단위 :MB)
+							                var fileSize = files[i].size / 1024 / 1024;
+							                
+							                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+							                    // 확장자 체크
+							                    alert("등록 불가 확장자");
+							                    break;
+							                }else if(fileSize > uploadSize){
+							                    // 파일 사이즈 체크
+							                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+							                    break;
+							                }else{
+							                    // 전체 파일 사이즈
+							                    totalFileSize += fileSize;
+							                    
+							                    // 파일 배열에 넣기
+							                    fileList[fileIndex] = files[i];
+							                    
+							                    // 파일 사이즈 배열에 넣기
+							                    fileSizeList[fileIndex] = fileSize;
+							 
+							                    // 업로드 파일 목록 생성
+							                    addFileList(fileIndex, fileName, fileSize);
+							 
+							                    // 파일 번호 증가
+							                    fileIndex++;
+							                }
+							            }
+							        }else{
+							            alert("ERROR");
+							        }
+							    }
+							 
+							    // 업로드 파일 목록 생성
+							    function addFileList(fIndex, fileName, fileSize){
+							        var html = "";
+							        html += "<tr id='fileTr_" + fIndex + "'>";
+							        html += "    <td class='left' >";
+							        html +=         fileName + " / " + fileSize + "MB "  + "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>"
+							        html += "    </td>"
+							        html += "</tr>"
+							 
+							        $('#fileTableTbody').append(html);
+							    }
+							 
+							    // 업로드 파일 삭제
+							    function deleteFile(fIndex){
+							        // 전체 파일 사이즈 수정
+							        totalFileSize -= fileSizeList[fIndex];
+							        
+							        // 파일 배열에서 삭제
+							        delete fileList[fIndex];
+							        
+							        // 파일 사이즈 배열 삭제
+							        delete fileSizeList[fIndex];
+							        
+							        // 업로드 파일 테이블 목록에서 삭제
+							        $("#fileTr_" + fIndex).remove();
+							    }
+								
+						/* file upload 끝 */
+							    
+				});
+			},
+			error:(m1,m2,m3)=>{alert(m3);}
 		});
 	}
 	return {login : login, join : join, mypage:mypage}
@@ -696,6 +691,17 @@ app.service = {
 					+'    </div>'
 					+'  </div>'
 					+'</div>').appendTo('#content');
+		},
+		nav : d=>{
+				$('<ul/>').append(
+							$('<li/>').append(
+									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
+											$('<img>').attr({src:$.img()+'/profile/'+d.profileimg}).addClass('avatar'),
+				 							$('<a/>').attr({href:'#', id:'mypage', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
+									).append($('<ul/>').addClass('mouseOverUl').append(
+	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')),
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'reservationList'}).html('예약내역'))		 															
+									)))).appendTo('.menubar');
 		}
 }
 
@@ -712,7 +718,7 @@ app.router = {
 			}
 		);
 	},
-	home :()=>{
+	home :d =>{
 		$('#wrapper').empty();
 		$('#nav').empty();
 		$('#header').empty();
@@ -780,13 +786,22 @@ app.router = {
 				sanghoon.main.init();
 			});
 		});
-		$('#logo_btn').click(e=>{ 
+		$('#logo_btn').click(e=>{
 			e.preventDefault();
-			app.router.home();
+			let session = $.cookie("loginID");
+				if(!session){
+					app.router.home();
+				}else{
+					e.preventDefault();
+					$('#content').empty();
+					$('#header').empty();
+					app.service.header();
+					app.service.content();
+				}
 			})
 		$('#login_btn').addClass('ya_cusor').click(e=>{
-			e.preventDefault();
-			app.permision.login();
+					e.preventDefault();
+					app.permision.login();	
 			});
 		$('#board').addClass('ya_cusor').click(e=>{
 			e.preventDefault();

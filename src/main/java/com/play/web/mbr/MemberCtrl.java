@@ -87,16 +87,11 @@ public class MemberCtrl {
 	}
 	
 	@PostMapping("/update")
-	public @ResponseBody Map<String,Object> modify(
+	public void modify(
 			@RequestBody Member pm) {
 		logger.info("\n--------- MemberController {} !!-----","modify()");
 		map.clear();
-		logger.info("Member pm : "+ pm);
-		logger.info("getMember_id() : "+ pm.getMember_id());
-		logger.info("getPassword() : "+ pm.getPassword());
-		map.put("mbr", mbr);
 		mbrMap.update(pm);
-		return map;
 	}
 	
 	@PostMapping("/fileUpload")
