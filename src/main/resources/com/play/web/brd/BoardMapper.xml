@@ -3,8 +3,27 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.play.web.brd.BoardMapper">
+<!-- <resultMap id="seinResult" type="hashmap">
+	<result property="msg_seq" column="MSG_SEQ"/>
+	<result property="msg_title" column="MSG_TITLE"/>
+	<result property="msg_photo" column="MSG_PHOTO"/>
+	<result property="msg_date" column="MSG_DATE"/>
+	<result property="msg_count" column="MSG_COUNT"/>
+	<result property="msg_content" column="MSG_CONTENT"/>
+	<result property="bookmark_count" column="BOOKMARK_COUNT"/>
+	<result property="subscription_count" column="SUBSCRIPTION_COUNT"/>
+	<result property="board_depth" column="BOARD_DEPTH"/>
+	<result property="board_id" column="BOARD_ID"/>
+	<result property="member_id" column="MEMBER_ID"/>
+	<result property="pay_no" column="PAY_NO"/>
+	<result property="tag" column="TAG"/>
+	<result property="like_count" column="LIKE_COUNT"/>
+	<result property="reply_count" column="REPLY_COUNT"/>
+	<result property="nickname" column="NICKNAME"/>
+</resultMap> -->
+
   <insert id="write">
-   INSERT INTO BOARD (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG)
+   INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG)
    VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}) 
   </insert>
   
@@ -29,19 +48,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <update id="modify">
-  	UPDATE BOARD SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}
+  	UPDATE board SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}
   	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </update>
   
   <delete id="delete">
-  	DELETE FROM BOARD 
+  	DELETE FROM board
   	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </delete>
   
   <insert id="reWrite">
-  	INSERT INTO BOARD (MSG_CONTENT, BOARD_DEPTH, BOARD_ID, MEMBER_ID)
+  	INSERT INTO board (MSG_CONTENT, BOARD_DEPTH, BOARD_ID, MEMBER_ID)
   	VALUES (#{msg_content}, #{msg_seq}, #{board_id}, #{member_id})
   </insert>
   
@@ -52,21 +71,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                ROW_NUMBER() OVER(ORDER BY msg_seq DESC) AS NUM,
                A.*
            FROM
-               BOARD A
+               board A
            WHERE board_depth like #{board_depth}
            AND board_id like #{board_id}
        )B
   </select>
   
   <update id="reModify">
-  	UPDATE BOARD SET MSG_CONTENT=#{msg_content}
+  	UPDATE board SET MSG_CONTENT=#{msg_content}
   	WHERE BOARD_DEPTH LIKE #{board_depth}
   	AND BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </update>
   
   <delete id="reDelete">
-  	DELETE FROM BOARD 
+  	DELETE FROM board 
   	WHERE BOARD_DEPTH LIKE #{board_depth}
   	AND BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
@@ -78,17 +97,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <update id="readInc">
-  	UPDATE BOARD SET MSG_COUNT=MSG_COUNT+1
+  	UPDATE board SET MSG_COUNT=MSG_COUNT+1
   	WHERE MSG_SEQ LIKE #{msg_seq}
   </update>
   
   <update id="likeInc">
-  	UPDATE BOARD SET LIKE_COUNT=LIKE_COUNT+1
+  	UPDATE board SET LIKE_COUNT=LIKE_COUNT+1
   	WHERE MSG_SEQ LIKE #{msg_seq}
   </update>
   
   <update id="likeDes">
-  	UPDATE BOARD SET LIKE_COUNT=LIKE_COUNT-1
+  	UPDATE board SET LIKE_COUNT=LIKE_COUNT-1
   	WHERE MSG_SEQ LIKE #{msg_seq}
   </update>
   

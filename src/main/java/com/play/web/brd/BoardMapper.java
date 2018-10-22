@@ -23,7 +23,7 @@ public interface BoardMapper {
 	public void reDelete(Board vo);
 	public int count();
 	
-	public void readInc(Board vo);
+	public void readInc(int seq);
 	public void likeInc(int seq);
 	public void likeDes(int seq);
   

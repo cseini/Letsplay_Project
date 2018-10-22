@@ -55,7 +55,7 @@ sein.board ={
 											sein.service.detail(j);	
 										})
 									}),
-									$('<a/>').attr({href:'#'}).append($('<span>'+j.member_id+'</span>'))
+									$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
 								),
 								$('<div/>').addClass('user_cont').append(
 									$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))			
