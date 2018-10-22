@@ -720,14 +720,14 @@ app.router = {
 		$('#footer').empty();
 		$.getScript($.script()+'/footer.js',()=>{
 		/* nav 시작 */
-		$('<div/>').addClass('mainNav').appendTo($('#wrapper'));
-			$('<nav/>').attr({id:'nav'}).appendTo($('.mainNav'));
-				$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('#nav');
-				$('<div/>').addClass('nav_left').appendTo('#nav');
+		$('<nav/>').attr({id:'nav'}).appendTo($('#wrapper'));
+			$('<div/>').addClass('mainNav').appendTo($('#nav'));
+				$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
+				$('<div/>').addClass('nav_left').appendTo('.mainNav');
 					$('<a/>').attr({href:'#', id:'mylocation'}).html('내주변(김태형)').appendTo('.nav_left');
 					$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색(한희태)').appendTo('.nav_left');
 					$('<a/>').attr({href:'#', id:'board'}).html('캐스트(최세인)').appendTo('.nav_left');
-				$('<div/>').addClass('nav_right').appendTo('#nav');
+				$('<div/>').addClass('nav_right').appendTo('.mainNav');
 					$('<a/>').attr({href:'#', id:'amdin'}).html('관리자(김상훈)').appendTo('.nav_right');
 					$('<a/>').attr({href:'#', id:'add_btn'}).html('회원가입').appendTo('.nav_right');
 					$('<a/>').attr({href:'#', id:'login_btn'}).html('로그인').appendTo('.nav_right');
