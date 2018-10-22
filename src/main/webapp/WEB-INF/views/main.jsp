@@ -29,6 +29,7 @@
 <body>
 <div id="wrapper">
 
+
 </div>
 <script>
 	app.init('${context}'); 
