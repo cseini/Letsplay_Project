@@ -1,5 +1,6 @@
 "use strict";
 var sanghoon = sanghoon || {};
+var googleChart = googleChart || {};
 
 sanghoon.main =(()=>{
 	var init =()=>{
@@ -63,6 +64,119 @@ sanghoon.main =(()=>{
 		
 	}
 })();*/
+
+googleChart.service = {
+		
+	byAgeList : ( ) =>{		
+		google.charts.load("current", {packages:['corechart']});
+	    google.charts.setOnLoadCallback( googleChart.service.drawAgeListChart );
+		 
+	},
+	drawAgeListChart : ( )=> {
+		$.ajax({
+			url:$.ctx()+'/admin/count',
+			method:'post',
+			contentType:'application/json',
+			success:d=>{
+				var list = "";
+				list = d.list;
+				console.log(d.list);
+				console.log(d.list[0].memberAge);
+				console.log(list[1].memberAge);
+				var jsonData = [
+					{"memberAge" : list[0].memberAge+"", "totCount" : list[0].totCount},
+					{"memberAge" : list[1].memberAge+"", "totCount" : list[1].totCount},
+					{"memberAge" : list[2].memberAge+"", "totCount" : list[2].totCount},
+					{"memberAge" : list[3].memberAge+"", "totCount" : list[3].totCount},
+					{"memberAge" : list[4].memberAge+"", "totCount" : list[4].totCount}
+				];
+				/*var jsonData = [
+						{"memberAge" : "20", "totCount" : "130" },
+						{"memberAge" : "30", "totCount" : "180" },
+						{"memberAge" : "40", "totCount" : "100" },
+						{"memberAge" : "50", "totCount" : "110" },
+						{"memberAge" : "60", "totCount" : "120" }
+				];*/
+				
+				
+				
+				//데이터 호출	
+			      var data = new google.visualization.DataTable( );
+			      data.addColumn('string', 'memberAge');
+			      data.addColumn('number', 'totCount');	      
+
+			      
+			      jsonData.forEach( function (row) {
+			    	 console.log( row );
+			        data.addRow([
+			          row.memberAge,
+			          ( row.totCount * 1 )           
+			        ]);
+			      });
+
+			      var view = new google.visualization.DataView(data);
+			      view.setColumns([0, 1]);
+			      
+
+			      var options = {
+			        title: "연령대별 회원수",
+			        width: 600,
+			        height: 400,
+			        bar: {groupWidth: "95%"},
+			        legend: { position: "none" },
+			      };
+			      var chart = new google.visualization.ColumnChart(document.getElementById( 'age_member' ));
+			      chart.draw(view, options);
+			}
+		});
+		/*var jsonData = [
+			{"memberAge" : list[0].memberAge, "totCount" : list[0].totCount},
+			{"memberAge" : list[1].memberAge, "totCount" : list[1].totCount},
+			{"memberAge" : list[2].memberAge, "totCount" : list[2].totCount},
+			{"memberAge" : list[3].memberAge, "totCount" : list[3].totCount},
+			{"memberAge" : list[4].memberAge, "totCount" : list[4].totCount}
+		];
+		var jsonData = [
+				{"memberAge" : "20", "totCount" : "130" },
+				{"memberAge" : "30", "totCount" : "180" },
+				{"memberAge" : "40", "totCount" : "100" },
+				{"memberAge" : "50", "totCount" : "110" },
+				{"memberAge" : "60", "totCount" : "120" }
+		];
+		
+		
+		
+		//데이터 호출	
+	      var data = new google.visualization.DataTable( );
+	      data.addColumn('string', 'memberAge');
+	      data.addColumn('number', 'totCount');	      
+
+	      
+	      jsonData.forEach( function (row) {
+	    	 console.log( row );
+	        data.addRow([
+	          row.memberAge,
+	          ( row.totCount * 1 )           
+	        ]);
+	      });
+
+	      var view = new google.visualization.DataView(data);
+	      view.setColumns([0, 1]);
+	      
+
+	      var options = {
+	        title: "연령대별 회원수",
+	        width: 600,
+	        height: 400,
+	        bar: {groupWidth: "95%"},
+	        legend: { position: "none" },
+	      };
+	      var chart = new google.visualization.ColumnChart(document.getElementById( 'age_member' ));
+	      chart.draw(view, options);*/
+	  }
+	
+};
+
 sanghoon.service = {
 		basic : x=>{
 			console.log('basic 버튼 클릭');
@@ -82,7 +196,7 @@ sanghoon.service = {
 			
 			$('<div/>').addClass('basic_middle').appendTo('#page-wrapper');
 			$('<div/>').attr({id:'age_member'}).appendTo('.basic_middle');
-			$('<img/>').attr({src:$.img()+'/admin_test/customer_graph.PNG', style:'width:600px; height:210px'}).appendTo('#age_member');
+			//$('<img/>').attr({src:$.img()+'/admin_test/customer_graph.PNG', style:'width:600px; height:210px'}).appendTo('#age_member');
 			$('<div/>').attr({id:'member_gender'}).appendTo('.basic_middle');
 			$('<img/>').attr({src:$.img()+'/admin_test/customer_gen_graph.PNG', style:'width:300px; height:210px'}).appendTo('#member_gender');
 			
@@ -97,7 +211,7 @@ sanghoon.service = {
 			$('<img/>').attr({src:$.img()+'/admin_test/TOP_average.PNG'}).appendTo('#top_average');
 			
 			
-			
+			googleChart.service.byAgeList();
 			/*$('<div/>').attr({id:'page-wrapper', style:"padding:30px" }).appendTo($('#content'));
 			$('<div/>').addClass('row').appendTo('#page-wrapper');
 					
@@ -125,7 +239,9 @@ sanghoon.service = {
 					$('<img/>').attr({src:$.img()+'/admin_test/TOP_views.PNG', style:'width:70%'}).appendTo('#col_4');
 				$('<div/>').addClass('col-lg-4').attr({id:'col_5', style:'padding:30px'}).appendTo('.row');
 					$('<img/>').attr({src:$.img()+'/admin_test/TOP_average.PNG', style:'width:70%'}).appendTo('#col_5');*/
-				
+			
+			 
+			
 		},
 		sales : x=>{
 			console.log('sales 버튼 클릭');
