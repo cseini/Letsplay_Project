@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.play.web.admin.AdminMapper">
+	<select id="getAgeCnt" resultType="hashmap">
+		SELECT  member_age AS memberAge
+				, COUNT(*) AS totCount
+		FROM(
+			SELECT CASE WHEN age between 20 AND 29 THEN '20'
+						WHEN age between 30 AND 39 THEN '30'
+						WHEN age between 40 AND 49 THEN '40'
+						WHEN age between 50 AND 59 THEN '50'
+					ELSE '60'
+					END
+			AS member_age
+			FROM member
+		)A
+		GROUP BY member_age
+	</select>
+	
+	<select id="getPayType" resultType="hashmap">
+		SELECT DISTINCT pay_type AS payType
+						, COUNT(pay_type) AS payTypeCount
+		FROM payment
+		GROUP BY pay_type
+	</select>
+	
+	<select id="getQuarter" resultType="hashmap">
+		SELECT booked AS booked
+			   , COUNT(*) AS bookCount
+		FROM(
+			SELECT CASE WHEN pay_date BETWEEN '2018-01-01' AND '2018-03-31' THEN '1quarter'
+						WHEN pay_date BETWEEN '2018-04-01' AND '2018-06-30' THEN '2quarter'
+						WHEN pay_date BETWEEN '2018-07-01' AND '2018-09-30' THEN '3quarter'
+						WHEN pay_date BETWEEN '2018-10-01' AND '2018-12-31' THEN '4quarter'
+						<!-- ELSE 'last' -->
+						END
+					AS 'booked'
+			FROM payment
+			) A
+		GROUP BY booked
+	</select>
+
+	<select id="getAccomCnt" resultType="hashmap">
+		SELECT accomType AS accomType
+			   , COUNT(*) AS accomCount
+		FROM(
+			SELECT CASE WHEN accom_type = 'HOTEL' THEN 'Hotel'
+						WHEN accom_type = 'MOTEL' THEN 'Motel'
+						END
+						As 'accomType'
+			FROM accommodation
+			) A
+		GROUP BY accomType
+	</select>
+
+	<select id="getGenderCnt" resultType="hashmap">
+		SELECT genderType AS genderType
+			   , COUNT(*) AS genderCount
+		FROM(
+			SELECT CASE WHEN gender = '남' THEN 'Male'
+						WHEN gender = '여' THEN 'Female'
+						END
+						AS 'genderType'
+			FROM member
+		) A
+		GROUP BY genderType
+	</select>
+</mapper>
