@@ -20,11 +20,13 @@ sein.board ={
 		
 		/*글쓰기 버튼*/
 		$('<div/>').addClass('bt_rap').append(
-				$('<span/>').addClass('bt_write').append(
-						$('<button>').addClass('b_all').html('글쓰기'))
-		).appendTo($('#cardlist_rap')).click(e=>{
+			$('<span/>').addClass('bt_write').append(
+				$('<button>').attr({'data-target':"#layerpop",'data-toggle':"modal"}).addClass('b_all').html('글쓰기'))
+		).click(e=>{
+			sein.service.modal('캐스트 작성하기');
 			sein.service.write();
-		});
+		})
+		.appendTo($('#cardlist_rap'));
 		
 		$('<div>').addClass('grid card_type').appendTo($('#cardlist_rap'));
 		let page;
@@ -170,7 +172,7 @@ sein.service ={
 			$('.carousel').carousel();
 		},
 		side_menu : x=>{
-			$('<div/>').attr({id:'side_menu'}).addClass('side_menu').appendTo($('.con_detail'));
+			$('<div/>').addClass('').attr({id:'side_menu'}).addClass('side_menu').appendTo($('.con_detail'));
 			$('<ul/>').addClass('sein_ul').append(
 					$('<li/>').addClass('btnlike').append(
 							$('<a/>').attr({href:"#none"}).append(
@@ -178,13 +180,13 @@ sein.service ={
 										if($('.btnlike').hasClass('on')){
 											if(confirm('좋아요 취소 하시겠습니까?')){
 												$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq);
-												/*sein.service.detail(x);*/
+												$('.like_count').html(x.like_count);
 												$('.btnlike').removeClass();
 											}											
 										}else{
 											if(confirm('좋아요 하시겠습니까?')){
 												$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq);
-												/*sein.service.detail(x);*/
+												$('.like_count').html(x.like_count+1);
 												$('.btnlike').addClass('on');
 											}	
 										}
@@ -243,13 +245,15 @@ sein.service ={
 				.appendTo($('.user_pic')).click(e=>{
 					alert('프로필이미지 클릭');
 				});
-				$('<a/>').attr({href:'#'}).addClass('user_name').append($('<span/>').html(d.member_id))
+				$('<a/>').attr({href:'#'}).addClass('user_name').append($('<span/>').html(d.nickname))
 				.appendTo($('.detail_user')).click(e=>{
 					alert('닉네임 클릭');
 				});
 				$('<div/>').attr({style:'float:right'}).append(
-					$('<a/>').addClass('btn btn-danger').attr({href:'#',style:'margin-right:10px'}).html('수정')
+					$('<a/>').addClass('btn btn-danger').attr({'data-target':"#layerpop",'data-toggle':"modal",href:'#',style:'margin-right:10px'}).html('수정')
 					.click(e=>{
+						$('#layerpop').remove();
+						sein.service.modal('캐스트 수정하기');
 						sein.service.modify(d);
 					}),
 					$('<a/>').addClass('btn btn-danger').attr({href:'#'}).html('삭제').click(e=>{
@@ -265,9 +269,9 @@ sein.service ={
 				$('<h3/>').addClass('sc_out').appendTo($('.detail_title'));
 				$('<p/>').attr({id:'jsonTitle'}).html(d.msg_title).appendTo($('.detail_title'));
 				$('<div/>').addClass('count').appendTo($('.detail_title'));
-				$('<span/>').addClass('day').attr({id:'jsonRegisterDate'}).html(d.msg_date.substring(0,19)).appendTo($('.count'));
+				$('<span/>').addClass('day').attr({id:'jsonRegisterDate'}).html(d.msg_date).appendTo($('.count'));
 				$('<span/>').addClass('ico_like').appendTo($('.count'));
-				$('<b/>').html(d.like_count).appendTo($('.count'));
+				$('<b/>').addClass('like_count').html(d.like_count).appendTo($('.count'));
 				$('<span/>').addClass('ico_read').appendTo($('.count'));
 				$('<b/>').html(d.msg_count).appendTo($('.count'));
 				$('<a/>').attr({href:'#'}).addClass('reply').append(
@@ -295,7 +299,7 @@ sein.service ={
 						$('<button/>').addClass('btnlike').attr({type:'button'}).append(
 							$('<span/>').addClass('ico_detaillike')),
 						$('<span>').addClass('bt_txt').html('좋아요'),
-						$('<b/>').html(d.like_count)
+						$('<b/>').addClass('like_count').html(d.like_count)
 					).click(e=>{
 						if($('.btnlike').hasClass('on')){
 							if(confirm('좋아요 취소 하시겠습니까?')){
@@ -501,71 +505,69 @@ sein.service ={
 			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + "/" + window.location.pathname)
 		},
 		write : x=>{
-			$('#sein_content').empty();
-			$('<div/>').addClass('contents').attr({id:'topContent'}).appendTo($('#sein_content'));
-			$('<div/>').addClass('con_inner').attr({style:'padding-top:30px'}).appendTo($('#topContent'));
-			$('<div/>').addClass('con_detail bord_b').appendTo($('.con_inner'));
-			$('<div/>').addClass('inner_bg').appendTo($('.con_detail'));
-			$('<h1/>').html('CAST').appendTo('.inner_bg');
-			$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'})
-			.appendTo($('.inner_bg'));
-			$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'})
-			.appendTo($('.inner_bg'));
-			$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'})
-			.appendTo($('.inner_bg'));
-			$('<div/>').attr({style:'text-align:right'})
-			.append($('<button/>').addClass('btn btn-danger').attr({style:'margin-right:5px'}).html('글쓰기')
+			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
+			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
+					$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
+					$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
+					$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
+					$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
 					.click(e=>{
 						$.ajax({
 							url:$.ctx()+'/cast/write/',
 							method:'post',
 							contentType:'application/json',
-							data:JSON.stringify({board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
+							data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
 							success:d=>{
-								sein.board.cast();
+								$('#layerpop').on('hidden.bs.modal',()=>{
+									sein.board.cast();
+								})
 							},
-							error:(m1,m2,m3)=>{alert(m3)}
+							error:(m1,m2,m3)=>{alert(m3)}})
 						})
-					}),
-					$('<button/>').addClass('btn btn-danger').html('취소'))
-					.click(e=>{
-						sein.board.cast();
-					})
-			.appendTo($('.inner_bg'));
+					)
+			).appendTo($('#modalContent'));
 			
 		},
 		modify : x=>{
-			$('#sein_content').empty();
-			$('<div/>').addClass('contents').attr({id:'topContent'}).appendTo($('#sein_content'));
-			$('<div/>').addClass('con_inner').attr({style:'padding-top:30px'}).appendTo($('#topContent'));
-			$('<div/>').addClass('con_detail bord_b').appendTo($('.con_inner'));
-			$('<div/>').addClass('inner_bg').appendTo($('.con_detail'));
-			$('<h1/>').html('게시글 수정').appendTo('.inner_bg');
-			$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%'}).text(x.msg_title)
-			.appendTo($('.inner_bg'));
-			$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px'}).text(x.msg_content)
-			.appendTo($('.inner_bg'));
-			$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%'}).text(x.tag)
-			.appendTo($('.inner_bg'));
-			$('<div/>').attr({style:'text-align:right'})
-			.append($('<button/>').addClass('btn btn-danger').attr({style:'margin-right:5px'}).html('수정')
+			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
+			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
+				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%'}).text(x.msg_title),
+				$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px'}).text(x.msg_content),
+				$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%'}).text(x.tag),
+				$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('수정하기')
 					.click(e=>{
 						$.ajax({
 							url:$.ctx()+'/cast/modify/',
 							method:'post',
 							contentType:'application/json',
-							data:JSON.stringify({board_id:'cast',msg_seq:x.msg_seq,msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
+							data:JSON.stringify({member_id:$.cookie("loginID"),msg_seq:x.msg_seq,board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
 							success:d=>{
-								sein.board.cast();
+								$('#layerpop').on('hidden.bs.modal',()=>{
+									sein.board.cast();
+								})
 							},
-							error:(m1,m2,m3)=>{alert(m3)}
+							error:(m1,m2,m3)=>{alert(m3)}})
 						})
-					}),
-					$('<button/>').addClass('btn btn-danger').html('취소'))
-					.click(e=>{
-						sein.board.cast();
-					})
-			.appendTo($('.inner_bg'));
+					)
+			).appendTo($('#modalContent'));
 			
+			/*$('#layerpop').on('hidden.bs.modal',()=>{
+				sein.board.cast();
+			})*/
+		},
+		modal : x=>{
+			$('#layerpop').empty();
+			$('<div class="modal fade" id="layerpop">'
+				+'  <div class="modal-dialog">'
+				+'    <div class="modal-content">'
+				+'      <div class="modal-header">'
+				+'        <h4 class="modal-title" id="modalTitle">'+x+'</h4>'
+				+'        <button type="button" class="close" data-dismiss="modal">×</button>'
+				+'      </div>'
+				+'      <div class="modal-body">'
+				+'      </div>'
+				+'    </div>'
+				+'  </div>'
+				+'</div>').appendTo('#content');
 		}
 }

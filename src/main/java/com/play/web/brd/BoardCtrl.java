@@ -1,5 +1,6 @@
 package com.play.web.brd;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,6 @@ public class BoardCtrl {
 	static final Logger logger = LoggerFactory.getLogger(BoardCtrl.class);
 	@Autowired Util2 util2;
 	@Autowired Board brd;
-	/*@Autowired SeinResult sr;*/
 	@Autowired BoardMapper brdMap;
 	@Autowired Pagination page;
 	@Autowired TxService tx;
@@ -36,8 +36,7 @@ public class BoardCtrl {
 	@PostMapping("/cast/write/")
 	public @ResponseBody void write(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","write()");
-		cast.setMember_id("A3");
-		cast.setMsg_photo("cast_3.jpg");
+		cast.setMsg_photo(cast.getMsg_seq()+".jpg");
 		brdMap.write(cast);;
 	}
 	
@@ -45,11 +44,9 @@ public class BoardCtrl {
 	public @ResponseBody Map<String,Object> list(@RequestBody Map<String,Object>cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","list");
 		map.clear();
-		Util.log.accept(cast.get("pageNumber")+"");
 		map.put("pageNumber",Integer.parseInt((String) cast.get("pageNumber")));
 		map.put("countRow",brdMap.count());
 		page.carryOut(map);
-		Util.log.accept(page+"");
 		map.clear();
 		map.put("beginRow", page.getBeginRow());
 		map.put("endRow", page.getEndRow());
@@ -61,7 +58,7 @@ public class BoardCtrl {
 	}
 	
 	@GetMapping("/cast/read/{seq}")
-	public Board read(@PathVariable int seq){
+	public HashMap<String,SeinResult> read(@PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","read()");
 		brd.setMsg_seq(seq);
 		brdMap.readInc(seq);
@@ -71,7 +68,7 @@ public class BoardCtrl {
 	@PostMapping("/cast/modify/")
 	public @ResponseBody void modify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","modify()");
-		Util.log.accept(cast+"");
+		Util.log.accept("msg_title : "+cast.getMsg_title()+"");
 		brdMap.modify(cast);;
 	}
 	
