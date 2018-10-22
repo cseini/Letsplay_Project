@@ -34,15 +34,21 @@
 	  	</if>
   	</where>
   </select>
+  
   <update id="update" parameterType="com.play.web.mbr.Member">
 	  UPDATE member SET
-	    PASSWORD = #{password},
-	    TEAMID = #{teamid},
-	    ROLL = #{roll},
-	    PHONE = #{phone},
-	    EMAIL = #{email}
-	  WHERE MEMBER_ID = #{member_id}
+	  	<if test=" nickname != null and nickname != '' ">
+    		NICKNAME = #{nickname}
+    	</if>
+	  	<if test=" password != null and password != '' ">
+    		PASSWORD = #{password}
+    	</if>
+	  	<if test=" phone != null and phone != '' ">
+    		PHONE = #{phone}
+    	</if>
+	  WHERE MEMBER_ID LIKE #{member_id}
   </update>
+  
   <delete id="delete" parameterType="com.play.web.mbr.Member">
 	  DELETE FROM member
 	  WHERE MEMBER_ID = #{member_id}

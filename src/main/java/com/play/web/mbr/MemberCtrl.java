@@ -34,24 +34,6 @@ public class MemberCtrl {
 		param.setGender(util2.ageAndGender(param).getGender());
 		mbrMap.post(param);
 	}
-	@RequestMapping("/search")
-	public void search() {}
-	@RequestMapping("/count")
-	public void count() {}
-	@RequestMapping(value="/modify", method=RequestMethod.POST)
-	public String modify(@ModelAttribute("user") Member user) {
-		logger.info("\n--------- MemberController {} !!-----","modify()");
-		mbrMap.put(user);
-		return "retrieve";
-	}
-	@RequestMapping(value="/remove", method=RequestMethod.POST)
-	public String remove(@ModelAttribute Member param,
-			@ModelAttribute("user") Member user){
-		logger.info("\n--------- MemberController {} !!-----","remove()");
-		param.setMember_id((user.getMember_id()));
-		mbrMap.delete(param);
-		return "redirect:/";
-	}
 	
 	@PostMapping("/auth")
 	public @ResponseBody Map<String,Object> auth(
@@ -101,6 +83,19 @@ public class MemberCtrl {
 		logger.info("deleteMsg  " + deleteMsg);
 		map.put("deleteMsg", deleteMsg);
 		map.put("mbr", mbr);
+		return map;
+	}
+	
+	@PostMapping("/update")
+	public @ResponseBody Map<String,Object> modify(
+			@RequestBody Member pm) {
+		logger.info("\n--------- MemberController {} !!-----","modify()");
+		map.clear();
+		logger.info("Member pm : "+ pm);
+		logger.info("getMember_id() : "+ pm.getMember_id());
+		logger.info("getPassword() : "+ pm.getPassword());
+		map.put("mbr", mbr);
+		mbrMap.update(pm);
 		return map;
 	}
 	
