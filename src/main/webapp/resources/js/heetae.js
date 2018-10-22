@@ -144,11 +144,6 @@ heetae.main =(()=>{
 		.addClass('heetae_section_form')
 		.appendTo('.heetae_content_form')
 		
-		//테스트
-		$('<div/>')
-		.addClass('heetae_test222')
-		.appendTo('.heetae_content_form')
-		
 		
 		$('<section/>')
 		.addClass('heetae_section1')
@@ -405,7 +400,7 @@ heetae.main =(()=>{
 			
 		$('<input/>')
 		.attr({'readonly':'true'
-				,'value':''
+				,'value':today
 				,'id':'start_date'}) //체크인 날짜 번경
 		.appendTo($('<div>')
 					.addClass('heetae_check_middle_con1')
@@ -417,7 +412,7 @@ heetae.main =(()=>{
 		.appendTo('.heetae_check_middle')
 		$('<input/>')
 		.attr({'readonly':'true'
-			,'value':''
+			,'value':today
 			,'id':'end_date'}) //체크아웃 날짜 번경
 		.appendTo($('<div>')
 				.addClass('heetae_check_middle_con3')
@@ -440,6 +435,18 @@ heetae.main =(()=>{
 		
 		$('.gj-icon')
 		.addClass('heetae_test222')
+		
+		/*$('[role=right-icon]')
+		.addClass('heetae_test222')
+		.click(e=>{
+			$('[role=calendar]').attr('style','top:709px; left:842px;')
+		})
+		
+		$('[role=left-icon]')
+		.addClass('heetae_test222')
+		.click(e=>{
+			$('[role=calendar]').attr('style','top:509px; left:842px;')
+		})*/
 		
 				
 				

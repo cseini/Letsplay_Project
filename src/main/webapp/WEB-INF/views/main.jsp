@@ -21,8 +21,9 @@
 	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" /> -->
 	<script src="${context}/resources/js/gijgo.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css"> 
 	<script src="${context}/resources/js/app.js"></script>
 </head>
 	
