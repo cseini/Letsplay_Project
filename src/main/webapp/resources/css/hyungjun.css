@@ -121,8 +121,9 @@
 .mainNav {
 	padding-left: 30px;
 	height: 70px;
-	border-bottom: none;
 	padding-top: 15px;
+	border-bottom: 1px solid;
+	border-color: #ddd;
 }
 
 .mainContent {
@@ -207,7 +208,8 @@
 	background-color: white;
 	padding-left: 30px;
 	height: 70px;
-	border-bottom: none;
+	border-bottom: 1px solid;
+	border-color: #ddd;
 	padding-top: 15px;
 }
 
