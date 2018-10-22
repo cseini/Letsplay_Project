@@ -111,9 +111,9 @@ taehyeong.list_map={
 			//$('<p/>').addClass('ppp__').html('H Avenue 역삼점').appendTo($('#first_list_one'+i));
 			$('<span>').addClass('span_').attr({id:'span_'+i}).appendTo($('#first_list_one'+i))
 			$('<p/>').addClass('p_span').html('대실').appendTo($('#span_'+i))
-			$('<h4/>').addClass('p_span p_span0').html(' 40,000원').appendTo($('#span_'+i))
+			$('<h5/>').addClass('p_span p_span0').html(' 40,000원').appendTo($('#span_'+i))
 			$('<p/>').addClass('p_span').html('숙박').appendTo($('#span_'+i))
-			$('<h4/>').addClass('p_span p_span0').html(' 80,000원').appendTo($('#span_'+i))
+			$('<h5/>').addClass('p_span p_span0').html(' 80,000원').appendTo($('#span_'+i))
 		})
 		$('<p/>').addClass('font_1 font_weight800').html('프리미엄').appendTo($('#list'));
 		$('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'}).appendTo($('#list'));
