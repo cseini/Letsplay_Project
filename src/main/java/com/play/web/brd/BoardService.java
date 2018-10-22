@@ -11,9 +11,7 @@ import com.play.web.cmm.SearchCriteria;
 public interface BoardService {
 
   public void regist(Board board) throws Exception;
-
   public Board read(Integer s) throws Exception;
-
   public void modify(Board board) throws Exception;
 
   public void remove(Integer bno) throws Exception;

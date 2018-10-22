@@ -25,6 +25,7 @@ public class BoardCtrl {
 	static final Logger logger = LoggerFactory.getLogger(BoardCtrl.class);
 	@Autowired Util2 util2;
 	@Autowired Board brd;
+	/*@Autowired SeinResult sr;*/
 	@Autowired BoardMapper brdMap;
 	@Autowired Pagination page;
 	@Autowired TxService tx;
@@ -32,7 +33,6 @@ public class BoardCtrl {
 	@Resource(name="uploadPath")
 	private String uploadPath;
 	
-
 	@PostMapping("/cast/write/")
 	public @ResponseBody void write(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","write()");
@@ -64,7 +64,7 @@ public class BoardCtrl {
 	public Board read(@PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","read()");
 		brd.setMsg_seq(seq);
-		brdMap.readInc(brd);
+		brdMap.readInc(seq);
 		return brdMap.read(brd);
 	}
 	
