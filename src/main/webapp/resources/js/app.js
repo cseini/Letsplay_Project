@@ -84,9 +84,15 @@ app.permision = (()=>{
 											});
 											$('#logout').click(e=>{
 												e.preventDefault();
+												$.cookie()
 												$.cookie("loginID","");
+												$.cookie("loginNickname", "");
+												$.cookie("loginName", d.mbr.name);
+												$.cookie("loginAge", d.mbr.age);
+												$.cookie("loginAddress", d.mbr.address);
+												$.cookie("loginPhone", d.mbr.phone);
+												$.cookie("loginPoint", d.mbr.point);
 												app.router.home();
-												alert("loginID : " + $.cookie("loginID"));
 											});	
 												
 									}
@@ -209,8 +215,7 @@ app.permision = (()=>{
 																nickname:$('#changeNickname').val()
 															}),
 															success:s=>{
-																$('#modifyAlert').remove();
-																$('<div/>').html('닉네임이 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																$('#layerpop').modal('hide')
 																$('#layerpop').on('hidden.bs.modal',()=>{
 																	app.permision.mypage(d);
 																	$('#mypage').html($('#changeNickname').val());
@@ -240,8 +245,7 @@ app.permision = (()=>{
 															phone:$('#changePhone').val()
 														}),
 														success:d=>{
-															$('#modifyAlert').remove();
-															$('<div/>').html('휴대폰 번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
 																app.permision.mypage(d);
 							                                })
@@ -255,9 +259,9 @@ app.permision = (()=>{
 											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPassword').click(e=>{
 												app.service.myModal();
 												$('<h4/>').html('비밀번호 변경하기').appendTo('#modalTitle');
-												$('<input/>').attr({type:'text', id:'currentPassword', placeholder:'현재 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-												$('<input/>').attr({type:'text', id:'changePassword1', placeholder:'변경하려는 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
-												$('<input/>').attr({type:'text', id:'changePassword2', placeholder:'변경하려는 비밀번호를 한번 더 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<input/>').attr({type:'password', id:'currentPassword', placeholder:'현재 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<input/>').attr({type:'password', id:'changePassword1', placeholder:'변경하려는 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<input/>').attr({type:'password', id:'changePassword2', placeholder:'변경하려는 비밀번호를 한번 더 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
 												$('<button/>').addClass('radi_button btn_save').attr({id:'update_password'}).text('수정완료').appendTo('.modal-body').click(e=>{
 													let cpw = $('#currentPassword').val();
 													let pw1 = $('#changePassword1').val();
@@ -300,8 +304,7 @@ app.permision = (()=>{
 																			password:pw1
 																		}),
 																		success:d=>{
-																			$('#modifyAlert').remove();
-																			$('<div/>').html('비밀번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																			$('#layerpop').modal('hide')
 																			$('#layerpop').on('hidden.bs.modal',()=>{
 																				app.permision.mypage(d);
 											                                })
@@ -377,21 +380,17 @@ app.permision = (()=>{
 							$('<td/>').html('○ 휴대폰번호').appendTo('#tr5');
 							$('<td/>').html(d.mbr.phone).appendTo('#tr5');
 							$('<button/>').addClass('btn btn-primary').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'modal1'}).appendTo('#photoChangeBtn').html('사진변경').click(e=>{
-									app.service.myModal();
+								e.preventDefault();
+								app.service.myModal();
+								$('.modal-footer').remove();
 									$('<h4/>').html('사진 변경하기').appendTo('#modalTitle');
+										$('<div/>').addClass('fileDrop').appendTo('.modal-body');
 										$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).appendTo('.modal-body');
-											$('<table width="100%" height="150px" border="1px"/>').addClass('table').appendTo('#uploadForm');
-												$('<tbody>').attr({id:'fileTableTbody'}).appendTo('.table');
+											$('<table width="400px" height="200px" border="1px" style="border:1px dotted blue"/>').addClass('photoUploadtable').appendTo('#uploadForm');
+												$('<tbody>').attr({id:'fileTableTbody'}).appendTo('.photoUploadtable');
 													$('<tr/>').attr({id:'fileTableTbodyTr'}).appendTo('#fileTableTbody');
-														$('<td/>').attr({id:'dropZone'}).appendTo('#fileTableTbodyTr');
-					
-												
-							    // 파일 등록
-								/*
-								 * +' <a href="#" onclick="uploadFile(); return false;"
-								 * class="btn bg_01">파일 업로드</a>'
-								 */
-										$('<a/>').attr({href:'#'}).addClass('btn bg_01').text('파일 업로드').appendTo('#uploadForm').click(e=>{
+														$('<td/>').attr({id:'dropZone', style:'text-align: center; color: #007bff80; font-size: 20px;'}).html('여기로 사진을 넣어주세요').appendTo('#fileTableTbodyTr');
+										$('<a/>').attr({href:'#', id:'fileUploadBtn'}).addClass('btn bg_01').addClass('btn btn-light').text('파일 업로드').appendTo('#uploadForm').click(e=>{
 									        // 등록할 파일 리스트
 									        var uploadFileList = Object.keys(fileList);
 									        // 파일이 있는지 체크
@@ -411,24 +410,23 @@ app.permision = (()=>{
 									            for(var i = 0; i < uploadFileList.length; i++){
 									                formData.append('files', fileList[uploadFileList[i]]);
 									            }
-									            alert('formData'+ formData);
 									            $.ajax({
-									            	url:$.ctx()+'/member/fileUpload',
-									                method:'POST',
-									                contentType:'application/json',
-									                enctype:'multipart/form-data',
-									                processData:false,
-									                contentType:false,
-									                cache:false,
-									                data:formData,
-									                success:d=>{
-									                    if(result.data.length > 0){
-									                        alert("성공");
-									                        location.reload();
-									                    }else{
-									                        alert("실패");
-									                        location.reload();
-									                    }
+									            	url:$.ctx()+'/image/profile/'+$.cookie("loginID"),
+									            	dataType:'text',
+									            	processData:false,
+									            	type:'post',
+									            	data:formData,
+									            	contentType:false,
+									                success: d=>{
+									                        $('#layerpop').modal('hide')
+									                        $('#layerpop').on('hidden.bs.modal',()=>{
+									                        	app.permision.mypage(d);
+									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.avatar');
+									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.bigAvatar');
+							                                })
+									                },
+									                error : e=>{
+									                	alert("ERROR");
 									                }
 									            });
 									        }
@@ -549,8 +547,8 @@ app.permision = (()=>{
 							    function addFileList(fIndex, fileName, fileSize){
 							        var html = "";
 							        html += "<tr id='fileTr_" + fIndex + "'>";
-							        html += "    <td class='left' >";
-							        html +=         fileName + " / " + fileSize + "MB "  + "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>"
+							        html += "    <td class='center' id='fileNameLocation'>";
+							        html +=         fileName
 							        html += "    </td>"
 							        html += "</tr>"
 							 
@@ -634,8 +632,6 @@ app.service = {
 				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
 					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
 					.click(e=>{
-						alert($('#checkin_date').val());
-						alert($('#checkout_date').val());
 					});
 			/* header 끝 */
 		},

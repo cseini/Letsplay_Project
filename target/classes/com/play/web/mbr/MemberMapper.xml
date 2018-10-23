@@ -46,6 +46,9 @@
 	  	<if test=" phone != null and phone != '' ">
     		PHONE = #{phone}
     	</if>
+	  	<if test=" profileimg != null and profileimg != '' ">
+    		PROFILEIMG = #{profileimg}
+    	</if>
 	  WHERE MEMBER_ID LIKE #{member_id}
   </update>
   

@@ -1,5 +1,15 @@
 @charset "UTF-8";
 
+#fileNameLocation{
+    font-size: 20px;
+    text-align: center;
+    color: #80808099;
+}
+#fileUploadBtn{
+    display: table;
+    margin-left: auto;
+    margin-top: 15px;
+}
 
 .validAlert{
 	text-align: center;
@@ -42,10 +52,10 @@
 	margin-bottom: unset;
 }
 
-.bigAvatar{
-    width: 140px;
-    height: 145px;
-    border-radius: 70px;
+.bigAvatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 100px;
     position: relative;
     display: inline-block;
     zoom: 1.1;
@@ -89,7 +99,7 @@
 }
 
 #nav-tabs {
-    padding-left: 650px;
+     padding-left: 700px;
 }
 
 
@@ -166,7 +176,7 @@
 	margin-bottom: 15px;
 }
 
-.hjButton { -
+.hjButton { 
 	-webkit--background: linear-gradient(top, #ff4143, #ff1764);
 	background: linear-gradient(top, #ff4143, #ff1764);
 	background: #ff4143;
@@ -358,7 +368,7 @@
 	top: 140px;
 	font-size: 60px;
 	color: #ffffff;
-	margin-left: 10%;
+	margin-left: 15%;
 }
 
 .centered-left2 {
@@ -366,14 +376,14 @@
 	top: 220px;
 	font-size: 60px;
 	color: #ffffff;
-	margin-left: 10%;
+	margin-left: 15%;
 }
 
 .centered-left3 {
 	position: absolute;
 	top: 360px;
 	color: #000000;
-	margin-left: 10%;
+	margin-left: 15%;
 }
 
 .btn-search-stay {
