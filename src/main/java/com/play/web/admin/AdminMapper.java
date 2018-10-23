@@ -12,4 +12,5 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getQuarter ();
 	public List<HashMap<String,Object>> getAccomCnt ();
 	public List<HashMap<String,Object>> getGenderCnt ();
+	public List<HashMap<String,Object>> getTopLocal ();
 }

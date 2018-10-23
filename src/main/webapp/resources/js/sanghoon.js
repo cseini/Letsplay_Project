@@ -363,6 +363,43 @@ googleChart.service = {
 				 chart.draw(data, options);
 			 }
 		  });
+	  },
+	  byTopLocal : ()=>{
+		  google.charts.load('current', {'packages':['table']});
+	      google.charts.setOnLoadCallback(drawTopLocal);
+	      
+	      function drawTopLocal(){
+	    	  $.getJSON($.ctx()+'/admin/topLocal',d=>{
+	    		  var topLocal = d.topLocal;
+	    		  console.log(topLocal);
+	    		  var jsonData=[];
+	    		  for(let i = 0; i < topLocal.length; i++){
+	    			  console.log(topLocal.length);
+	    			  jsonData[i] = {"byAccom" : topLocal[i].byAccom, "accomCount" : topLocal[i].accomCount};
+	    		  }
+	    		  /*var jsonData = [
+	    			  	  {"rank" : topLocal[0].rank, "byAccom" : topLocal[0].byAccom, "accomCount" : topLocal[0].accomCount},
+	    			  	  {"rank" : topLocal[1].rank, "byAccom" : topLocal[1].byAccom, "accomCount" : topLocal[1].accomCount},
+	    			  	  {"rank" : topLocal[2].rank, "byAccom" : topLocal[2].byAccom, "accomCount" : topLocal[2].accomCount},
+	    			  	  {"rank" : topLocal[3].rank, "byAccom" : topLocal[3].byAccom, "accomCount" : topLocal[3].accomCount},
+	    			  	  {"rank" : topLocal[4].rank, "byAccom" : topLocal[4].byAccom, "accomCount" : topLocal[4].accomCount}
+	    		  ];*/
+	    		  var data = new google.visualization.DataTable();
+	    		  /*data.addColumn('number', 'rank');*/
+	    	      data.addColumn('string', 'byAccom');
+	    	      data.addColumn('number', 'accomCount');
+	    	      jsonData.forEach( function (row) {
+						 data.addRow([
+							 /*(row.rank * 1),*/
+							 row.byAccom,
+							 (row.accomCount * 1)
+						 ]);
+					 });
+	    	      var table = new google.visualization.Table(document.getElementById('top_local_div'));
+	    	      table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+	    	  });
+	      }
+	      
 	  }
 	
 };
@@ -393,8 +430,8 @@ sanghoon.service = {
 			$('<div/>').addClass('basic_last').appendTo('#page-wrapper');
 			
 			
-			$('<div/>').attr({id:'top_local'}).appendTo('.basic_last');
-			$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG'}).appendTo('#top_local');
+			$('<div/>').attr({id:'top_local_div'}).appendTo('.basic_last');
+			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG'}).appendTo('#top_local');
 			$('<div/>').attr({id:'top_views'}).appendTo('.basic_last');
 			$('<img/>').attr({src:$.img()+'/admin_test/TOP_views.PNG'}).appendTo('#top_views');
 			$('<div/>').attr({id:'top_average'}).appendTo('.basic_last');
@@ -405,6 +442,7 @@ sanghoon.service = {
 			googleChart.service.byAccomType();
 			googleChart.service.byAgeList();
 			googleChart.service.byGenderType();
+			googleChart.service.byTopLocal();
 			/*$('<div/>').attr({id:'page-wrapper', style:"padding:30px" }).appendTo($('#content'));
 			$('<div/>').addClass('row').appendTo('#page-wrapper');
 					

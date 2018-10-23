@@ -38,12 +38,12 @@ public class AdminCtrl {
 	public Map<String, Object> byBookQuarter(){
 		map.clear();
 		List<HashMap<String, Object>> byQuarter = admMap.getQuarter();
-		System.out.println(byQuarter);
+		/*System.out.println(byQuarter);
 		System.out.println(byQuarter.get(0).get("bookCount"));
 		System.out.println(byQuarter.get(1).get("bookCount"));
 		System.out.println(byQuarter.get(2).get("bookCount"));
 		System.out.println(byQuarter.get(3).get("bookCount"));
-		System.out.println(byQuarter.get(4).get("bookCount"));
+		System.out.println(byQuarter.get(4).get("bookCount"));*/
 		map.put("booked", byQuarter);
 		return map;
 	}
@@ -60,8 +60,23 @@ public class AdminCtrl {
 	public Map<String, Object> byGenderType(){
 		map.clear();
 		List<HashMap<String, Object>> byGender = admMap.getGenderCnt();
-		System.out.println(byGender);
+		//System.out.println(byGender);
 		map.put("genderType", byGender);
 		return map;
+	}
+	
+	@RequestMapping("/topLocal")
+	public Map<String, Object> byTopLocal(){
+		map.clear();
+		List<HashMap<String, Object>> byLocal = admMap.getTopLocal();
+		/*System.out.println(byLocal.get(0).get("byAccom"));
+		System.out.println(byLocal.get(0).get("accomCount"));
+		System.out.println(byLocal.get(0).get("rank"));
+		System.out.println(byLocal.get(1).get("byAccom"));
+		System.out.println(byLocal.get(1).get("accomCount"));
+		System.out.println(byLocal.get(1).get("rank"));*/
+		map.put("topLocal", byLocal);
+		return map;
+		
 	}
 }
