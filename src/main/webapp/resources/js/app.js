@@ -242,6 +242,9 @@ app.permision = (()=>{
 														success:d=>{
 															$('#modifyAlert').remove();
 															$('<div/>').html('휴대폰 번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+															$('#layerpop').on('hidden.bs.modal',()=>{
+																app.permision.mypage(d);
+							                                })
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
 													});
@@ -299,6 +302,9 @@ app.permision = (()=>{
 																		success:d=>{
 																			$('#modifyAlert').remove();
 																			$('<div/>').html('비밀번호가 성공적으로 변경되었습니다.').addClass('validSuccessAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
+																			$('#layerpop').on('hidden.bs.modal',()=>{
+																				app.permision.mypage(d);
+											                                })
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
 																	});
