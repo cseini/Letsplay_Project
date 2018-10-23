@@ -51,8 +51,10 @@ public class BoardCtrl {
 		map.put("beginRow", page.getBeginRow());
 		map.put("endRow", page.getEndRow());
 		map.put("board_id", cast.get("board_id"));
+		map.put("member_id", cast.get("member_id"));
 		List<Board> ls = brdMap.list(map);
 		map.put("list", ls);
+		Util.log.accept(ls+"");
 		map.put("page", page);
 		return map;
 	}
@@ -83,6 +85,8 @@ public class BoardCtrl {
 	@PostMapping("/cast/reWrite/")
 	public @ResponseBody void reWrite(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyWrite()");
+		Util.log.accept(cast+"");
+		/*brdMap.reSeqInc();*/
 		brdMap.reWrite(cast);;
 	}
 	
@@ -90,8 +94,22 @@ public class BoardCtrl {
 	public Map<String,Object> replyRead(@PathVariable String board_id, @PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyRead()");
 		brd = new Board();
-		brd.setBoard_depth(seq);
+		brd.setMsg_ref(seq);
 		brd.setBoard_id(board_id);
+		brd.setBoard_depth(1);
+		List<Board> ls = brdMap.reply(brd);
+		map.clear();
+		map.put("list", ls);
+		return map;
+	}
+	
+	@GetMapping("/cast/rereply/{board_id}/{seq}")
+	public Map<String,Object> rereplyRead(@PathVariable String board_id, @PathVariable int seq){
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","rereplyRead()");
+		brd = new Board();
+		brd.setMsg_ref(seq);
+		brd.setBoard_id(board_id);
+		brd.setBoard_depth(2);
 		List<Board> ls = brdMap.reply(brd);
 		map.clear();
 		map.put("list", ls);
@@ -101,14 +119,14 @@ public class BoardCtrl {
 	@PostMapping("/cast/reModify/")
 	public @ResponseBody void reModify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyModify()");
-		brdMap.reModify(cast);;
+		Util.log.accept(cast+"");
+		brdMap.reModify(cast);
 	}
 	
 	
-	@GetMapping("/cast/reDelete/{board_id}/{board_depth}/{msg_seq}")
-	public void reDelete(@PathVariable int board_depth, @PathVariable String board_id, @PathVariable int msg_seq){
+	@GetMapping("/cast/reDelete/{board_id}/{msg_seq}")
+	public void reDelete( @PathVariable String board_id, @PathVariable int msg_seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyDelete()");
-		brd.setBoard_depth(board_depth);
 		brd.setBoard_id(board_id);
 		brd.setMsg_seq(msg_seq);
 		brdMap.reDelete(brd);;

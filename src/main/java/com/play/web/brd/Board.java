@@ -24,6 +24,10 @@ public class Board {
 	private String tag;
 	private Integer like_count;
 	private Integer reply_count;
+	private Integer accom_grade;
+	private Integer accom_reco;
+	private Integer reply_seq;
+	private Integer msg_ref;
 	
 	
 	
