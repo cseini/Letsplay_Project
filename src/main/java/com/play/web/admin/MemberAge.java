@@ -9,5 +9,6 @@ import lombok.Data;
 @Data @Lazy
 public class MemberAge {
 	private int memberAge, totCount;
+	
 }
 */
