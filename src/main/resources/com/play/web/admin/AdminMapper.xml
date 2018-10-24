@@ -99,4 +99,22 @@
 		    )B
 		WHERE B.rank <![CDATA[<]]> 6
 	</select>
+	
+	<select id="getTopSales" resultType="hashmap">
+		SELECT A.accom AS accom, A.accomName, A.sumPay AS sumPay, A.rank AS rank
+		FROM(
+		    SELECT accommodation.accom_seq AS accom, accommodation.accom_name AS accomName, SUM(payment.pay_price) AS sumPay, RANK() OVER (ORDER BY sumPay DESC) AS rank
+		    FROM payment
+		    JOIN reservation
+		    ON payment.pay_no = reservation.pay_no
+		    JOIN room
+		    ON reservation.room_seq = room.room_seq
+		    JOIN accommodation
+		    ON room.accom_seq = accommodation.accom_seq
+		    GROUP BY accommodation.accom_seq
+		    ORDER BY sumPay DESC
+		    )A
+		WHERE A.rank <![CDATA[<]]> 6;
+	</select>
+	
 </mapper>

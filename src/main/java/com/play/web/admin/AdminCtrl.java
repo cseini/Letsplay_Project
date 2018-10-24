@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
+//@RequestMapping("/admin")
 public class AdminCtrl {
 	//@Autowired MemberAge mbrAge;
 	@Autowired AdminMapper admMap;
@@ -76,6 +77,20 @@ public class AdminCtrl {
 		System.out.println(byLocal.get(1).get("accomCount"));
 		System.out.println(byLocal.get(1).get("rank"));*/
 		map.put("topLocal", byLocal);
+		return map;
+		
+	}
+	@GetMapping("/admin/basic")
+	public Map<String,Object> basic(){
+		map.clear();
+		map.put("pay", admMap.getPayType());
+		map.put("booked", admMap.getQuarter());
+		map.put("accom", admMap.getAccomCnt());
+		map.put("age", admMap.getAgeCnt());
+		map.put("gender", admMap.getGenderCnt());
+		map.put("topLoc", admMap.getTopLocal());
+		//System.out.println(admMap.getTopSales());
+		map.put("topSales", admMap.getTopSales());
 		return map;
 		
 	}
