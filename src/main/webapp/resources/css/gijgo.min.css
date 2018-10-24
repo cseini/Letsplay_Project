@@ -125,7 +125,8 @@ ul.gj-list-bootstrap li [data-role=image],ul.gj-list-md li [data-role=checkbox],
 	color:rgba(0,0,0,.87)
 }
 .gj-textbox-md:active,.gj-textbox-md:focus {
-	border-bottom:2px solid rgba(0,0,0,.42);
+	border-bottom:2px solid;
+	border-color:#ED006D;
 	outline:0
 }
 .gj-textbox-md::placeholder {

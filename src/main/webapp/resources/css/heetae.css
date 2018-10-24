@@ -8,7 +8,7 @@ em{
 	font-style: normal;
 }
 
-.heetae_test222{
+.heetae_hide_ico{
 	width: 130px;
 	height:37px;
 	opacity: 0;
@@ -204,7 +204,7 @@ em{
 
 .heetae_check_bottom_con2{
 	float : right;
-	margin : -15px 8px;
+	margin : 5px 8px;
 	font-size: 21px;
     color: #ff777a;
 }
@@ -408,6 +408,114 @@ em{
 }
 
 .heetae_tab_content{
+}
+
+.heetae_tab_review_write{
+	display: block;
+}
+.heetae_write_button{
+	width: 80px;
+    height: 30px;
+    font-size: 12px;
+    vertical-align: middle;
+    border: 1px solid #343a403d;
+    color: #666666;
+    margin-left: 680px;
+    margin-top: 10px;
+}
+.heetae_card{
+	width:100%;
+	margin: 10px auto 0px;
+	resize: none;
+	overflow:hidden;
+}
+
+.heetae_textarea_support{
+	height: 50px;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    margin-bottom: 0px;
+    margin-top: -3px;
+}
+
+.heetae_textarea_counter{
+	display: inline-block;
+	font-size: 13px;
+    margin-left: 15px;
+    top: 10px;
+    vertical-align: middle;
+    color: gray;
+    position: relative;
+}
+
+.heetae_textarea_submit{
+	width: 80px;
+    height: 100%;
+    font-size: 12px;
+    vertical-align: middle;
+    border-left: 1px solid #343a403d;
+    color: #666666;
+    float: right;
+}
+
+.heetae_write_check{
+	display: inline-block;
+    margin-left: 70px;
+    margin-top: 17px;
+    position: absolute;
+    font-size: 13px;
+}
+.heetae_write_check label{
+	display: inline-block;
+    bottom: 2px;
+    left: 8px;
+    position: relative;
+    color: #ff2d60;
+}
+
+.heetae_textarea_support_ratingcontroller{
+	float: right;
+	height: 100%;
+	margin-right: 50px;
+}
+.heetae_support_header{
+	display: inline-block;
+	float: left;
+	margin-bottom: 10px;
+}
+
+.heetae_support_header div{
+	display: inline-block;
+}
+
+.heetae_review_input_title{
+	width: 400px;
+    font-size: 15px;
+    border: 1px solid #dfdfdf;
+}
+
+.heetae_fileupload_inputbox_input{
+    font-size: 14px;
+    color: #666666;
+    margin-left: 10px;
+}
+
+.heetae_textarea_support_rating{
+    width: 100px;
+    display: inline-block;
+    left: 11px;
+    top: 5px;
+    position: relative;
+}
+
+.heetae_textarea_support_rating_button{
+	width: 80px;
+    height: 100%;
+    font-size: 15px;
+    color: #666666;
+    vertical-align: middle;
+    border-right: 1px solid #ced0d1;
+    border-left: 1px solid #ced0d1;
 }
 
 .heetae_tab_content_room{

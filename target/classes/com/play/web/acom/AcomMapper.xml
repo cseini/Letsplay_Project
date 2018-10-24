@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.play.web.accom.AccomMapper">
+	<resultMap type="hashmap" id="HeeTaeBean">
+		<result property="accom_seq" column="accom_seq"/>
+		<result property="accom_name" column="accom_name"/>
+		<result property="accom_addr" column="accom_addr"/>
+		<result property="accom_phone" column="accom_phone"/>
+		<result property="accom_business_no" column="accom_business_no"/>
+		<result property="accom_type" column="accom_type"/>
+		<result property="accom_date" column="accom_date"/>
+		<result property="room_seq" column="room_seq"/>
+		<result property="room_name" column="room_name"/>
+		<result property="room_no" column="room_no"/>
+		<result property="room_price" column="room_price"/>
+		<result property="room_image1" column="room_image1"/>
+		<result property="room_image2" column="room_image2"/>
+		<result property="room_image3" column="room_image3"/>
+		<result property="msg_seq" column="msg_seq"/>
+		<result property="msg_title" column="msg_title"/>
+		<result property="msg_content" column="msg_content"/>
+		<result property="msg_photo" column="msg_photo"/>
+		<result property="msg_date" column="msg_date"/>
+		<result property="board_id" column="board_id"/>
+		<result property="member_id" column="member_id"/>
+		<result property="name" column="name"/>
+		<result property="accom_reco" column="accom_reco"/>
+		<result property="pay_no" column="pay_no"/>
+	</resultMap>
+	<select id="retrieveAcom" resultMap="HeeTaeBean">
+		select * from accommodation
+		where accom_seq like #{accom_seq}
+	</select>
+	<select id="listRoom" resultMap="HeeTaeBean">
+		select * from room
+		where accom_seq like #{accom_seq}
+	</select>
+	<select id="insertReview" resultMap="HeeTaeBean">
+		insert into acom_review(
+		MSG_TITLE, MSG_CONTENT, MSG_PHOTO, BOARD_ID, MEMBER_ID,
+		ROOM_SEQ, ACCOM_GRADE, ACCOM_RECO, PAY_NO)
+		VALUES( #{msg_title},'#{msg_content}','#{msg_photo}'
+		,'#{msg_date}','#{board_id}','#{member_id}','#{name}'
+		,'#{accom_reco}','#{pay_no}' )
+	</select>
+</mapper>
