@@ -63,7 +63,7 @@
 	</bean>
 	<mybatis-spring:scan base-package="com.play.web"/>
 	<bean id="uploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\1027\\Desktop\\springWorkspace\\Team_Project-master\\src\\main\\webapp\\resources\\img"/>		
+		<constructor-arg value="C:\\Users\\1027\\Desktop\\newWorkspace\\masterWrks\\src\\main\\webapp\\resources\\img\\profile"/>		
 	</bean>	
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	

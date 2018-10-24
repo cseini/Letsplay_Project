@@ -9,6 +9,6 @@ public class Image {
 	private String imgSeq;
 	private String imgName;
 	private String extension;
-	private String userid;
+	private String member_id;
 	private String formData;
 }
