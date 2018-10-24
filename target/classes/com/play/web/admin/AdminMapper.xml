@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.play.web.admin.AdminMapper">
+	<select id="getAgeCnt" resultType="hashmap">
+		SELECT  member_age AS memberAge
+				, COUNT(*) AS totCount
+		FROM(
+			SELECT CASE WHEN age between 20 AND 29 THEN '20'
+						WHEN age between 30 AND 39 THEN '30'
+						WHEN age between 40 AND 49 THEN '40'
+						WHEN age between 50 AND 59 THEN '50'
+					ELSE '60'
+					END
+			AS member_age
+			FROM member
+		)A
+		GROUP BY member_age
+	</select>
+	
+	<select id="getPayType" resultType="hashmap">
+		SELECT DISTINCT pay_type AS payType
+						, COUNT(pay_type) AS payTypeCount
+		FROM payment
+		GROUP BY pay_type
+	</select>
+	
+	<select id="getQuarter" resultType="hashmap">
+		SELECT booked AS booked
+			   , COUNT(*) AS bookCount
+		FROM(
+			SELECT CASE WHEN pay_date BETWEEN '2018-01-01' AND '2018-03-31' THEN '1quarter'
+						WHEN pay_date BETWEEN '2018-04-01' AND '2018-06-30' THEN '2quarter'
+						WHEN pay_date BETWEEN '2018-07-01' AND '2018-09-30' THEN '3quarter'
+						WHEN pay_date BETWEEN '2018-10-01' AND '2018-12-31' THEN '4quarter'
+						<!-- ELSE 'last' -->
+						END
+					AS 'booked'
+			FROM payment
+			) A
+		GROUP BY booked
+	</select>
+
+	<select id="getAccomCnt" resultType="hashmap">
+		SELECT accomType AS accomType
+			   , COUNT(*) AS accomCount
+		FROM(
+			SELECT CASE WHEN accom_type = 'HOTEL' THEN 'Hotel'
+						WHEN accom_type = 'MOTEL' THEN 'Motel'
+						END
+						As 'accomType'
+			FROM accommodation
+			) A
+		GROUP BY accomType
+	</select>
+
+	<select id="getGenderCnt" resultType="hashmap">
+		SELECT genderType AS genderType
+			   , COUNT(*) AS genderCount
+		FROM(
+			SELECT CASE WHEN gender = '남' THEN 'Male'
+						WHEN gender = '여' THEN 'Female'
+						END
+						AS 'genderType'
+			FROM member
+		) A
+		GROUP BY genderType
+	</select>
+	
+	<select id="getTopLocal" resultType="hashmap">
+		SELECT B.byAccom AS byAccom, B.accomCount AS accomCount, B.rank AS rank
+		FROM(
+		    SELECT byAccom, COUNT(*) AS accomCount, RANK() OVER (ORDER BY accomCount DESC) AS rank
+		    FROM(
+		        SELECT CASE WHEN accom_addr LIKE '강원%' THEN '강원'
+		                    WHEN accom_addr LIKE '경기%' THEN '경기'
+		                    WHEN accom_addr LIKE '경상남도%' THEN '경상남도'
+		                    WHEN accom_addr LIKE '경상북도%' THEN '경상북도'
+		                    WHEN accom_addr LIKE '광주%' THEN '광주'
+		                    WHEN accom_addr LIKE '대구%' THEN '대구'
+		                    WHEN accom_addr LIKE '대전%' THEN '대전'
+		                    WHEN accom_addr LIKE '부산%' THEN '부산'
+		                    WHEN accom_addr LIKE '서울%' THEN '서울'
+		                    WHEN accom_addr LIKE '세종%' THEN '세종'
+		                    WHEN accom_addr LIKE '울산%' THEN '울산'
+		                    WHEN accom_addr LIKE '인천%' THEN '인천'
+		                    WHEN accom_addr LIKE '전라남도%' THEN '전라남도'
+		                    WHEN accom_addr LIKE '전라북도%' THEN '전라북도'
+		                    WHEN accom_addr LIKE '제주%' THEN '제주'
+		                    WHEN accom_addr LIKE '충청남도%' THEN '충청남도'
+		                    WHEN accom_addr LIKE '충청북도%' THEN '충청북도'
+		                    END
+		                    AS 'byAccom' 
+		        FROM count_res
+		        )A
+		    GROUP BY byAccom
+		    ORDER BY accomCount DESC
+		    )B
+		WHERE B.rank <![CDATA[<]]> 6
+	</select>
+	
+	<select id="getTopSales" resultType="hashmap">
+		SELECT A.accom AS accom, A.accomName, A.sumPay AS sumPay, A.rank AS rank
+		FROM(
+		    SELECT accommodation.accom_seq AS accom, accommodation.accom_name AS accomName, SUM(payment.pay_price) AS sumPay, RANK() OVER (ORDER BY sumPay DESC) AS rank
+		    FROM payment
+		    JOIN reservation
+		    ON payment.pay_no = reservation.pay_no
+		    JOIN room
+		    ON reservation.room_seq = room.room_seq
+		    JOIN accommodation
+		    ON room.accom_seq = accommodation.accom_seq
+		    GROUP BY accommodation.accom_seq
+		    ORDER BY sumPay DESC
+		    )A
+		WHERE A.rank <![CDATA[<]]> 6;
+	</select>
+	<!-- 테스트 -->
+</mapper>

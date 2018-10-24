@@ -17,9 +17,15 @@
   </select>
   
   <insert id="post" >
-    INSERT INTO member
-    (MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, ZIPCODE)
-    VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{zipcode})
+  	INSERT INTO member
+  		<!-- <if test=" BIRTHDATE != null and BIRTHDATE != '' "> -->
+    		(MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, kakaoToken)
+    		VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{kakaoToken})
+  		<!-- </if> -->
+  		<!-- <if test=" BIRTHDATE == null and BIRTHDATE == '' ">
+    		(MEMBER_ID, NAME, PASSWORD, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, ZIPCODE)
+    		VALUES (#{member_id}, #{name}, #{password}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{zipcode})
+  		</if> -->
   </insert>
   
   <select id="list" resultType="com.play.web.mbr.Member">

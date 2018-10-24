@@ -2,6 +2,7 @@ package com.play.web.mbr;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -30,9 +31,13 @@ public class MemberCtrl {
 	@PostMapping("/join")
 	public void join(@RequestBody Member param) {
 		logger.info("\n--------- MemberController {} !!-----","join()");
-		param.setAge(util2.ageAndGender(param).getAge());
-		param.setGender(util2.ageAndGender(param).getGender());
-		mbrMap.post(param);
+		if(param.getBirthdate()!=null) {
+			param.setAge(util2.ageAndGender(param).getAge());
+			param.setGender(util2.ageAndGender(param).getGender());
+			mbrMap.post(param);
+		} else {
+			mbrMap.post(param);
+		}
 	}
 	
 	@PostMapping("/auth")
