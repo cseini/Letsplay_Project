@@ -116,5 +116,5 @@
 		    )A
 		WHERE A.rank <![CDATA[<]]> 6;
 	</select>
-	
+	<!-- 테스트 -->
 </mapper>
