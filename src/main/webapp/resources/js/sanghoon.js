@@ -580,7 +580,7 @@ sanghoon.service = {
 			
 			
 			$('<div/>').attr({id:'top_local_div'}).appendTo('.basic_last');
-			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG'}).appendTo('#top_local');
+			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG'}).appendTo('#top_local');주석
 			$('<div/>').attr({id:'top_sales_div'}).appendTo('.basic_last');
 			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_views.PNG'}).appendTo('#top_sales');
 			$('<div/>').attr({id:'top_average'}).appendTo('.basic_last');
