@@ -11,6 +11,47 @@ sein.board ={
 			$.getJSON($.ctx()+'/room/');
 		})*/
 		
+		
+		/*룸데이터 넣기 테스트*/
+		$('<button>/').addClass('btn btn-primary').html('drag').appendTo('#sein_content').click(e=>{
+			$('#sein_content').empty();
+			$('<div/>').attr({id:'dropzone',style:'width:500px;height:300px;'}).html('drag here').appendTo('#sein_content');
+			$(document).ready(function(){
+				$('#dropzone').on('dragenter',e=>{
+			        e.preventDefault();
+			        $(this).attr({'border':'2px solid #5272A0'});
+				})
+				$('#dropzone').on('dragover',e=>{
+					e.preventDefault();
+      				$(this).attr({'border':'2px solid #5272A0'});
+				})
+				$('#dropzone').on('dragleave',e=>{
+					e.preventDefault();
+					$(this).attr({'border':'2px solid #5272A0'});
+				})
+			})
+			$("#dropzone").on('drop',e=>{
+				e.preventDefault();
+				var files = e.originalEvent.dataTransfer.files;
+				var file = files[0];
+				console.log(file);
+				var formData = new FormData();
+				formData.append('file',file);
+				$.ajax({
+					url:$.ctx()+'/uploadAjax',
+					data : formData,
+					dataType:'text',
+					processData:false,
+					contentType:false,
+					type:'post',
+					success:d=>{
+						alert(d);
+					}
+				})
+			})
+			
+		})
+		
 		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
 
@@ -426,7 +467,6 @@ sein.service ={
 			
 		},
 		re_list : x=>{
-			
 			$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
 				$.each(d.list,(i,j)=>{
 					sein.service.re_read(j);	
@@ -546,11 +586,13 @@ sein.service ={
 			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + "/" + window.location.pathname)
 		},
 		write : x=>{
+			/*$('#layerpop').draggable();*/
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
 			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
 					$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
 					$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
 					$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
+					$('<div/>').html('첨부할 이미지 파일을 드래그 앤 드랍 해주세요.').attr({id:'dropzone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;vertical-align:middle'}),
 					$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
 					.click(e=>{
 						$.ajax({
@@ -568,8 +610,43 @@ sein.service ={
 						})
 					)
 			).appendTo($('#modalContent'));
+			$('#dropzone')
+			.on('dragenter',e=>{
+		        e.preventDefault();
+		        $('#dropzone').attr({style:'border:3px dotted blue;width:100%;height:100px;text-align:center'});
+			})
+			$('#dropzone')
+			.on('dragover',e=>{
+				e.preventDefault();
+				$('#dropzone').attr({style:'border:3px dotted red;width:100%;height:100px;text-align:center'});
+			})
+			$('#dropzone')
+			.on('dragleave',e=>{
+				e.preventDefault();
+				$('#dropzone').attr({style:'border:3px dotted pink;width:100%;height:100px;text-align:center'});
+			})
+			$('#dropzone').on('drop',e=>{
+				e.preventDefault();
+				var files = e.originalEvent.dataTransfer.files;
+				var file = files[0];
+				console.log(file);
+				var formData = new FormData();
+				formData.append('file',file);
+				$.ajax({
+					url:$.ctx()+'/cast/upload/',
+					data : formData,
+					dataType:'text',
+					processData:false,
+					contentType:false,
+					type:'post',
+					success:d=>{
+						alert(d);
+					}
+				})
+			})
 		},
 		modify : x=>{
+			$('#layerpop').draggable();
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
 			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
 				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%'}).text(x.msg_title),
@@ -827,23 +904,5 @@ sein.service ={
 				}
 			})
 		})
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 }
