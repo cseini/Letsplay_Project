@@ -545,9 +545,22 @@ googleChart.service = {
 		      function drawSales(){
 		    	  var data = new google.visualization.DataTable();
 		    	  data.addColumn('string', 'Month');
-		    	  data.addColumn('number', 'sales');
+		    	  data.addColumn('number', 'motel');
+		    	  data.addColumn('number', 'hotel');
 		    	  data.addColumn('number', 'revenue');
-		      }
+		    	  for(let i = 0; i < d.sumMotel.length-1; i++){
+		    		  data.addRow([d.sumMotel[i].monthly, d.sumMotel[i].sales * 1, d.sumHotel[i].sales * 1, (d.sumMotel[i].sales * 1) + (d.sumHotel[i].sales * 1)])
+		    	  }
+		    	  var options = {
+		    		      title : '매출',
+		    		      vAxis: {title: 'Sales'},
+		    		      hAxis: {title: 'Month'},
+		    		      seriesType: 'bars',
+		    		      series: {2: {type: 'line'}}
+		    		    };
+		    	  var chart = new google.visualization.ComboChart(document.getElementById('sales_div'));
+		    	    chart.draw(data, options);
+		      }//매출 차트
 		  });
 	  }
 	
@@ -628,9 +641,10 @@ sanghoon.service = {
 			console.log('sales 버튼 클릭');
 			$('#content').empty();
 			$('<div/>').attr({id:'page-wrapper'}).appendTo('#content');
-			$('<div/>').addClass('sales_graph').appendTo('#page-wrapper');
-			$('<img/>').attr({src:$.img()+'/admin_test/sales_graph.PNG', style:'display:block; margin-left: auto; margin-right: auto'}).appendTo('.sales_graph');
-			$('<div/>').addClass('sales_table').appendTo('#page-wrapper');
+			$('<div/>').attr({id:'sales_div'}).appendTo('#page-wrapper');
+			//$('<div/>').addClass('sales_div').appendTo('#page-wrapper');
+			//$('<img/>').attr({src:$.img()+'/admin_test/sales_graph.PNG', style:'display:block; margin-left: auto; margin-right: auto'}).appendTo('.sales_graph');
+			/*$('<div/>').addClass('sales_table').appendTo('#page-wrapper');
 			let revenue = ['수익','1100','2200','3300','4400','5500','6600','7700','8800','9900','11000','12100','13200'];
 			let hotel = ['호텔','1000','2000','3000','4000','5000','6000','7000','8000','9000','10000','11000','12000'];
 			let motel = ['모텔','100','200','300','400','500','600','700','800','900','1000','1100','1200'];
@@ -653,8 +667,9 @@ sanghoon.service = {
 			$('<tr/>').attr({id:'tbody_tr_3'}).appendTo('.tbody');
 			$.each(revenue,(i,j)=>{
 				$('<td/>').html(j).appendTo('#tbody_tr_3');
-			});
+			});*/
 			
+			googleChart.service.salesInfo();
 			
 			
 		},

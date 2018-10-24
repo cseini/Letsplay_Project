@@ -70,6 +70,9 @@
 	top: 50px;
 }
 
+#sales_div{
+	height: 600px;
+}
 /* 고객정보 css */
 .custo_div_1{
 	display: inline-blaock;

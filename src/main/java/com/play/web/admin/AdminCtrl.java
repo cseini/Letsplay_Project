@@ -92,6 +92,20 @@ public class AdminCtrl {
 		//System.out.println(admMap.getTopSales());
 		map.put("topSales", admMap.getTopSales());
 		return map;
+	}
+	@GetMapping("/admin/sales")
+	public Map<String,Object> sales(){
+		map.clear();
+		
+		map.put("sumHotel", admMap.getSumHotel());
+		map.put("sumMotel", admMap.getSumMotel());
+		System.out.println(admMap.getSumHotel().get(0).get("monthly"));
+		System.out.println(admMap.getSumHotel().get(0).get("accomType"));
+		System.out.println(admMap.getSumHotel().get(0).get("sales"));
+		System.out.println(admMap.getSumMotel().get(0).get("monthly"));
+		System.out.println(admMap.getSumMotel().get(0).get("accomType"));
+		System.out.println(admMap.getSumMotel().get(0).get("sales"));
+		return map;
 		
 	}
 }
