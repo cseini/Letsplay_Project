@@ -390,6 +390,7 @@ app.permision = (()=>{
 												$('<tbody>').attr({id:'fileTableTbody'}).appendTo('.photoUploadtable');
 													$('<tr/>').attr({id:'fileTableTbodyTr'}).appendTo('#fileTableTbody');
 														$('<td/>').attr({id:'dropZone', style:'text-align: center; color: #007bff80; font-size: 20px;'}).html('여기로 사진을 넣어주세요').appendTo('#fileTableTbodyTr');
+														
 										$('<a/>').attr({href:'#', id:'fileUploadBtn'}).addClass('btn bg_01').addClass('btn btn-light').text('파일 업로드').appendTo('#uploadForm').click(e=>{
 									        // 등록할 파일 리스트
 									        var uploadFileList = Object.keys(fileList);
@@ -410,12 +411,13 @@ app.permision = (()=>{
 									            for(var i = 0; i < uploadFileList.length; i++){
 									                formData.append('files', fileList[uploadFileList[i]]);
 									            }
+									            
 									            $.ajax({
 									            	url:$.ctx()+'/image/profile/'+$.cookie("loginID"),
 									            	dataType:'text',
-									            	processData:false,
 									            	type:'post',
 									            	data:formData,
+									            	processData:false,
 									            	contentType:false,
 									                success: d=>{
 									                        $('#layerpop').modal('hide')
@@ -442,9 +444,9 @@ app.permision = (()=>{
 							    // 파일 사이즈 리스트
 							    var fileSizeList = new Array();
 							    // 등록 가능한 파일 사이즈 MB
-							    var uploadSize = 50;
+							    var uploadSize = 1;
 							    // 등록 가능한 총 파일 사이즈 MB
-							    var maxUploadSize = 500;
+							    var maxUploadSize = 5;
 							 
 							    $(function (){
 							        fileDropDown();
@@ -476,7 +478,6 @@ app.permision = (()=>{
 							            e.preventDefault();
 							            // 드롭다운 영역 css
 							            dropZone.css('background-color','#FFFFFF');
-							            
 							            var files = e.originalEvent.dataTransfer.files;
 							            if(files != null){
 							                if(files.length < 1){
@@ -493,7 +494,6 @@ app.permision = (()=>{
 							    // 파일 선택시
 							    function selectFile(fileObject){
 							        var files = null;
-							 
 							        if(fileObject != null){
 							            // 파일 Drag 이용하여 등록시
 							            files = fileObject;
@@ -524,16 +524,12 @@ app.permision = (()=>{
 							                }else{
 							                    // 전체 파일 사이즈
 							                    totalFileSize += fileSize;
-							                    
 							                    // 파일 배열에 넣기
 							                    fileList[fileIndex] = files[i];
-							                    
 							                    // 파일 사이즈 배열에 넣기
 							                    fileSizeList[fileIndex] = fileSize;
-							 
 							                    // 업로드 파일 목록 생성
 							                    addFileList(fileIndex, fileName, fileSize);
-							 
 							                    // 파일 번호 증가
 							                    fileIndex++;
 							                }
@@ -551,7 +547,6 @@ app.permision = (()=>{
 							        html +=         fileName
 							        html += "    </td>"
 							        html += "</tr>"
-							 
 							        $('#fileTableTbody').append(html);
 							    }
 							 

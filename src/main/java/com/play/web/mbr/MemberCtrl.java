@@ -28,7 +28,7 @@ public class MemberCtrl {
 	@Autowired HashMap<String,Object>map;
 	
 	@PostMapping("/join")
-	public @ResponseBody void join(@RequestBody Member param) {
+	public void join(@RequestBody Member param) {
 		logger.info("\n--------- MemberController {} !!-----","join()");
 		param.setAge(util2.ageAndGender(param).getAge());
 		param.setGender(util2.ageAndGender(param).getGender());
@@ -36,7 +36,7 @@ public class MemberCtrl {
 	}
 	
 	@PostMapping("/auth")
-	public @ResponseBody Map<String,Object> auth(
+	public Map<String,Object> auth(
 			@RequestBody Member pm){
 		logger.info("\n--------- MemberController {} !!-----","auth()");
 		map.clear();
@@ -45,7 +45,7 @@ public class MemberCtrl {
 		return map;
 	}
 	@PostMapping("/login")
-	public @ResponseBody Map<String,Object> login(
+	public Map<String,Object> login(
 			@RequestBody Member pm) {
 		logger.info("\n--------- MemberController {} !!-----","login()");
 		Map<String,Object> rm =  new HashMap<>();
@@ -67,7 +67,7 @@ public class MemberCtrl {
 		return rm;
 	}
 	@PostMapping("/delete")
-	public @ResponseBody Map<String,Object> delete(
+	public Map<String,Object> delete(
 			@RequestBody Member pm) {
 		logger.info("\n--------- MemberController {} !!-----","delete()");
 		map.clear();
@@ -87,15 +87,14 @@ public class MemberCtrl {
 	}
 	
 	@PostMapping("/update")
-	public void modify(
-			@RequestBody Member pm) {
+	public void modify(@RequestBody Member pm) {
 		logger.info("\n--------- MemberController {} !!-----","modify()");
 		map.clear();
 		mbrMap.update(pm);
 	}
 	
 	@PostMapping("/fileUpload")
-	public @ResponseBody Map<String,Object> login(
+	public Map<String,Object> login(
 			@RequestBody Image img) {
 		logger.info("\n--------- MemberController {} !!-----","fileUpload()");
 		logger.info("img " + img);
