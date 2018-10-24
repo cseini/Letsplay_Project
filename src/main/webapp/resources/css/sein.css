@@ -356,6 +356,7 @@ input[type="search"] { -webkit-appearance:textfield; -moz-box-sizing:content-box
 .re_comment.re.close .ico_reply { top:34px }
 .re_comment .inner { padding:0 10px 0 44px }
 .re_comment .user_pic { position:absolute; top:20px; left:0; width:34px; height:34px }
+.re_comment .user_pic1 { position:relative; min-height:50px;padding:0 10px 0 68px; }
 
 .re_box .re_comment.re { position:relative; min-height:50px }
 .re_comment.re .inner { padding:0 10px 0 68px }
@@ -701,7 +702,7 @@ li.place_list .place_over li b { display:inline-block; height:28px; line-height:
 .bt_rap .bt_more { display:block; margin:60px 0 }
 .bt_rap .bt_more button { width:100%; height:44px; margin:0 auto; font-size:14px; color:#444; background:#eee; font-weight:600 }
 .bt_rap .bt_write { display:block; margin: 0 }
-.bt_rap .bt_write button { width:100%; height:44px; margin:0 auto; font-size:14px; color:#444; background:#eee; font-weight:600; margin-top:10px;margin-bottom:10px }
+.bt_rap .bt_write button { width:100%; height:44px; margin:0 auto; font-size:14px; color:#444; background:#eee; font-weight:600 }
 
 
 

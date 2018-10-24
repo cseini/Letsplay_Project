@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.play.web.brd.BoardMapper">
-<!-- <resultMap id="seinResult" type="hashmap">
+<resultMap id="seinResult" type="hashmap">
 	<result property="msg_seq" column="MSG_SEQ"/>
 	<result property="msg_title" column="MSG_TITLE"/>
 	<result property="msg_photo" column="MSG_PHOTO"/>
@@ -19,31 +19,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="tag" column="TAG"/>
 	<result property="like_count" column="LIKE_COUNT"/>
 	<result property="reply_count" column="REPLY_COUNT"/>
+	<result property="accom_grade" column="ACCOM_GRADE"/>
+	<result property="accom_reco" column="ACCOM_RECO"/>
+	<result property="reply_seq" column="REPLY_SEQ"/>
+	<result property="msg_ref" column="MSG_REF"/>
 	<result property="nickname" column="NICKNAME"/>
-</resultMap> -->
+	<result property="password" column="NICKpasswordNAME"/>
+	<result property="birthdate" column="birthdate"/>
+	<result property="joindate" column="joindate"/>
+	<result property="gender" column="gender"/>
+	<result property="age" column="age"/>
+	<result property="phone" column="phone"/>
+	<result property="customer_grade" column="customer_grade"/>
+	<result property="point" column="point"/>
+	<result property="address" column="address"/>
+	<result property="zipcode" column="zipcode"/>
+	<result property="profileimg" column="profileimg"/>
+</resultMap>
 
   <insert id="write">
    INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG)
    VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}) 
   </insert>
   
-  <select id="list" resultType="com.play.web.brd.Board">
+  <select id="list" resultMap="seinResult">
 	SELECT *
        FROM (
            SELECT
                ROW_NUMBER() OVER(ORDER BY msg_seq DESC) AS NUM,
-               A.*
-           FROM
-               BOARD A
-           WHERE board_depth like 0
-           AND board_id like #{board_id}
+               a.*, m.NICKNAME
+           FROM board a
+           	JOIN member m
+           	ON a.MEMBER_ID = m.MEMBER_ID
+           WHERE a.board_depth like 0
+           AND a.board_id like #{board_id}
+           <if test="member_id != null">
+           		AND a.MEMBER_ID like #{member_id}
+           </if>
        )B
        WHERE B.NUM BETWEEN #{beginRow} AND #{endRow}
        ORDER BY B.NUM
   </select>
   
-  <select id="read" resultType="com.play.web.brd.Board">
-  	SELECT * FROM board
+  <select id="read" resultMap="seinResult">
+  	SELECT a.*, m.nickname
+  	FROM board a
+	  	JOIN member m
+	    ON a.MEMBER_ID = m.MEMBER_ID
   	WHERE MSG_SEQ like #{msg_seq}
   </select>
   
@@ -60,8 +82,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </delete>
   
   <insert id="reWrite">
-  	INSERT INTO board (MSG_CONTENT, BOARD_DEPTH, BOARD_ID, MEMBER_ID)
-  	VALUES (#{msg_content}, #{msg_seq}, #{board_id}, #{member_id})
+  	INSERT INTO board (MSG_CONTENT,BOARD_DEPTH, MSG_REF, BOARD_ID, MEMBER_ID, REPLY_SEQ)
+  	VALUES (#{msg_content},#{board_depth}, #{msg_seq}, #{board_id}, #{member_id}, 
+  		nvl((SELECT MAX(REPLY_SEQ)+1
+  		FROM board b
+ 		WHERE BOARD_ID LIKE #{board_id}
+  		AND BOARD_DEPTH LIKE #{board_depth}
+  		AND MSG_REF LIKE #{msg_seq}
+  		),1)
+  	)
   </insert>
   
   <select id="reply" resultType="com.play.web.brd.Board">
@@ -72,22 +101,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                A.*
            FROM
                board A
-           WHERE board_depth like #{board_depth}
+           WHERE msg_ref like #{msg_ref}
            AND board_id like #{board_id}
+           AND board_depth like #{board_depth}
        )B
   </select>
   
   <update id="reModify">
   	UPDATE board SET MSG_CONTENT=#{msg_content}
-  	WHERE BOARD_DEPTH LIKE #{board_depth}
-  	AND BOARD_ID LIKE #{board_id}
+  	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </update>
   
   <delete id="reDelete">
   	DELETE FROM board 
-  	WHERE BOARD_DEPTH LIKE #{board_depth}
-  	AND BOARD_ID LIKE #{board_id}
+  	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </delete>
     

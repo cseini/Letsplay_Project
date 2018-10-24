@@ -1,5 +1,6 @@
 package com.play.web.brd;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +27,6 @@ public class BoardCtrl {
 	static final Logger logger = LoggerFactory.getLogger(BoardCtrl.class);
 	@Autowired Util2 util2;
 	@Autowired Board brd;
-	/*@Autowired SeinResult sr;*/
 	@Autowired BoardMapper brdMap;
 	@Autowired Pagination page;
 	@Autowired TxService tx;
@@ -36,8 +37,7 @@ public class BoardCtrl {
 	@PostMapping("/cast/write/")
 	public @ResponseBody void write(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","write()");
-		cast.setMember_id("A3");
-		cast.setMsg_photo("cast_3.jpg");
+		cast.setMsg_photo(cast.getMsg_seq()+".jpg");
 		brdMap.write(cast);;
 	}
 	
@@ -45,23 +45,23 @@ public class BoardCtrl {
 	public @ResponseBody Map<String,Object> list(@RequestBody Map<String,Object>cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","list");
 		map.clear();
-		Util.log.accept(cast.get("pageNumber")+"");
 		map.put("pageNumber",Integer.parseInt((String) cast.get("pageNumber")));
 		map.put("countRow",brdMap.count());
 		page.carryOut(map);
-		Util.log.accept(page+"");
 		map.clear();
 		map.put("beginRow", page.getBeginRow());
 		map.put("endRow", page.getEndRow());
 		map.put("board_id", cast.get("board_id"));
+		map.put("member_id", cast.get("member_id"));
 		List<Board> ls = brdMap.list(map);
 		map.put("list", ls);
+		Util.log.accept(ls+"");
 		map.put("page", page);
 		return map;
 	}
 	
 	@GetMapping("/cast/read/{seq}")
-	public Board read(@PathVariable int seq){
+	public HashMap<String,SeinResult> read(@PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","read()");
 		brd.setMsg_seq(seq);
 		brdMap.readInc(seq);
@@ -71,7 +71,7 @@ public class BoardCtrl {
 	@PostMapping("/cast/modify/")
 	public @ResponseBody void modify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","modify()");
-		Util.log.accept(cast+"");
+		Util.log.accept("msg_title : "+cast.getMsg_title()+"");
 		brdMap.modify(cast);;
 	}
 	
@@ -86,6 +86,8 @@ public class BoardCtrl {
 	@PostMapping("/cast/reWrite/")
 	public @ResponseBody void reWrite(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyWrite()");
+		Util.log.accept(cast+"");
+		/*brdMap.reSeqInc();*/
 		brdMap.reWrite(cast);;
 	}
 	
@@ -93,8 +95,22 @@ public class BoardCtrl {
 	public Map<String,Object> replyRead(@PathVariable String board_id, @PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyRead()");
 		brd = new Board();
-		brd.setBoard_depth(seq);
+		brd.setMsg_ref(seq);
 		brd.setBoard_id(board_id);
+		brd.setBoard_depth(1);
+		List<Board> ls = brdMap.reply(brd);
+		map.clear();
+		map.put("list", ls);
+		return map;
+	}
+	
+	@GetMapping("/cast/rereply/{board_id}/{seq}")
+	public Map<String,Object> rereplyRead(@PathVariable String board_id, @PathVariable int seq){
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","rereplyRead()");
+		brd = new Board();
+		brd.setMsg_ref(seq);
+		brd.setBoard_id(board_id);
+		brd.setBoard_depth(2);
 		List<Board> ls = brdMap.reply(brd);
 		map.clear();
 		map.put("list", ls);
@@ -104,14 +120,14 @@ public class BoardCtrl {
 	@PostMapping("/cast/reModify/")
 	public @ResponseBody void reModify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyModify()");
-		brdMap.reModify(cast);;
+		Util.log.accept(cast+"");
+		brdMap.reModify(cast);
 	}
 	
 	
-	@GetMapping("/cast/reDelete/{board_id}/{board_depth}/{msg_seq}")
-	public void reDelete(@PathVariable int board_depth, @PathVariable String board_id, @PathVariable int msg_seq){
+	@GetMapping("/cast/reDelete/{board_id}/{msg_seq}")
+	public void reDelete( @PathVariable String board_id, @PathVariable int msg_seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyDelete()");
-		brd.setBoard_depth(board_depth);
 		brd.setBoard_id(board_id);
 		brd.setMsg_seq(msg_seq);
 		brdMap.reDelete(brd);;
@@ -127,6 +143,11 @@ public class BoardCtrl {
 	public void likeDes(@PathVariable int msg_seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","likeDes()");
 		brdMap.likeDes(msg_seq);
+	}
+	
+	@PostMapping("/cast/upload/")
+	public @ResponseBody void castUpload(@RequestBody HashMap<String, Object> hashmap) {
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","fileUpload()");
 	}
 	
 	

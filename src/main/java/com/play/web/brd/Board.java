@@ -1,12 +1,9 @@
 package com.play.web.brd;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import com.play.web.mbr.Member;
 
 import lombok.Data;
 @Component
@@ -27,6 +24,10 @@ public class Board {
 	private String tag;
 	private Integer like_count;
 	private Integer reply_count;
+	private Integer accom_grade;
+	private Integer accom_reco;
+	private Integer reply_seq;
+	private Integer msg_ref;
 	
 	
 	

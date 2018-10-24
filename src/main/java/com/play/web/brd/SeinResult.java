@@ -8,6 +8,7 @@ import lombok.Data;
 @Component
 @Data @Lazy
 public class SeinResult {
+	/*Board bean*/
 	private Integer msg_seq;
 	private String msg_title;
 	private String msg_photo;
@@ -23,7 +24,7 @@ public class SeinResult {
 	private String tag;
 	private Integer like_count;
 	private Integer reply_count;
+	
+	/*member bean*/
 	private String name, password, birthdate, joindate, gender, age, phone, customer_grade, point, nickname, address, zipcode, profileimg;
-	int countRow, pageNumber,beginRow, endRow, pageSize, blockSize, pageCount, blockCount, beginPage, endPage, prevBlock, nextBlock, lastBlockPage;
-	boolean existPrev, existNext;
 }
