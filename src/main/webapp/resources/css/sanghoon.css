@@ -100,33 +100,33 @@
 /* basic css */
 .basic_first{
 	position: relative;
-	width: 100%;
+	width: 85%;
 	height: 220px;
 	left: 15%;
 }
 .basic_middle{
 	position: relative;
-	width: 100%;
+	width: 85%;
 	height: 250px;
 	left: 15%;
 }
 .basic_last{
 	position: relative;
-	width: 100%;
+	width: 85%;
 	height: 250px;
 	left: 15%;
 }
-#available{
+#pay_type_div{
 	display: inline-block;
 	width:300px;
 	height: 170px;
 }
-#booked{
+#booked_div{
 	display: inline-block;
 	width:300px;
 	height: 170px;
 }
-#have_accom_type{
+#have_accom_div{
 	display: inline-block;
 	width: 500px;
 	height: 170px;
@@ -135,15 +135,15 @@
 	display: inline-block;
 	width: 700px;
 }
-#member_gender{
+#member_gender_div{
 	display: inline-block;
 	width: 400px;
 }
-#top_local{
+#top_local_div{
 	display: inline-block;
 	width: 400px;
 }
-#top_views{
+#top_sales_div{
 	display: inline-block;
 	width: 400px;
 }

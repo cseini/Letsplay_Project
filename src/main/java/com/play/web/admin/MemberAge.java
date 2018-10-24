@@ -1,4 +1,4 @@
-package com.play.web.admin;
+/*package com.play.web.admin;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -10,3 +10,4 @@ import lombok.Data;
 public class MemberAge {
 	private int memberAge, totCount;
 }
+*/
