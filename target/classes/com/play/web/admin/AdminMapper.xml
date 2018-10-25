@@ -3,6 +3,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.play.web.admin.AdminMapper">
+<!-- <resultMap id="sanghoonResult" type="hashmap">
+	<result property="accom_addr" column="accom_addr"/>
+</resultMap> -->
 	<select id="getAgeCnt" resultType="hashmap">
 		SELECT  member_age AS memberAge
 				, COUNT(*) AS totCount
@@ -247,5 +250,75 @@
 			)A
 		where A.ACCOM_TYPE = 'MOTEL'
 		GROUP BY A.monthly
+	</select>
+	
+	<select id="getByPrice" resultType="hashmap">
+		SELECT concat(B.byPrice, '원대') AS byPrice,
+		       B.reserCount AS reserCount,
+		       B.roomSeq AS roomSeq
+		FROM (SELECT CASE
+		                WHEN A.room_price BETWEEN 30000 AND 39000 THEN 30000
+		                WHEN A.room_price BETWEEN 40000 AND 49000 THEN 40000
+		                WHEN A.room_price BETWEEN 50000 AND 59000 THEN 50000
+		                WHEN A.room_price BETWEEN 60000 AND 69000 THEN 60000
+		                WHEN A.room_price BETWEEN 70000 AND 79000 THEN 70000
+		                WHEN A.room_price BETWEEN 80000 AND 89000 THEN 80000
+		                WHEN A.room_price BETWEEN 90000 AND 99000 THEN 90000
+		                WHEN A.room_price BETWEEN 100000 AND 109000 THEN 100000
+		                WHEN A.room_price BETWEEN 110000 AND 119000 THEN 110000
+		                WHEN A.room_price BETWEEN 120000 AND 129000 THEN 120000
+		                WHEN A.room_price BETWEEN 130000 AND 139000 THEN 130000
+		                WHEN A.room_price BETWEEN 140000 AND 149000 THEN 140000
+		                WHEN A.room_price BETWEEN 150000 AND 159000 THEN 150000
+		                WHEN A.room_price BETWEEN 160000 AND 169000 THEN 160000
+		                WHEN A.room_price BETWEEN 170000 AND 179000 THEN 170000
+		                ELSE 180000
+		             END
+		                AS byPrice,
+		             count(reservation.res_no)
+		                AS reserCount,
+		             A.room_seq
+		                AS roomSeq
+		      FROM reservation
+		           JOIN
+		           (SELECT room.room_seq, room.room_price
+		            FROM room
+		            WHERE room.accom_seq IN
+		                     (SELECT accommodation.accom_seq
+		                      FROM accommodation
+		                      WHERE accommodation.accom_addr LIKE #{accom_addr})) A
+		              ON reservation.room_seq = A.room_seq
+		      WHERE reservation.res_date BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01'))
+		                                     AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+		      GROUP BY A.room_price) B
+		GROUP BY B.byPrice
+	</select>
+	
+	<select id="getLocalHo" resultType="hashmap">
+		select count(reservation.res_no) hoResrCount
+		from reservation
+		where reservation.room_seq
+		in (
+		    select room.room_seq
+		    from room
+		    where room.accom_seq
+		    in (
+		        select accom_seq
+		        from accommodation
+		        where accom_addr like '서울%' and accom_type ='HOTEL'))
+	</select>
+	
+	<select id="getLocalMo" resultType="hashmap">
+		select count(reservation.res_no) moResrCount
+		from reservation
+		where reservation.room_seq
+		in (
+		    select room.room_seq
+		    from room
+		    where room.accom_seq
+		    in (
+		        select accom_seq
+		        from accommodation
+		        where accom_addr like '서울%' and accom_type ='MOTEL'))
 	</select>
 </mapper>

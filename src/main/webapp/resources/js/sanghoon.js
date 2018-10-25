@@ -59,348 +59,9 @@ sanghoon.main =(()=>{
 	return {init:init};
 		
 })();
-/*sanghoon.admin =(()=>{
-	var basic = ()=>{
-		
-	}
-})();*/
 
 googleChart.service = {
 		
-	/*byAgeList : () =>{		
-		google.charts.load("current", {packages:['corechart']});
-	    google.charts.setOnLoadCallback( googleChart.service.drawAgeListChart );
-		 
-	},
-	drawAgeListChart : ()=> {
-		$.ajax({
-			url:$.ctx()+'/admin/count',
-			method:'post',
-			contentType:'application/json',
-			success:d=>{
-				var list = "";
-				list = d.list;
-				console.log(d.list);
-				console.log(d.list[0].memberAge);
-				console.log(list[1].memberAge);
-				var jsonData = [
-					{"memberAge" : list[0].memberAge+"", "totCount" : list[0].totCount},
-					{"memberAge" : list[1].memberAge+"", "totCount" : list[1].totCount},
-					{"memberAge" : list[2].memberAge+"", "totCount" : list[2].totCount},
-					{"memberAge" : list[3].memberAge+"", "totCount" : list[3].totCount},
-					{"memberAge" : list[4].memberAge+"", "totCount" : list[4].totCount}
-				];
-				var jsonData = [
-						{"memberAge" : "20", "totCount" : "130" },
-						{"memberAge" : "30", "totCount" : "180" },
-						{"memberAge" : "40", "totCount" : "100" },
-						{"memberAge" : "50", "totCount" : "110" },
-						{"memberAge" : "60", "totCount" : "120" }
-				];
-				
-				
-				
-				//데이터 호출	
-			      var data = new google.visualization.DataTable();
-			      data.addColumn('string', 'memberAge');
-			      data.addColumn('number', 'totCount');	      
-
-			      
-			      jsonData.forEach( function (row) {
-			    //	 console.log(row);
-			        data.addRow([
-			          row.memberAge,
-			          (row.totCount * 1)           
-			        ]);
-			      });
-
-			      var view = new google.visualization.DataView(data);
-			      view.setColumns([0, 1]);
-			      
-
-			      var options = {
-			        title: "연령대별 회원수",
-			        width: 600,
-			        height: 400,
-			        bar: {groupWidth: "95%"},
-			        legend: {position: "none"},
-			      };
-			      var chart = new google.visualization.ColumnChart(document.getElementById('age_member'));
-			      chart.draw(view, options);
-			}
-		});
-		var jsonData = [
-			{"memberAge" : list[0].memberAge, "totCount" : list[0].totCount},
-			{"memberAge" : list[1].memberAge, "totCount" : list[1].totCount},
-			{"memberAge" : list[2].memberAge, "totCount" : list[2].totCount},
-			{"memberAge" : list[3].memberAge, "totCount" : list[3].totCount},
-			{"memberAge" : list[4].memberAge, "totCount" : list[4].totCount}
-		];
-		var jsonData = [
-				{"memberAge" : "20", "totCount" : "130" },
-				{"memberAge" : "30", "totCount" : "180" },
-				{"memberAge" : "40", "totCount" : "100" },
-				{"memberAge" : "50", "totCount" : "110" },
-				{"memberAge" : "60", "totCount" : "120" }
-		];
-		
-		
-		
-		//데이터 호출	
-	      var data = new google.visualization.DataTable( );
-	      data.addColumn('string', 'memberAge');
-	      data.addColumn('number', 'totCount');	      
-
-	      
-	      jsonData.forEach( function (row) {
-	    	 console.log( row );
-	        data.addRow([
-	          row.memberAge,
-	          ( row.totCount * 1 )           
-	        ]);
-	      });
-
-	      var view = new google.visualization.DataView(data);
-	      view.setColumns([0, 1]);
-	      
-
-	      var options = {
-	        title: "연령대별 회원수",
-	        width: 600,
-	        height: 400,
-	        bar: {groupWidth: "95%"},
-	        legend: { position: "none" },
-	      };
-	      var chart = new google.visualization.ColumnChart(document.getElementById( 'age_member' ));
-	      chart.draw(view, options);
-	  },
-	  byPayType : () =>{
-		// Load the Visualization API and the corechart package.
-	      google.charts.load('current', {'packages':['corechart']});
-	      // Set a callback to run when the Google Visualization API is loaded.
-	      google.charts.setOnLoadCallback(googleChart.service.drawPayType);
-	  },
-	  drawPayType : () =>{
-		  $.ajax({
-			  url:$.ctx()+'/admin/payTypeCount',
-			  method:'post',
-			  contentType:'application/json',
-			  success:d=>{
-				  var payType = "";
-				  payType = d.payType;
-				  var jsonData = [
-						{"payType" : payType[0].payType, "payTypeCount" : payType[0].payTypeCount },
-						{"payType" : payType[1].payType, "payTypeCount" : payType[1].payTypeCount },
-						{"payType" : payType[2].payType, "payTypeCount" : payType[2].payTypeCount },
-						{"payType" : payType[3].payType, "payTypeCount" : payType[3].payTypeCount },
-						{"payType" : payType[4].payType, "payTypeCount" : payType[4].payTypeCount }
-						];
-					// Create the data table.
-				        var data = new google.visualization.DataTable();
-				        data.addColumn('string', 'payType');
-				        data.addColumn('number', 'payTypeCount');
-				        jsonData.forEach( function (row) {
-					//    	 console.log(row);
-					        data.addRow([
-					          row.payType,
-					          (row.payTypeCount * 1)           
-					        ]);
-					      });
-				        var options = {'title':'결제타입',
-			                       'width':400,
-			                       'height':300};
-
-			        // Instantiate and draw our chart, passing in some options.
-			        var chart = new google.visualization.PieChart(document.getElementById('pay_type_div'));
-			        chart.draw(data, options);
-			  }
-			  
-		  });
-		  var jsonData = [
-			{"" : "", "" : "" },
-			{"" : "", "" : "" },
-			{"" : "", "" : "" },
-			{"" : "", "" : "" },
-			{"" : "", "" : "" }
-			];
-		// Create the data table.
-	        var data = new google.visualization.DataTable();
-	        data.addColumn('string', 'payType');
-	        data.addColumn('number', 'count');
-	        jsonData.forEach( function (row) {
-		    	 console.log(row);
-		        data.addRow([
-		          row.memberAge,
-		          (row.totCount * 1)           
-		        ]);
-		      });
-	        data.addRows([ 원본
-	          ['Mushrooms', 3],
-	          ['Onions', 1],
-	          ['Olives', 1],
-	          ['Zucchini', 1],
-	          ['Pepperoni', 2]
-	        ]);
-		// Set chart options
-	        var options = {'title':'결제타입',
-	                       'width':400,
-	                       'height':300};
-
-	        // Instantiate and draw our chart, passing in some options.
-	        var chart = new google.visualization.PieChart(document.getElementById('available'));
-	        chart.draw(data, options);
-	  },
-	  byQuarter : () =>{
-		  google.charts.load("current", {packages:["corechart"]});
-	      google.charts.setOnLoadCallback(googleChart.service.drawQuarter);
-	  },
-	  drawQuarter : () =>{
-		  $.ajax({
-			 url:$.ctx()+'/admin/quarter',
-			 method:'post',
-			 contentType:'application/json',
-			 success:d=>{
-				 var quarter = "";
-				 quarter = d.booked;
-				 console.log(quarter[1].booked);
-				 var jsonData = [
-						{"booked" : quarter[1].booked, "bookCount" : quarter[1].bookCount },
-						{"booked" : quarter[2].booked, "bookCount" : quarter[2].bookCount },
-						{"booked" : quarter[3].booked, "bookCount" : quarter[3].bookCount },
-						{"booked" : quarter[4].booked, "bookCount" : quarter[4].bookCount }
-						];
-				 var data = new google.visualization.DataTable();
-			        data.addColumn('string', 'booked');
-			        data.addColumn('number', 'bookCount');
-			        jsonData.forEach( function (row) {
-				//    	 console.log(row);
-				        data.addRow([
-				          row.booked,
-				          (row.bookCount * 1)           
-				        ]);
-				      });
-			        var options = {'title':'분기별 예약',
-		                       'width':400,
-		                       'height':300,
-		                       'is3D':true,};
-			        var chart = new google.visualization.PieChart(document.getElementById('booked_div'));
-			        chart.draw(data, options);
-			 }
-		  });
-	  },
-	  byAccomType : ()=>{
-		  google.charts.load("current", {packages:["corechart"]});
-		  google.charts.setOnLoadCallback(googleChart.service.drawAccomType);
-	  },
-	  drawAccomType : ()=>{
-		  $.ajax({
-			  url:$.ctx()+'/admin/accomCount',
-			  method:'post',
-			  contentType:'application/json',
-			  success:d=>{
-				  var accomType= "";
-				  accomType = d.accomType;
-				  var jsonData = [
-					  	 {"accomType" : accomType[0].accomType, "accomCount" : accomType[0].accomCount },
-					  	 {"accomType" : accomType[1].accomType, "accomCount" : accomType[1].accomCount }
-				  ];
-				  var data = new google.visualization.DataTable();
-				  data.addColumn('string', 'accomType');
-				  data.addColumn('number', 'accomCount');
-				  
-				  jsonData.forEach( function (row) {
-			//	    	 console.log(row);
-				        data.addRow([
-				          row.accomType,
-				          (row.accomCount * 1)           
-				        ]);
-				      });
-				  var view = new google.visualization.DataView(data);
-				  view.setColumns([0, 1]);
-				  
-				  var options = {
-					        title: "숙소 타입",
-					        width: 600,
-					        height: 400,
-					        bar: {groupWidth: "95%"},
-					        legend: { position: "none" },
-					      };
-					      var chart = new google.visualization.BarChart(document.getElementById("have_accom_div"));
-					      chart.draw(view, options);
-			  }
-		  });
-	  },
-	  byGenderType : ()=>{
-		  google.charts.load("current", {packages:["corechart"]});
-	      google.charts.setOnLoadCallback(googleChart.service.drawGenderType);
-	  },
-	  drawGenderType : ()=>{
-		  $.ajax({
-			 url:$.ctx()+'/admin/genderCount',
-			 method:'post',
-			 contentType:'application/json',
-			 success:d=>{
-				 var gender = "";
-				 gender = d.genderType;
-				 var jsonData = [
-					    {"genderType" : gender[0].genderType, "genderCount" : gender[0].genderCount},
-					    {"genderType" : gender[1].genderType, "genderCount" : gender[1].genderCount}
-				 ];
-				 var data = new google.visualization.DataTable();
-				 data.addColumn('string', 'genderType');
-				 data.addColumn('number', 'genderCount');
-				 jsonData.forEach( function (row) {
-					 data.addRow([
-						 row.genderType,
-						 (row.genderCount * 1)
-					 ]);
-				 });
-				 var options = {'title':'회원 성별',
-	                       'width':400,
-	                       'height':300,
-	                       'pieHole':0.4,};
-				 var chart = new google.visualization.PieChart(document.getElementById('member_gender_div'));
-				 chart.draw(data, options);
-			 }
-		  });
-	  },
-	  byTopLocal : ()=>{
-		  google.charts.load('current', {'packages':['table']});
-	      google.charts.setOnLoadCallback(drawTopLocal);
-	      
-	      function drawTopLocal(){
-	    	  $.getJSON($.ctx()+'/admin/topLocal',d=>{
-	    		  var topLocal = d.topLocal;
-	    		  console.log(topLocal);
-	    		  var jsonData=[];
-	    		  for(let i = 0; i < topLocal.length; i++){
-	    			  console.log(topLocal.length);
-	    			  jsonData[i] = {"byAccom" : topLocal[i].byAccom, "accomCount" : topLocal[i].accomCount};
-	    		  }
-	    		  var jsonData = [
-	    			  	  {"rank" : topLocal[0].rank, "byAccom" : topLocal[0].byAccom, "accomCount" : topLocal[0].accomCount},
-	    			  	  {"rank" : topLocal[1].rank, "byAccom" : topLocal[1].byAccom, "accomCount" : topLocal[1].accomCount},
-	    			  	  {"rank" : topLocal[2].rank, "byAccom" : topLocal[2].byAccom, "accomCount" : topLocal[2].accomCount},
-	    			  	  {"rank" : topLocal[3].rank, "byAccom" : topLocal[3].byAccom, "accomCount" : topLocal[3].accomCount},
-	    			  	  {"rank" : topLocal[4].rank, "byAccom" : topLocal[4].byAccom, "accomCount" : topLocal[4].accomCount}
-	    		  ];
-	    		  var data = new google.visualization.DataTable();
-	    		  data.addColumn('number', 'rank');
-	    	      data.addColumn('string', 'byAccom');
-	    	      data.addColumn('number', 'accomCount');
-	    	      jsonData.forEach( function (row) {
-						 data.addRow([
-							 (row.rank * 1),
-							 row.byAccom,
-							 (row.accomCount * 1)
-						 ]);
-					 });
-	    	      var table = new google.visualization.Table(document.getElementById('top_local_div'));
-	    	      table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-	    	  });
-	      }
-	      
-	  },*/
 	  basicInfo : () => {
 		  $.getJSON($.ctx()+'/admin/basic',d=>{
 			  google.charts.load("current", {packages:['corechart']});
@@ -562,6 +223,32 @@ googleChart.service = {
 		    	    chart.draw(data, options);
 		      }//매출 차트
 		  });
+	  },
+	  accomInfo : x =>{
+		  alert(x);
+		  $.getJSON($.ctx()+'/admin/accom/'+x, d=>{
+			  google.charts.load('current', {'packages':['corechart']});
+		      google.charts.setOnLoadCallback(drawPrice);
+		      function drawPrice(){
+		    	  var data = new google.visualization.DataTable();
+		    	  data.addColumn('number', 'price');
+		    	  data.addColumn('number', 'count');
+		    	  $.each(d.accomPrice, (i,j)=>{
+		    		  data.addRow([
+		    			  (j.byPrice * 1),
+		    			  (j.reserCount * 1)
+		    		  ]);
+		    	  });
+		    	  var options = {
+		    	          title: '가격대별 예약수',
+		    	          hAxis: {title: 'price', minValue: 0, maxValue: 15},
+		    	          vAxis: {title: 'count', minValue: 0, maxValue: 15},
+		    	          legend: 'none'
+		    	        };
+		    	  var chart = new google.visualization.ScatterChart(document.getElementById('price_reservation'));
+		    	  chart.draw(data, options);
+		      }
+		  });
 	  }
 	
 };
@@ -599,42 +286,7 @@ sanghoon.service = {
 			$('<div/>').attr({id:'top_average'}).appendTo('.basic_last');
 			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_average.PNG'}).appendTo('#top_average');
 			
-			/*googleChart.service.byPayType();
-			googleChart.service.byQuarter();
-			googleChart.service.byAccomType();
-			googleChart.service.byAgeList();
-			googleChart.service.byGenderType();
-			googleChart.service.byTopLocal();*/
 			googleChart.service.basicInfo();
-			/*$('<div/>').attr({id:'page-wrapper', style:"padding:30px" }).appendTo($('#content'));
-			$('<div/>').addClass('row').appendTo('#page-wrapper');
-					
-				$('<div/>').addClass('col-lg-3').attr({id:'graph_1', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/pie_graph_1.PNG', style:'width:100%'}).appendTo('#graph_1');
-					
-					
-				$('<div/>').addClass('col-lg-3').attr({id:'graph_2', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/pie_graph_2.PNG', style:'width:100%'}).appendTo('#graph_2');
-					
-					
-				$('<div/>').addClass('col-lg-6').attr({id:'graph_3', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/accom_type_graph.PNG', style:'width:80%; height:100%'}).appendTo('#graph_3');
-				
-				
-				$('<div/>').addClass('col-lg-7').attr({style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/customer_graph.PNG', style:'width:100%; height:100%'}).appendTo('.col-lg-7');
-				$('<div/>').addClass('col-lg-5').attr({style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/customer_gen_graph.PNG', style:'width:75%'}).appendTo('.col-lg-5');
-				
-				
-				$('<div/>').addClass('col-lg-4').attr({id:'col_3', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG', style:'width:70%'}).appendTo('#col_3');
-				$('<div/>').addClass('col-lg-4').attr({id:'col_4', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/TOP_views.PNG', style:'width:70%'}).appendTo('#col_4');
-				$('<div/>').addClass('col-lg-4').attr({id:'col_5', style:'padding:30px'}).appendTo('.row');
-					$('<img/>').attr({src:$.img()+'/admin_test/TOP_average.PNG', style:'width:70%'}).appendTo('#col_5');*/
-			
-			 
 			
 		},
 		sales : x=>{
@@ -680,13 +332,18 @@ sanghoon.service = {
 				$('<div/>').addClass('left_wrapper').appendTo('#page-wrapper');
 							
 					$('<div/>').attr({id:'local_box'}).appendTo('.left_wrapper')
+					
 					$('<select/>').attr({id:'local_sel'}).appendTo('#local_box');
 					$.each(['서울','경기','인천','강원','제주','대전','충북','충남','세종','부산','울산','경남','대구','경북','광주','전남','전주','전북'],(i,j)=>{
-						$('<option/>').attr({value:j}).html(j).appendTo('#local_sel');
-					});
-					
+						$('<option/>').attr({value:j}).html(j).appendTo('#local_sel')
+						});
+					$('#local_sel').change(function(){
+						var imsi = $(this).val(); 
+						alert(imsi);
+						googleChart.service.accomInfo(imsi);
+						});
 					$('<div/>').attr({id:'price_reservation'}).appendTo('.left_wrapper');
-						$('<img/>').attr({src:$.img()+'/admin_test/price_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#price_reservation');
+						//$('<img/>').attr({src:$.img()+'/admin_test/price_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#price_reservation');
 					$('<div/>').attr({id:'accom_reservation'}).appendTo('.left_wrapper');
 							$('<img/>').attr({src:$.img()+'/admin_test/accom_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#accom_reservation');
 				$('<div/>').addClass('right_wrapper').appendTo('#page-wrapper');
@@ -728,7 +385,7 @@ sanghoon.service = {
 						} 
 					});
 							//$('<img/>').attr({src:$.img()+'/admin_test/location.PNG', style:'width:500px; display:block; margin-left: auto; margin-right: auto'}).appendTo('#location');
-			
+					googleChart.service.accomInfo('서울');
 		},
 		custo : x=>{
 			console.log('custo 버튼 클릭');
