@@ -25,9 +25,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>  <!-- 형준 로그인 참고 -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" /> -->
 	<script src="${context}/resources/js/gijgo.min.js"></script>
-
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
 	<script src="${context}/resources/js/app.js"></script>
 </head>
