@@ -14,4 +14,7 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getGenderCnt ();
 	public List<HashMap<String,Object>> getTopLocal ();
 	public List<HashMap<String,Object>> getTopSales ();
+	public List<HashMap<String,Object>> getSumHotel ();
+	public List<HashMap<String,Object>> getSumMotel ();
+	public List<HashMap<String,Object>> getByPrice (String accom_addr);
 }
