@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface BoardMapper {
 	public void write(Board vo);
 	public List<Board> list(Map<String,Object>map);
-	public HashMap<String,SeinResult> read(Board vo);
+	public HashMap<String,Object> read(Board vo);
 	public void modify(Board vo);
 	public void delete(Board vo);
 	
@@ -23,6 +23,10 @@ public interface BoardMapper {
 	public void readInc(int seq);
 	public void likeInc(int seq);
 	public void likeDes(int seq);
+	public void saveLike(HashMap<String, Object>map);
+	public void deleteLike(HashMap<String, Object>map);
   
+	public HashMap<String,Object> check(HashMap<String, Object>map);
+	
 	public void room(Board vo);
 }

@@ -27,4 +27,7 @@ public class SeinResult {
 	
 	/*member bean*/
 	private String name, password, birthdate, joindate, gender, age, phone, customer_grade, point, nickname, address, zipcode, profileimg;
+	
+	/*SAVED_ACCOM*/
+//	private Integer like_check, bookmark_check, sub_check;
 }

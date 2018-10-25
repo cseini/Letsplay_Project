@@ -5,51 +5,10 @@ sein.board ={
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #BDBDBD'}).appendTo($('#content'));
-		
-		/*룸데이터 넣기 테스트*/
-		/*$('<button>/').addClass('btn btn-primary').html('룸추가').appendTo('#sein_content').click(e=>{
-			$.getJSON($.ctx()+'/room/');
-		})*/
-		
-		
-		/*룸데이터 넣기 테스트*/
-		$('<button>/').addClass('btn btn-primary').html('drag').appendTo('#sein_content').click(e=>{
-			$('#sein_content').empty();
-			$('<div/>').attr({id:'dropzone',style:'width:500px;height:300px;'}).html('drag here').appendTo('#sein_content');
-			$(document).ready(function(){
-				$('#dropzone').on('dragenter',e=>{
-			        e.preventDefault();
-			        $(this).attr({'border':'2px solid #5272A0'});
-				})
-				$('#dropzone').on('dragover',e=>{
-					e.preventDefault();
-      				$(this).attr({'border':'2px solid #5272A0'});
-				})
-				$('#dropzone').on('dragleave',e=>{
-					e.preventDefault();
-					$(this).attr({'border':'2px solid #5272A0'});
-				})
-			})
-			$("#dropzone").on('drop',e=>{
-				e.preventDefault();
-				var files = e.originalEvent.dataTransfer.files;
-				var file = files[0];
-				console.log(file);
-				var formData = new FormData();
-				formData.append('file',file);
-				$.ajax({
-					url:$.ctx()+'/uploadAjax',
-					data : formData,
-					dataType:'text',
-					processData:false,
-					contentType:false,
-					type:'post',
-					success:d=>{
-						alert(d);
-					}
-				})
-			})
-			
+
+		/*map 테스트*/
+		$('<button/>').addClass('btn btn-primary').html('map').appendTo($('#sein_content')).click(e=>{
+   			sein.service.map(x);	
 		})
 		
 		/*배너 슬라이드*/
@@ -59,7 +18,7 @@ sein.board ={
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		
 		/*글쓰기 버튼*/
-		if($.cookie('loginID')!==''){
+		if($.cookie('loginID')){
 		$('<div/>').addClass('bt_rap').append(
 			$('<span/>').addClass('bt_write').append(
 				$('<button>').attr({'data-target':"#layerpop",'data-toggle':"modal"}).addClass('b_all').html('글쓰기'))
@@ -71,7 +30,8 @@ sein.board ={
 		}
 		
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
-		let page;
+		let page=0;;
+		$(window).off("scroll");
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
@@ -90,7 +50,7 @@ sein.board ={
 							),
 							$('<div/>').addClass('card_bottom').append(
 								$('<div/>').addClass('user_pic').append(
-									$('<img/>').attr({src:$.img()+'/profile/'+j.member_id+'.jpg'}).click(e=>{
+									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
 										sein.service.caster(j);
 									})				
 								),
@@ -132,6 +92,7 @@ sein.board ={
 					$('<button>').addClass('b_all').html('더보기')))
 			.appendTo($('#cardlist_rap'))
 			.click(e=>{
+			$(window).off("scroll");
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
 				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
@@ -156,7 +117,7 @@ sein.board ={
 											),
 											$('<div/>').addClass('card_bottom').append(
 												$('<div/>').addClass('user_pic').append(
-													$('<img/>').attr({src:$.img()+'/profile/'+j.member_id+'.jpg'})				
+													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg})				
 												),
 												$('<div/>').addClass('user_info').append(
 													$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
@@ -185,7 +146,7 @@ sein.board ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(page===d.page.pageCount){
+							if(page>=d.page.pageCount){
 								$(window).off("scroll");
 							}
 						},
@@ -223,6 +184,7 @@ sein.service ={
 			$('.carousel').carousel();
 		},
 		side_menu : x=>{
+			let like_count=x.like_count;
 			$('<div/>').addClass('').attr({id:'side_menu'}).addClass('side_menu').appendTo($('.con_detail'));
 			$('<ul/>').addClass('sein_ul').append(
 					$('<li/>').addClass('btnlike').append(
@@ -230,14 +192,16 @@ sein.service ={
 									$('<span/>').addClass('bl_like'))).click(e=>{
 										if($('.btnlike').hasClass('on')){
 											if(confirm('좋아요 취소 하시겠습니까?')){
-												$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq);
-												$('.like_count').html(x.like_count);
-												$('.btnlike').removeClass();
+												$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
+												like_count=like_count-1;
+												$('.like_count').html(like_count);
+												$('.btnlike').removeClass('on');
 											}											
 										}else{
 											if(confirm('좋아요 하시겠습니까?')){
-												$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq);
-												$('.like_count').html(x.like_count+1);
+												like_count=like_count+1;
+												$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
+												$('.like_count').html(like_count);
 												$('.btnlike').addClass('on');
 											}	
 										}
@@ -253,11 +217,11 @@ sein.service ={
 										if($('.btnBookmark').hasClass('on')){
 											if(confirm('북마크 취소 하시겠습니까?')){
 												
-												$('.btnBookmark').removeClass();
+												$('.btnBookmark').removeClass('on');
 											}											
 										}else{
 											if(confirm('북마크 하시겠습니까?')){
-												
+
 												$('.btnBookmark').addClass('on');
 											}	
 										}
@@ -282,8 +246,25 @@ sein.service ={
 			$('<div/>').addClass('con_inner').attr({style:'padding-top:30px'}).appendTo($('#topContent'));
 			$('<div/>').addClass('con_detail bord_b').appendTo($('.con_inner'));
 			
-			/*----사이드메뉴----*/
 			$.getJSON($.ctx()+'/cast/read/'+x.msg_seq,d=>{
+				let like_count=d.like_count;
+				/*개인별 게시글 좋아요 북마크 구독 체크*/
+				$.ajax({
+					url:$.ctx()+'/cast/check/',
+					method:'post',
+					contentType:'application/json',
+					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie('loginID')}),
+					success:d=>{
+						if(d.like_check===1){
+							$('.btnlike').addClass('on')
+						}
+						if(d.bookmark_check===1){
+							$('.btnBookmark').addClass('on')
+						}
+					},
+					error:(m1,m2,m3)=>{alert(m3)}
+				})
+				
 				sein.service.side_menu(d);
 				$('<div/>').addClass('inner_bg').appendTo($('.con_detail'));
 				$('<div/>').addClass('detail_user').appendTo($('.inner_bg'));
@@ -312,24 +293,31 @@ sein.service ={
 						})
 					).appendTo($('.detail_user'))
 				}
-				
-				
+				let dates = new Date(x.msg_date)
+		        let dt = dates.getFullYear()+
+		        "-" +(dates.getMonth()+1)
+		        + "-" + dates.getDate()+" "
+		        + dates.getHours()+ ":"
+		        + dates.getMinutes()+":"
+		        + dates.getSeconds();
+		        
 				$('<div/>').addClass('detail_title').appendTo($('.inner_bg'));
 				$('<h3/>').addClass('sc_out').appendTo($('.detail_title'));
 				$('<p/>').html(d.msg_title).appendTo($('.detail_title'));
 				$('<div/>').addClass('count').appendTo($('.detail_title'));
-				$('<span/>').addClass('day').html(' '+ d.msg_date).appendTo($('.count'));
+				$('<span/>').addClass('date').html(dt).appendTo($('.count'));
 				$('<span/>').addClass('ico_like').appendTo($('.count'));
 				$('<b/>').addClass('like_count').html(d.like_count).appendTo($('.count'));
 				$('<span/>').addClass('ico_read').appendTo($('.count'));
 				$('<b/>').html(d.msg_count).appendTo($('.count'));
-				$('<a/>').attr({href:'#'}).addClass('reply').append(
-						$('<span/>').html('댓글'),$('<b/>'))
+				$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
+					$('<a/>').attr({href:'#'}).addClass('reply').append(
+						$('<span/>').html('댓글'),$('<b/>').text(d.list.length))
 						.appendTo($('.detail_title')).click(e=>{
 							var offset = $('.bt_rap').offset();
 							$('html').animate({scrollTop : offset.top},400)							
-						});
-				
+						});	
+				})
 				
 				$('<div/>').addClass('detail_area').appendTo($('.inner_bg'));
 				$('<p/>').html('&nbsp').appendTo($('.detail_area'));
@@ -339,7 +327,6 @@ sein.service ={
 				$('<div/>').attr({style:'text-align:center',align:'center'}).append(
 						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo}))
 				.appendTo($('.detail_area'));
-				
 				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
 				$('<div/>').addClass('bt_detail').appendTo($('.bt_rap'));
@@ -352,14 +339,16 @@ sein.service ={
 					).click(e=>{
 						if($('.btnlike').hasClass('on')){
 							if(confirm('좋아요 취소 하시겠습니까?')){
+								like_count=like_count-1;
 								$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq);
-								/*sein.service.detail(x);*/
-								$('.btnlike').removeClass();
+								$('.like_count').html(like_count);
+								$('.btnlike').removeClass('on');
 							}											
 						}else{
 							if(confirm('좋아요 하시겠습니까?')){
+								like_count=like_count+1;
 								$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq);
-								/*sein.service.detail(x);*/
+								$('.like_count').html(like_count);
 								$('.btnlike').addClass('on');
 							}	
 						}
@@ -373,7 +362,7 @@ sein.service ={
 							if(confirm('북마크 취소 하시겠습니까?')){
 								
 								
-								$('.btnBookmark').removeClass();
+								$('.btnBookmark').removeClass('on');
 							}											
 						}else{
 							if(confirm('북마크 하시겠습니까?')){
@@ -404,7 +393,7 @@ sein.service ={
 				$('<div/>').addClass('user_cast').appendTo($('.inner_box'));
 				$('<div/>').addClass('user_pic').appendTo($('.user_cast'));
 				$('<a/>').attr({href:'#'}).append(
-						$('<img/>').attr({src:$.img()+'/profile/'+d.member_id+'.jpg',style:'position:static;width:100%;height:100%'})
+						$('<img/>').attr({src:$.img()+'/profile/'+d.profileimg,style:'position:static;width:100%;height:100%'})
 				).appendTo($('.user_pic'));
 				$('<div/>').addClass('user_txt').appendTo($('.user_cast'));
 				$('<a/>').attr({href:'#'}).addClass('user_name')
@@ -423,17 +412,18 @@ sein.service ={
 				.appendTo($('.user_cast'));
 				
 				sein.service.reply(d);
-				
 			})
 			
 		},
 		reply : x=>{
 			$('<div/>').attr({id:'inner_bg_reply'}).addClass('inner_bg').appendTo($('.con_detail'));
 			$('<div/>').addClass('reply_area').appendTo($('#inner_bg_reply'));
-			$('<div/>').addClass('re_txt')
-			.append($('<span/>').html('댓글'),$('<b>').html(x.reply_count))
-			.appendTo($('.reply_area'));
-			
+			var reply_count;
+			$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
+				$('<div/>').addClass('re_txt')
+				.append($('<span/>').html('댓글'),$('<b>').html(d.list.length))
+				.appendTo($('.reply_area'));	
+			})
 			$('<div/>').addClass('re_inner').appendTo($('#inner_bg_reply'));
 			$('<div/>').addClass('edit_rap').appendTo($('.re_inner'));
 			
@@ -523,16 +513,23 @@ sein.service ={
 			).appendTo($('#reply_empty'+x.msg_seq));
 		},
 		re_read : x=>{
+			let dates = new Date(x.msg_date)
+	        let dt = dates.getFullYear()+
+	        "-" +(dates.getMonth()+1)
+	        + "-" + dates.getDate()+" "
+	        + dates.getHours()+ ":"
+	        + dates.getMinutes()+":"
+	        + dates.getSeconds();
 			$('<div/>').attr({id:'re_comment'+x.msg_seq}).addClass('re_comment').appendTo($('.re_box'));
 			$('<div/>').addClass('inner').append(
 				$('<div/>').addClass('user_pic').append(
 					$('<a/>').append(
-						$('<img/>').attr({src:$.img()+'/profile/'+x.member_id+'.jpg',style:'position: static; width: 100%; height: 100%;'})
+						$('<img/>').attr({src:$.img()+'/profile/'+x.profileimg,style:'position: static; width: 100%; height: 100%;'})
 					)
 				),
 				$('<div/>').addClass('user_text').append(
 					$('<strong/>').html(x.member_id), /*추후 멤버테이블 조인걸어 이름으로 수정*/
-					$('<span/>').addClass('date').html('   '+x.msg_date/*.substring(0,19)*/)
+					$('<span/>').addClass('date').html(' '+dt)
 				),
 				$('<div/>').addClass('re_cont').append(
 					$('<p/>').attr({id:'p_re_read'+x.msg_seq}).html(x.msg_content)
@@ -585,64 +582,199 @@ sein.service ={
 			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + "/" + window.location.pathname)
 		},
 		write : x=>{
-			/*$('#layerpop').draggable();*/
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
 			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
-					$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
-					$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
-					$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
-					$('<div/>').html('첨부할 이미지 파일을 드래그 앤 드랍 해주세요.').attr({id:'dropzone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;vertical-align:middle'}),
-					$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
-					.click(e=>{
-						$.ajax({
-							url:$.ctx()+'/cast/write/',
-							method:'post',
-							contentType:'application/json',
-							data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
-							success:d=>{
-								$('#layerpop').on('hidden.bs.modal',()=>{
-									sein.board.cast();
-								})
-								
-							},
-							error:(m1,m2,m3)=>{alert(m3)}})
-						})
-					)
-			).appendTo($('#modalContent'));
-			$('#dropzone')
-			.on('dragenter',e=>{
-		        e.preventDefault();
-		        $('#dropzone').attr({style:'border:3px dotted blue;width:100%;height:100px;text-align:center'});
-			})
-			$('#dropzone')
-			.on('dragover',e=>{
-				e.preventDefault();
-				$('#dropzone').attr({style:'border:3px dotted red;width:100%;height:100px;text-align:center'});
-			})
-			$('#dropzone')
-			.on('dragleave',e=>{
-				e.preventDefault();
-				$('#dropzone').attr({style:'border:3px dotted pink;width:100%;height:100px;text-align:center'});
-			})
-			$('#dropzone').on('drop',e=>{
-				e.preventDefault();
-				var files = e.originalEvent.dataTransfer.files;
-				var file = files[0];
-				console.log(file);
-				var formData = new FormData();
-				formData.append('file',file);
+			$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
+			$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
+			$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
+			$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).append(
+				$('<div/>').html('첨부할 이미지 파일을 드래그 해주세요.').attr({id:'dropZone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px'})
+			),
+			$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
+			.click(e=>{
+				// 등록할 파일 리스트
+				var uploadFileList = Object.keys(fileList);
+		        // 파일이 있는지 체크
+		        if(uploadFileList.length == 0){
+		            alert("파일이 없습니다.");
+		            return;
+		        }
+		        // 용량을 500MB를 넘을 경우 업로드 불가
+		        if(totalFileSize > maxUploadSize){
+		            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
+		            return;
+		        }
+		        var form = $('#uploadForm');
+	            var formData = new FormData(form);
+	            for(var i = 0; i < uploadFileList.length; i++){
+	                formData.append('files', fileList[uploadFileList[i]]);
+	            }
 				$.ajax({
-					url:$.ctx()+'/cast/upload/',
-					data : formData,
-					dataType:'text',
-					processData:false,
-					contentType:false,
-					type:'post',
-					success:d=>{
-						alert(d);
-					}
+	            	url:$.ctx()+'/cast/upload/',
+	            	dataType:'text',
+	            	type:'post',
+	            	data:formData,
+	            	processData:false,
+	            	contentType:false,
+	                success: d=>{
+				        if(confirm("등록 하시겠습니까?")){
+				            // 등록할 파일 리스트를 formData로 데이터 입력
+		                	$.ajax({
+		    					url:$.ctx()+'/cast/write/',
+		    					method:'post',
+		    					contentType:'application/json',
+		    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:d}),
+		    					success:d=>{
+		    						 $('#layerpop').on('hidden.bs.modal',()=>{
+			            				sein.board.cast();
+			                		})
+		    					},
+		    					error:(m1,m2,m3)=>{alert(m3)}
+	    					})
+				        }
+	                },
+	                error : e=>{
+	                	alert("ERROR");
+	                }
+	            });
 				})
-			})
+			)
+			).appendTo($('#modalContent'));
+			
+	        
+			/*file upload 시작 */
+		    // 파일 리스트 번호
+		    var fileIndex = 0;
+		    // 등록할 전체 파일 사이즈
+		    var totalFileSize = 0;
+		    // 파일 리스트
+		    var fileList = new Array();
+		    // 파일 사이즈 리스트
+		    var fileSizeList = new Array();
+		    // 등록 가능한 파일 사이즈 MB
+		    var uploadSize = 1;
+		    // 등록 가능한 총 파일 사이즈 MB
+		    var maxUploadSize = 5;
+		 
+		    $(function (){
+		        fileDropDown();
+		    });
+		 
+		    // 파일 드롭 다운
+		    function fileDropDown(){
+		        var dropZone = $("#dropZone");
+		        // Drag기능
+		        dropZone.on('dragenter',function(e){
+		            e.stopPropagation();
+		            e.preventDefault();
+		            // 드롭다운 영역 css
+		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#E3F2FC'});
+		        });
+		        dropZone.on('dragleave',function(e){
+		            e.stopPropagation();
+		            e.preventDefault();
+		            // 드롭다운 영역 css
+		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'});
+		        });
+		        dropZone.on('dragover',function(e){
+		            e.stopPropagation();
+		            e.preventDefault();
+		            // 드롭다운 영역 css
+		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#E3F2FC'});
+		        });
+		        dropZone.on('drop',function(e){
+		            e.preventDefault();
+		            // 드롭다운 영역 css
+		            var files = e.originalEvent.dataTransfer.files;
+		            if(files != null){
+		                if(files.length < 1){
+		                    alert("폴더 업로드 불가");
+		                    return;
+		                }
+		                selectFile(files)
+		            }else{
+		                alert("ERROR");
+		            }
+		        });
+		    }
+		 
+		    // 파일 선택시
+		    function selectFile(fileObject){
+		        var files = null;
+		        if(fileObject != null){
+		            // 파일 Drag 이용하여 등록시
+		            files = fileObject;
+		            $("#dropZone").attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'}).html('파일 드랍 완료');
+		        }else{
+		            // 직접 파일 등록시
+		            files = $('#multipaartFileList_' + fileIndex)[0].files;
+		            $("#dropZone").attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'}).html('파일 등록 완료');
+		        }
+		        
+		        // 다중파일 등록
+		        if(files != null){
+		            for(var i = 0; i < files.length; i++){
+		                // 파일 이름
+		                var fileName = files[i].name;
+		                var fileNameArr = fileName.split("\.");
+		                // 확장자
+		                var ext = fileNameArr[fileNameArr.length - 1];
+		                // 파일 사이즈(단위 :MB)
+		                var fileSize = files[i].size / 1024 / 1024;
+		                
+		                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+		                    // 확장자 체크
+		                    alert("등록 불가 확장자");
+		                    break;
+		                }else if(fileSize > uploadSize){
+		                    // 파일 사이즈 체크
+		                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+		                    break;
+		                }else{
+		                    // 전체 파일 사이즈
+		                    totalFileSize += fileSize;
+		                    // 파일 배열에 넣기
+		                    fileList[fileIndex] = files[i];
+		                    // 파일 사이즈 배열에 넣기
+		                    fileSizeList[fileIndex] = fileSize;
+		                    // 업로드 파일 목록 생성
+		                    addFileList(fileIndex, fileName, fileSize);
+		                    // 파일 번호 증가
+		                    fileIndex++;
+		                }
+		            }
+		        }else{
+		            alert("ERROR");
+		        }
+		    }
+		 
+		    // 업로드 파일 목록 생성
+		    function addFileList(fIndex, fileName, fileSize){
+		        var html = "";
+		        html += "<tr id='fileTr_" + fIndex + "'>";
+		        html += "    <td class='center' id='fileNameLocation'>";
+		        html +=         fileName
+		        html += "    </td>"
+		        html += "</tr>"
+		        $('#fileTableTbody').append(html);
+		    }
+		 
+		    // 업로드 파일 삭제
+		    function deleteFile(fIndex){
+		        // 전체 파일 사이즈 수정
+		        totalFileSize -= fileSizeList[fIndex];
+		        
+		        // 파일 배열에서 삭제
+		        delete fileList[fIndex];
+		        
+		        // 파일 사이즈 배열 삭제
+		        delete fileSizeList[fIndex];
+		        
+		        // 업로드 파일 테이블 목록에서 삭제
+		        $("#fileTr_" + fIndex).remove();
+		    }
+			
+	/* file upload 끝 */
 		},
 		modify : x=>{
 			$('#layerpop').draggable();
@@ -685,16 +817,23 @@ sein.service ={
 				+'</div>').appendTo('#content');
 		},
 		rereply:x=>{
+			let dates = new Date(x.msg_date)
+	        let dt = dates.getFullYear()+
+	        "-" +(dates.getMonth()+1)
+	        + "-" + dates.getDate()+" "
+	        + dates.getHours()+ ":"
+	        + dates.getMinutes()+":"
+	        + dates.getSeconds();
 		$('<div/>').addClass('recomment re').attr({id:'rereply'+x.msg_seq,style:'margin-left:30px'}).append(
 			$('<div/>').addClass('inner').append(
 				$('<div/>').addClass('user_pic').attr({style:'position:relative;left: -40px;top:35px'}).append(
 					$('<a/>').append(
-						$('<img/>').attr({src:$.img()+'/profile/'+x.member_id+'.jpg',style:'position: static; width: 100%; height: 100%;'})
+						$('<img/>').attr({src:$.img()+'/profile/'+x.profileimg,style:'position: static; width: 100%; height: 100%;'})
 					)
 				),
 				$('<div/>').addClass('user_text').append(
 					$('<strong/>').html(x.member_id), /*추후 멤버테이블 조인걸어 이름으로 수정*/
-					$('<span/>').addClass('date').html('   '+x.msg_date/*.substring(0,19)*/)
+					$('<span/>').addClass('date').html(' '+dt)
 				),
 				$('<div/>').addClass('re_cont').append(
 					$('<p/>').attr({id:'p_rere_read'+x.msg_seq}).text(x.msg_content)
@@ -752,7 +891,7 @@ sein.service ={
 		$('<div/>').addClass('caster_inner').append(
 			$('<div/>').addClass('caster_c').append(
 				$('<div/>').addClass('user_pic').append(
-					$('<a/>').attr({href:'#none',src:$.img()+'/profile/'+x.member_id+'.jpg'})
+					$('<a/>').attr({href:'#none',src:$.img()+'/profile/'+x.profileimg})
 				),
 				$('<span/>').addClass('ico_caster'),
 				$('<strong/>').html(x.nickname),
@@ -775,7 +914,7 @@ sein.service ={
 		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
-		let page;
+		let page=0;
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
@@ -794,7 +933,7 @@ sein.service ={
 							),
 							$('<div/>').addClass('card_bottom').append(
 								$('<div/>').addClass('user_pic').append(
-									$('<img/>').attr({src:$.img()+'/profile/'+j.member_id+'.jpg'}).click(e=>{
+									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
 										sein.service.caster(j);
 									})				
 								),
@@ -838,7 +977,7 @@ sein.service ={
 			.click(e=>{
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
-				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
+				if($(document).height() <= $(window).scrollTop()+$(window).height()+10){
 					$.ajax({
 						url:$.ctx()+'/cast/',
 						method:'post',
@@ -860,7 +999,7 @@ sein.service ={
 											),
 											$('<div/>').addClass('card_bottom').append(
 												$('<div/>').addClass('user_pic').append(
-													$('<img/>').attr({src:$.img()+'/profile/'+j.member_id+'.jpg'})
+													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg})
 													.click(e=>{
 														sein.service.caster(j);
 													})
@@ -892,7 +1031,7 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(page===d.page.pageCount){
+							if(page>=d.page.pageCount){
 								$(window).off("scroll");
 							}
 						},
@@ -903,5 +1042,40 @@ sein.service ={
 				}
 			})
 		})
+	},
+	map : x=>{
+		$('#sein_content').empty();
+		$('<div/>').attr({id:'location',style:'width:100%;min-height:800px'}).appendTo($('#sein_content'));
+
+		var mapContainer = document.getElementById('location'), // 지도를 표시할 div  
+	    mapOption = { 
+	        center: new daum.maps.LatLng(37.566535,126.97796919999996), // 지도의 중심좌표
+	        level: 3 // 지도의 확대 레벨
+	    };
+		var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+		var positions = new Array();
+		var geocoder = new daum.maps.services.Geocoder();
+		var addr = [{title:'나나',addr:'제주특별자치도 제주시 첨단로 242'},{title:'가가',addr:'경기도 고양시 일산서구 고양대로 112번길 64'}];
+		$.each(addr,(i,j)=>{
+			geocoder.addressSearch(j.addr, function(result, status) {
+				var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+				var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+				// 마커 이미지의 이미지 크기 입니다
+			    var imageSize = new daum.maps.Size(34, 60); 
+			    
+			    // 마커 이미지를 생성합니다    
+			    var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize); 
+			    
+			    // 마커를 생성합니다
+			    var marker = new daum.maps.Marker({
+			        map: map, // 마커를 표시할 지도
+			        position: coords, // 마커를 표시할 위치
+			        title : j.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+			        image : markerImage // 마커 이미지 
+			    });
+			})
+			 alert(j.title);
+		})
+
 	}
 }
