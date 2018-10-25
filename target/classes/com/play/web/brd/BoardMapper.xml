@@ -25,21 +25,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="msg_ref" column="MSG_REF"/>
 	<result property="nickname" column="NICKNAME"/>
 	<result property="password" column="NICKpasswordNAME"/>
-	<result property="birthdate" column="birthdate"/>
-	<result property="joindate" column="joindate"/>
-	<result property="gender" column="gender"/>
-	<result property="age" column="age"/>
-	<result property="phone" column="phone"/>
-	<result property="customer_grade" column="customer_grade"/>
-	<result property="point" column="point"/>
-	<result property="address" column="address"/>
-	<result property="zipcode" column="zipcode"/>
-	<result property="profileimg" column="profileimg"/>
+	<result property="birthdate" column="BIRTHDATE"/>
+	<result property="joindate" column="JOINDATE"/>
+	<result property="gender" column="GENDER"/>
+	<result property="age" column="AGE"/>
+	<result property="phone" column="PHONE"/>
+	<result property="customer_grade" column="CUSTOMER_GRADE"/>
+	<result property="point" column="POINT"/>
+	<result property="address" column="ADDRESS"/>
+	<result property="zipcode" column="ZIPCODE"/>
+	<result property="profileimg" column="PROFILEIMG"/>
+	<result property="like_check" column="LIKE_CHECK"/>
+	<result property="bookmark_check" column="BOOKMARK_CHECK"/>
+	<result property="saved_uinque" column="SAVED_UINQUE"/>
 </resultMap>
 
   <insert id="write">
-   INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG)
-   VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}) 
+   INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG, MSG_PHOTO)
+   VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}, #{msg_photo}) 
   </insert>
   
   <select id="list" resultMap="seinResult">
@@ -47,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        FROM (
            SELECT
                ROW_NUMBER() OVER(ORDER BY msg_seq DESC) AS NUM,
-               a.*, m.NICKNAME
+               a.*, m.NICKNAME, m.PROFILEIMG
            FROM board a
            	JOIN member m
            	ON a.MEMBER_ID = m.MEMBER_ID
@@ -62,11 +65,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <select id="read" resultMap="seinResult">
-  	SELECT a.*, m.nickname
+  	SELECT a.*, m.nickname, m.profileimg
   	FROM board a
 	  	JOIN member m
 	    ON a.MEMBER_ID = m.MEMBER_ID
-  	WHERE MSG_SEQ like #{msg_seq}
+  	WHERE a.MSG_SEQ like #{msg_seq}
   </select>
   
   <update id="modify">
@@ -93,14 +96,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	)
   </insert>
   
-  <select id="reply" resultType="com.play.web.brd.Board">
+  <select id="reply" resultMap="seinResult">
 	SELECT *
        FROM (
            SELECT
                ROW_NUMBER() OVER(ORDER BY msg_seq DESC) AS NUM,
-               A.*
+               A.*, M.NICKNAME, M.PROFILEIMG
            FROM
                board A
+               JOIN member M
+               ON A.member_id like M.member_id
            WHERE msg_ref like #{msg_ref}
            AND board_id like #{board_id}
            AND board_depth like #{board_depth}
@@ -122,6 +127,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   <select id="count" resultType="int">
   	SELECT COUNT(*) FROM board
   	WHERE board_depth like 0
+  	AND board_id like 'cast'
+  	<if test=" member_id != null and member_id != ''">
+  	AND member_id like #{member_id};
+  	</if>
   </select>
   
   <update id="readInc">
@@ -139,8 +148,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	WHERE MSG_SEQ LIKE #{msg_seq}
   </update>
   
+  <insert id="saveLike">
+  	INSERT INTO saved_accom (SAVED_UNIQUE, MEMBER_ID, MSG_SEQ, LIKE_CHECK)
+  	VALUES (#{saved_unique}, #{member_id}, #{msg_seq}, 1)
+  	ON DUPLICATE KEY UPDATE LIKE_CHECK=1
+  </insert>
+  
+  <insert id="deleteLike">
+  	UPDATE saved_accom SET LIKE_CHECK=0
+  	WHERE SAVED_UNIQUE LIKE #{saved_unique}
+  </insert>
+  
   <insert id="room">
   	INSERT INTO ROOM (ACCOM_SEQ, ROOM_NAME, ROOM_NO, ROOM_PRICE)
   	VALUES (#{accom_seq},#{room_name},#{room_no},#{room_price})
   </insert>
+  
+  <select id="check" resultMap="seinResult">
+	SELECT *
+	FROM saved_accom
+	WHERE MSG_SEQ LIKE #{msg_seq}
+	AND MEMBER_ID LIKE #{member_id}
+  </select>
 </mapper>

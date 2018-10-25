@@ -1,21 +1,24 @@
 package com.play.web.brd;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
@@ -31,37 +34,43 @@ public class BoardCtrl {
 	@Autowired Pagination page;
 	@Autowired TxService tx;
 	@Autowired Map<String,Object> map;
-	@Resource(name="uploadPath")
-	private String uploadPath;
+	@Autowired HashMap<String,Object> smap;
+	@Resource(name="castUploadPath")
+	private String castUploadPath;
 	
 	@PostMapping("/cast/write/")
-	public @ResponseBody void write(@RequestBody Board cast){
+	public void write(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","write()");
-		cast.setMsg_photo(cast.getMsg_seq()+".jpg");
-		brdMap.write(cast);;
+		cast.setMsg_photo(cast.getMsg_photo());
+		brdMap.write(cast);
 	}
 	
 	@PostMapping("/cast/")
-	public @ResponseBody Map<String,Object> list(@RequestBody Map<String,Object>cast){
+	public Map<String,Object> list(@RequestBody Map<String,Object>cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","list");
 		map.clear();
-		map.put("pageNumber",Integer.parseInt((String) cast.get("pageNumber")));
-		map.put("countRow",brdMap.count());
-		page.carryOut(map);
-		map.clear();
-		map.put("beginRow", page.getBeginRow());
-		map.put("endRow", page.getEndRow());
-		map.put("board_id", cast.get("board_id"));
-		map.put("member_id", cast.get("member_id"));
-		List<Board> ls = brdMap.list(map);
-		map.put("list", ls);
-		Util.log.accept(ls+"");
-		map.put("page", page);
+		Util.log.accept(cast.get("member_id")+"");
+		int count = brdMap.count();
+		map.put("countRow",count);
+		Util.log.accept("전체카운트"+count);
+		if(Integer.parseInt((String) cast.get("pageNumber"))<count) {
+			Util.log.accept("페이지 : "+cast.get("pageNumber")+"");
+			map.put("pageNumber",Integer.parseInt((String) cast.get("pageNumber")));
+			page.carryOut(map);
+			map.clear();
+			map.put("beginRow", page.getBeginRow());
+			map.put("endRow", page.getEndRow());
+			map.put("board_id", cast.get("board_id"));
+			map.put("member_id", cast.get("member_id"));
+			List<Board> ls = brdMap.list(map);
+			map.put("list", ls);
+			map.put("page", page);
+		}
 		return map;
 	}
 	
 	@GetMapping("/cast/read/{seq}")
-	public HashMap<String,SeinResult> read(@PathVariable int seq){
+	public HashMap<String, Object> read(@PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","read()");
 		brd.setMsg_seq(seq);
 		brdMap.readInc(seq);
@@ -69,7 +78,7 @@ public class BoardCtrl {
 	}
 	
 	@PostMapping("/cast/modify/")
-	public @ResponseBody void modify(@RequestBody Board cast){
+	public void modify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","modify()");
 		Util.log.accept("msg_title : "+cast.getMsg_title()+"");
 		brdMap.modify(cast);;
@@ -84,7 +93,7 @@ public class BoardCtrl {
 	}
 
 	@PostMapping("/cast/reWrite/")
-	public @ResponseBody void reWrite(@RequestBody Board cast){
+	public void reWrite(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyWrite()");
 		Util.log.accept(cast+"");
 		/*brdMap.reSeqInc();*/
@@ -94,7 +103,6 @@ public class BoardCtrl {
 	@GetMapping("/cast/reply/{board_id}/{seq}")
 	public Map<String,Object> replyRead(@PathVariable String board_id, @PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyRead()");
-		brd = new Board();
 		brd.setMsg_ref(seq);
 		brd.setBoard_id(board_id);
 		brd.setBoard_depth(1);
@@ -118,7 +126,7 @@ public class BoardCtrl {
 	}
 	
 	@PostMapping("/cast/reModify/")
-	public @ResponseBody void reModify(@RequestBody Board cast){
+	public void reModify(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyModify()");
 		Util.log.accept(cast+"");
 		brdMap.reModify(cast);
@@ -133,42 +141,52 @@ public class BoardCtrl {
 		brdMap.reDelete(brd);;
 	}
 	
-	@GetMapping("/cast/likeInc/{msg_seq}")
-	public void likeInc(@PathVariable int msg_seq){
+	@GetMapping("/cast/likeInc/{msg_seq}/{member_id}")
+	public void likeInc(@PathVariable int msg_seq,@PathVariable String member_id){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","likeInc()");
 		brdMap.likeInc(msg_seq);
+		smap.clear();
+		smap.put("member_id", member_id);
+		smap.put("msg_seq", msg_seq);
+		smap.put("saved_unique", member_id+'_'+msg_seq);
+		brdMap.likeInc(msg_seq);
+		brdMap.saveLike(smap);
 	}
 	
-	@GetMapping("/cast/likeDes/{msg_seq}")
-	public void likeDes(@PathVariable int msg_seq){
+	@GetMapping("/cast/likeDes/{msg_seq}/{member_id}")
+	public void likeDes(@PathVariable int msg_seq,@PathVariable String member_id){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","likeDes()");
+		smap.clear();
+		smap.put("member_id", member_id);
+		smap.put("msg_seq", msg_seq);
+		smap.put("saved_unique", member_id+'_'+msg_seq);
 		brdMap.likeDes(msg_seq);
+		brdMap.deleteLike(smap);
 	}
 	
 	@PostMapping("/cast/upload/")
-	public @ResponseBody void castUpload(@RequestBody HashMap<String, Object> hashmap) {
-		logger.info("\n BoardCtrl :::::::::: {} !!-----","fileUpload()");
+	public String uploadProfile(MultipartFile files) throws Exception {
+		logger.info("\n--------- BoardCtrl {} !!-----","upload()");
+		map.clear();
+		String msg_photo = uploadPhoto(files.getOriginalFilename(), files.getBytes());
+		brd.setMsg_photo(msg_photo);
+		return msg_photo;
 	}
 	
-	
-	@GetMapping("/room/")
-	public void room(){
-		logger.info("\n BoardCtrl :::::::::: {} !!-----","room()");
-		String[] room_no = {"101","102","103","104","105"
-								,"201","202","203","204","205"
-								,"301","302","303","304","305"};
-		String[] room_name =  {"스탠다드 트윈","스탠다드 더블","트리플","패밀리","패밀리 트윈"
-				,"디럭스A","디럭스B","프리미엄A","프리미엄B","로열프리미엄"
-				,"슈페리어","슈페리어 트윈","슈페리어 트리플","VIP","VVIP"};
-		for(int i=1;i<=519;i++) {
-			for(int j=0;j<15;j++) {
-				brd.setAccom_seq(i);
-				brd.setRoom_name(room_name[j]);
-				brd.setRoom_no(room_no[j]);
-				brd.setRoom_price((int)Math.round(Math.random()*150+30)*1000);
-				brdMap.room(brd);
-			}
-		}
+	private String uploadPhoto(String originalName, byte[] fileData) throws Exception {
+		logger.info("\n--------- BoardCtrl {} !!-----","uploadFile()");
+		String savedName ="";
+		UUID uuid = UUID.randomUUID();
+		savedName = uuid + "." + originalName.split("\\.")[1];		
+		FileCopyUtils.copy(fileData, new File(castUploadPath, savedName));
+		Util.log.accept(castUploadPath+savedName);
+		return savedName;
 	}
 	
+	@PostMapping("/cast/check/")
+	public HashMap<String, Object> check(@RequestBody HashMap<String, Object> x){
+		logger.info("\n--------- BoardCtrl {} !!-----","check()");
+		return brdMap.check(x);
+	}
+
 }
