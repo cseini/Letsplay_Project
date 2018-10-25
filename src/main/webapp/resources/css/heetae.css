@@ -480,8 +480,14 @@ em{
 }
 .heetae_support_header{
 	display: inline-block;
-	float: left;
-	margin-bottom: 10px;
+    float: left;
+    height: 38px;
+    width: 100%;
+    border-color: #dfdfdf;
+    border-left: 1px solid #dfdfdf;
+    border-top: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    margin-top: 10px;
 }
 
 .heetae_support_header div{
@@ -491,7 +497,8 @@ em{
 .heetae_review_input_title{
 	width: 400px;
     font-size: 15px;
-    border: 1px solid #dfdfdf;
+    border: 0px solid #dfdfdf;
+    margin: 5px;
 }
 
 .heetae_fileupload_inputbox_input{
@@ -624,6 +631,23 @@ em{
     color: #fff;  
     line-height:1;
     cursor: pointer;
+}
+
+.heetae_tab_info_reserve_not_btn{
+	background: -webkit-gradient(linear,left top,right bottom,color-stop(0,#333333),color-stop(100%,#787878));
+    width: 100%;
+    height: 48px;
+    display: block;
+    padding: 16px 0 6px;
+    text-align: center;
+    color: #fff;
+    line-height: 1;
+    cursor: default;
+}
+
+.heetae_tab_info_reserve_not_btn:hover{
+	text-decoration: none;
+	color: #fff; 
 }
 
 .heetae_tab_info_reserve_btn:hover{

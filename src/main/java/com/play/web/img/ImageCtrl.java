@@ -1,18 +1,23 @@
 package com.play.web.img;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,10 +43,11 @@ public class ImageCtrl {
 	@Autowired HashMap<String, Object> map;
 	@Resource(name="uploadPath")
 	private String uploadPath;
+	String savedName ="";
 
 	@PostMapping("/profile/{member_id}")
 	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
-		logger.info("\n--------- ImageController {} !!-----","profile()");
+		logger.info("\n--------- ImageController {} !!-----","uploadProfile()");
 		map.clear();
 		String savedName = uploadPhoto(files.getOriginalFilename(), files.getBytes(), member_id);
 		mbr.setProfileimg(savedName);
@@ -49,11 +55,25 @@ public class ImageCtrl {
 		mbrMap.update(mbr);
 		return savedName;
 	}
+	@PostMapping("/kakaoProfile/")
+	public String uploadKakaoProfile(@RequestBody Member mbr) throws Exception {
+		logger.info("\n--------- ImageController {} !!-----","uploadKakaoProfile()");
+		URL url = new URL(mbr.getProfileimg());
+		logger.info("url : " + url);
+		String ext = mbr.getProfileimg().substring(mbr.getProfileimg().lastIndexOf(".")+1,mbr.getProfileimg().length()); 
+		BufferedImage img = ImageIO.read(url);
+        savedName = UUID.randomUUID() + "." +ext;
+        File file=new File(uploadPath,savedName);
+        ImageIO.write(img, ext, file);
+        mbr.setProfileimg(savedName);
+		mbr.setMember_id(mbr.getMember_id());
+		mbrMap.update(mbr);
+		return savedName;
+	}
 	
 	private String uploadPhoto(String originalName, byte[] fileData, String member_id) throws Exception {
 		logger.info("\n--------- ImageController {} !!-----","uploadFile()");
-		String savedName ="";
-		savedName = member_id + "." + originalName.split("\\.")[1];		
+		savedName = UUID.randomUUID() + "." + originalName.split("\\.")[1];		
 		Util.log.accept("savedName: " + savedName);
 		FileCopyUtils.copy(fileData, new File(uploadPath, savedName));
 		return savedName;

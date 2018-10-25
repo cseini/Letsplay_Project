@@ -80,14 +80,13 @@
 	float: right;
 }
 .font_1{
-	padding-top:15px;
 	font-family: 'Hi Melody', cursive;
 	font-size: 20px;
 }
 .first_list{
 	border-bottom: 1px solid #e5e5e5;
 	display: inline-block;
-	width: 100%
+	padding-bottom: 40px;
 }
 .map_header{
 	display:table;
@@ -124,6 +123,7 @@
 	text-align: left;
 	background-color: #fff;
 	box-shadow: 0 3px 7px rgba(0,0,0,.2);
+	z-index: 1;
 }
 
 @keyframes fadeIn{
@@ -165,14 +165,18 @@
 .font_weight800{
 	font-weight: 800;
 }
-.test_img{
+.high_rank_img{
 	display:block;
 	width: 100%;
+	height: 180px;
+	padding-bottom: 10px;
 }
 .first_list_one{
-	width: 33%;
     display: inline-block;
     padding: 10px;
+    position: relative;
+    width: 50%;
+    padding-bottom: 20px;
 }
 .premium_selecter{
 	padding-left: 0px;
@@ -188,6 +192,7 @@
 	width: 30%;
 	display: inline-block;
 	max-height: 240px;
+	position: relative;
 }
 .premium_selecter_writer{
 	width: 70%;
@@ -200,14 +205,13 @@
 	display: inline-block;
 }
 .p_span0{
-	padding: 10px;
+	padding: 5px;
 }
 .p_padding5{
 	padding: 5px;
 }
 .p_padding20{
 	padding-left: 20px;
-	padding-right: 20px;
 }
 .square_div_Reservation{
 	background-color: #ff2d60;
@@ -220,4 +224,31 @@
 }
 .ppp__{
 	position: absolute;
+    width: 100%;
+    top: 5%;
+    font-size: 24px;
+    font-weight: 600;
+    color: darkgrey;
 }
+.image_Box10{
+	display: inline-block;
+	max-height: 185px;
+}
+.padding_top_30{
+	padding-top: 20px;
+	margin-bottom: 0px;
+}
+.cursor_pointer{
+	cursor: pointer;
+}
+.color_red{
+	color: red;
+}
+.p_won{
+	padding-right: 20px;
+}
+.customoverlay {position:relative;bottom:85px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;}
+.customoverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+.customoverlay a {display:block;text-decoration:none;color:#000;text-align:center;border-radius:6px;font-size:14px;font-weight:bold;overflow:hidden;background: #d95050;background: #d95050 url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+.customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
+.customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}

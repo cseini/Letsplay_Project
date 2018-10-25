@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -91,6 +92,30 @@ public class AdminCtrl {
 		map.put("topLoc", admMap.getTopLocal());
 		//System.out.println(admMap.getTopSales());
 		map.put("topSales", admMap.getTopSales());
+		return map;
+	}
+	@GetMapping("/admin/sales")
+	public Map<String,Object> sales(){
+		map.clear();
+		
+		map.put("sumHotel", admMap.getSumHotel());
+		map.put("sumMotel", admMap.getSumMotel());
+		/*System.out.println(admMap.getSumHotel().get(0).get("monthly"));
+		System.out.println(admMap.getSumHotel().get(0).get("accomType"));
+		System.out.println(admMap.getSumHotel().get(0).get("sales"));
+		System.out.println(admMap.getSumMotel().get(0).get("monthly"));
+		System.out.println(admMap.getSumMotel().get(0).get("accomType"));
+		System.out.println(admMap.getSumMotel().get(0).get("sales"));*/
+		return map;
+	}
+	@GetMapping("/admin/accom/{accom_addr}")
+	public Map<String,Object> accom(@PathVariable String accom_addr){
+		map.clear();
+		System.out.println(accom_addr);
+		//map.put("local",accom_addr);
+		map.put("accomPrice", admMap.getByPrice(accom_addr));
+		System.out.println(map.get("accomPrice"));
+		System.out.println(admMap.getByPrice(accom_addr));
 		return map;
 		
 	}

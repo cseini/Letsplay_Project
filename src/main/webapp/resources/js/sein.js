@@ -588,7 +588,7 @@ sein.service ={
 			$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
 			$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
 			$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).append(
-				$('<div/>').html('첨부할 이미지 파일을 드래그 해주세요.').attr({id:'dropZone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px'}),
+				$('<div/>').html('첨부할 이미지 파일을 드래그 해주세요.').attr({id:'dropZone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px'})
 			),
 			$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
 			.click(e=>{

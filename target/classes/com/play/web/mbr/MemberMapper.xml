@@ -17,11 +17,10 @@
   </select>
   
   <insert id="post" >
-    INSERT INTO member
-    (MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, ZIPCODE)
-    VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{zipcode})
+  	INSERT INTO member
+		(MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, PROFILEIMG)
+		VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{profileimg})
   </insert>
-  
   <select id="list" resultType="com.play.web.mbr.Member">
     SELECT * 
     FROM member

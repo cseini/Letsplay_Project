@@ -61,13 +61,16 @@
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryBean"></constructor-arg>
 	</bean>
+	
 	<mybatis-spring:scan base-package="com.play.web"/>
 	<bean id="uploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\1027\\Desktop\\newWorkspace\\masterWrks\\src\\main\\webapp\\resources\\img\\profile"/>		
-	</bean>
+		<constructor-arg value="C:\\Users\\HJ\\Documents\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\profile"/> 	
+	</bean>	
+	
 	<bean id="castUploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\csein\\OneDrive\\문서\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\cast\\"/>		
-	</bean>		
+		<constructor-arg value="C:\\Users\\csein\\OneDrive\\문서\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\cast\\"/>
+	</bean>	
+		
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

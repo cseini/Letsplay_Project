@@ -13,6 +13,7 @@ public class HeeTaeBean {
 	room_seq ,room_name ,room_no ,room_price, 
 	room_image1 ,room_image2, room_image3, msg_seq, msg_title,
 	msg_content, msg_photo, msg_date, board_id, member_id,
-	name, accom_reco, pay_no;
+	name, accom_reco, pay_no,
+	res_no,checkin_date,checkout_date;
 }
 
