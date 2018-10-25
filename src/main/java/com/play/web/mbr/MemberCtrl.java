@@ -34,6 +34,7 @@ public class MemberCtrl {
 		if(param.getBirthdate()!=null) {
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
+			param.setProfileimg("default.jpg");
 			mbrMap.post(param);
 		} else {
 			mbrMap.post(param);
@@ -41,17 +42,17 @@ public class MemberCtrl {
 	}
 	
 	@PostMapping("/auth")
-	public Map<String,Object> auth(
-			@RequestBody Member pm){
+	public Map<String,Object> auth(@RequestBody Member pm){
 		logger.info("\n--------- MemberController {} !!-----","auth()");
 		map.clear();
+		logger.info("member_id :" + pm.getMember_id());
+		logger.info("pw : " + pm.getPassword());
 		map.put("mbr", mbrMap.get(pm));
 		logger.info("mbrMap.get(pm)" + mbrMap.get(pm));
 		return map;
 	}
 	@PostMapping("/login")
-	public Map<String,Object> login(
-			@RequestBody Member pm) {
+	public Map<String,Object> login(@RequestBody Member pm) {
 		logger.info("\n--------- MemberController {} !!-----","login()");
 		Map<String,Object> rm =  new HashMap<>();
 		String pwValid = "WRONG";

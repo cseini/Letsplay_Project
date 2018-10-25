@@ -12,6 +12,7 @@ app =(()=>{
 app.main =(()=>{
 	var init =()=>{
 		onCreate();
+		Kakao.init('ab11f68d3c4372117993ec440aec4768');
 	};
 	var onCreate =()=>{
 		setContentView();
@@ -23,6 +24,23 @@ app.main =(()=>{
 })();
 
 app.permision = (()=>{
+	var reservationList = d=>{
+		alert('reservationList 들어옴');
+		$('#header').empty();
+		$('#content').empty();
+		$('<div/>').addClass('reservationList').attr({style:'background: #f5f5f5'}).appendTo('#content');
+		$('<table/>').addClass('reservationTable').appendTo('.reservationList');
+		$('<tr/>').append(
+				$('<th/>').html('숙소이름'),
+				$('<th/>').html('방번호'),
+				$('<th/>').html('주소'),
+				$('<th/>').html('체크인'),
+				$('<th/>').html('체크아웃'),
+				$('<th/>').html('결제가격'),
+				$('<th/>').html('결제일')
+		).appendTo('.reservationTable')
+	};
+	
 	var login = ()=>{
 		let validate ="";
 		$('#header').empty();
@@ -33,40 +51,6 @@ app.permision = (()=>{
 					$('<input/>').attr({type:'text', id:'member_id', placeholder:'아이디',autofocus:'autofocus'}).addClass('inputData').appendTo('.inputBox');
 					$('<input/>').attr({type:'text', id:'password', placeholder:'비밀번호'}).addClass('inputData').appendTo('.inputBox');
 					$('<div/>').attr({id:'loginAlert'}).addClass('validAlert').appendTo('.inputBox');
-					
-					
-					/*------------카카오톡 기능 시작 ------------*/
-					$('<a/>').attr({id:'kakao-login-btn', style:'margin-left:750px;'}).appendTo('.inputBox');
-					$('<a/>').attr({href:'http://developers.kakao.com/logout'}).appendTo('.inputbox');
-						  // <![CDATA[
-					    // 사용할 앱의 JavaScript 키를 설정해 주세요.
-					    Kakao.init('ab11f68d3c4372117993ec440aec4768');
-					    // 카카오 로그인 버튼을 생성합니다.
-					    Kakao.Auth.createLoginButton({
-					      container: '#kakao-login-btn',
-					      success: function(authObj) {
-					        alert(JSON.stringify(authObj));
-					        Kakao.API.request({
-					            url: '/v1/user/me',
-					            success: function(res) {
-					                  alert('res : ' + JSON.stringify(res)); 
-					                  alert('authObj : ' + JSON.stringify(authObj)); 
-					                  console.log('res.id : ' + res.id);  // id로 전달
-					                  console.log('res.access_token : ' + authObj.access_token); // token으로 전달
-					                  console.log('nickname : ' + res.properties['nickname']);  // nickname 전달 
-					                  console.log('profile_image : ' + res.properties['profile_image'] ); // profileimg전달
-					                  // 형준 945386552
-					            }
-		                  })			        
-					      },
-					      fail: function(err) {
-					         alert(JSON.stringify(err));
-					      }
-				    });
-				    /*------------카카오톡 기능 끝 ------------*/   
-					    
-					    
-					    
 					$('<div/>').addClass('hjButton').text('로그인').attr({id:'loginButton'}).appendTo('.inputBox')
 					.click(e=>{
 						let pw = $('#password').val();
@@ -88,7 +72,7 @@ app.permision = (()=>{
 								url:$.ctx()+'/member/login',
 								method:'post',
 								contentType:'application/json',
-								data:JSON.stringify({member_id:$('#member_id').val(),password:$('#password').val()}),
+								data:JSON.stringify({member_id:id,password:pw}),
 								success:d=>{
 									let validate ="";
 									if(d.id_valid==='WRONG'){
@@ -101,34 +85,25 @@ app.permision = (()=>{
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
 										$.cookie("loginID", d.mbr.member_id);
-											e.preventDefault();
 											app.service.header();
 											$('.nav_right').empty();
 											$('#content').empty();
 											app.service.content();
 					 							$('<div/>').addClass('menubar').appendTo('.nav_right');
 					 							app.service.nav(d.mbr);
-												$('#myinfo').click(e=>{
+												$('#mypage').click(e=>{
 													e.preventDefault();
 													mypage(d);
 												})
-											$('#reservationList').click(e=>{
-												e.preventDefault();
-												alert('예약내역 클릭');
-											});
-											$('#logout').click(e=>{
-												e.preventDefault();
-												$.cookie()
-												$.cookie("loginID","");
-												$.cookie("loginNickname", "");
-												$.cookie("loginName", d.mbr.name);
-												$.cookie("loginAge", d.mbr.age);
-												$.cookie("loginAddress", d.mbr.address);
-												$.cookie("loginPhone", d.mbr.phone);
-												$.cookie("loginPoint", d.mbr.point);
-												app.router.home();
-											});	
-												
+												$('#moveToReservationList').click(e=>{
+													e.preventDefault();
+													reservationList(d);
+												});
+												$('#logout').click(e=>{
+													e.preventDefault();
+													$.cookie("loginID","");
+													app.router.home();
+												});	
 									}
 									$('#validate').html(validate);
 								},
@@ -137,8 +112,99 @@ app.permision = (()=>{
 								}
 						});
 					}
-
 		});
+					/*------------카카오톡 기능 시작 ------------*/
+					$('<a/>').attr({id:'kakao-login-btn', style:'margin-left:770px;'}).appendTo('.inputBox');
+					$('<a/>').attr({href:'http://developers.kakao.com/logout'}).appendTo('.inputbox');
+					    // 카카오 로그인 버튼을 생성합니다.
+					    Kakao.Auth.createLoginButton({
+					      container: '#kakao-login-btn',
+					      success: function(authObj) {
+					        Kakao.API.request({
+					            url: '/v1/user/me',
+					            success: function(res) {
+					            	console.log('gender : ' + res.properties['gender'])
+					            	console.log('age_rang : '+ res.properties['age_rang'])
+					            	console.log('birthday : '+ res.properties['birthday'])
+					            	
+					            	$.ajax({
+										url:$.ctx()+'/member/login',
+										method:'post',
+										contentType:'application/json',
+										data:JSON.stringify({member_id:res.id,password: res.uuid}),
+										success:d=>{
+											let validate ="";
+											if(d.id_valid==='WRONG'){
+								                  $.ajax({
+														url:$.ctx()+'/member/join',
+														method:'post',
+														contentType:'application/json',
+														data:JSON.stringify({
+															member_id:res.id,
+															name:res.properties['nickname'],
+															nickname:res.properties['nickname'],
+															password: res.uuid,
+															profileimg :res.properties['profile_image']
+														}),
+														success:d=>{
+															alert('카카오톡으로 가입이 성공하였습니다.');
+															login(); 
+															
+															/*카톡 불러온 사진 서버 저장*/
+											                  $.ajax({
+																	url:$.ctx()+'/image/kakaoProfile/',
+																	method:'post',
+																	contentType:'application/json',
+																	data:JSON.stringify({
+																		member_id:res.id,
+																		profileimg :res.properties['profile_image']
+																	}),
+																	success:d=>{
+																		alert(d);
+																	},
+																	error:(m1,m2,m3)=>{alert(m3);}
+																});
+												            /*카톡 불러온 사진 서버 저장*/
+														},
+														error:(m1,m2,m3)=>{alert(m3);}
+													});
+											}else{
+												$.cookie("loginID", d.mbr.member_id);
+													app.service.header();
+													$('.nav_right').empty();
+													$('#content').empty();
+													app.service.content();
+							 							$('<div/>').addClass('menubar').appendTo('.nav_right');
+							 							app.service.nav(d.mbr);
+														$('#myinfo').click(e=>{
+															e.preventDefault();
+															mypage(d);
+														})
+													$('#moveToReservationList').click(e=>{
+														e.preventDefault();
+														reservationList(d);
+													});
+													$('#logout').click(e=>{
+														e.preventDefault();
+														$.cookie("loginID","");
+														app.router.home();
+													});	
+														
+											}
+											$('#validate').html(validate);
+										},
+										error:(m1,m2,m3)=>{
+											alert('에러발생'+m3);
+										}
+								});
+					            }
+		                  })			        
+					      },
+					      fail: function(err) {
+					         alert(JSON.stringify(err));
+					      }
+				    });
+				    /*------------카카오톡 기능 끝 ------------*/   
 	}
 	var join =()=>{
 		$('#header').empty();
@@ -154,61 +220,7 @@ app.permision = (()=>{
 				$('<input/>').attr({type:'text', id:'phone', placeholder:'휴대폰 번호(ex 010-9000-5000)를 입력하세요'}).addClass('inputData').appendTo('.inputBox');
 				$('<input/>').attr({type:'text', id:'address', placeholder:'주소를 입력하세요'}).addClass('inputData').appendTo('.inputBox');
 				$('<div/>').attr({id:'joinIdAlert'}).addClass('validAlert').appendTo('.inputBox');
-				
-				/*------------카카오톡 기능 시작 ------------*/
-				$('<a/>').attr({id:'kakao-login-btn', style:'margin-left:750px;'}).appendTo('.inputBox');
-				$('<a/>').attr({href:'http://developers.kakao.com/logout'}).appendTo('.inputbox');
-					  // <![CDATA[
-				    // 사용할 앱의 JavaScript 키를 설정해 주세요.
-				    Kakao.init('ab11f68d3c4372117993ec440aec4768');
-				    // 카카오 로그인 버튼을 생성합니다.
-				    Kakao.Auth.createLoginButton({
-				      container: '#kakao-login-btn',
-				      success: function(authObj) {
-				        alert(JSON.stringify(authObj));
-				        Kakao.API.request({
-				            url: '/v1/user/me',
-				            success: function(res) {
-				                  alert('res : ' + JSON.stringify(res)); 
-				                  alert('authObj : ' + JSON.stringify(authObj)); 
-				                  console.log('res.id : ' + res.id);  // id로 전달
-				                  console.log('authObj.access_token : ' + authObj.access_token); // token으로 전달
-				                  console.log('nickname : ' + res.properties['nickname']);  // nickname 전달 
-				                  console.log('profile_image : ' + res.properties['profile_image'] ); // profileimg전달
-				                  console.log('age_range : ' + res.properties['kakao_account.age_range'] ); // profileimg전달
-				                  console.log('birthday : ' + res.properties['kakao_account.birthday'] ); // profileimg전달
-				                  console.log('gender : ' + res.properties['kakao_account.gender'] ); // profileimg전달
-				                  $.ajax({
-										url:$.ctx()+'/member/join',
-										method:'post',
-										contentType:'application/json',
-										data:JSON.stringify({
-											member_id:res.id,
-											nickname:res.properties['nickname'],
-											kakaoToken:authObj.access_token,
-											password: app.service.makeRandomLetter(10)
-											
-										}),
-										success:d=>{
-											alert('회원가입 성공'); 
-										},
-										error:(m1,m2,m3)=>{alert(m3);}
-									});
-				            }
-	                  })			        
-				      },
-				      fail: function(err) {
-				         alert(JSON.stringify(err));
-				      }
-			    });
-			    /*------------카카오톡 기능 끝 ------------*/   
-				    
-				    
-				    
-				    
-				    
-				    
-				$('<div/>').addClass('hjButton').text('가입하기').attr({id:'joinButton'}).appendTo('.inputBox')
+				$('<div/>').addClass(['hjButton','joinButton']).text('가입하기').attr({id:'joinButton'}).appendTo('.inputBox')
 					.click(e=>{
 						e.preventDefault();
 						let validate ="";
@@ -660,7 +672,7 @@ app.permision = (()=>{
 			error:(m1,m2,m3)=>{alert(m3);}
 		});
 	}
-	return {login : login, join : join, mypage:mypage}
+	return {login : login, join : join, mypage:mypage, reservationList:reservationList}
 })();
 
 app.service = {
@@ -706,15 +718,6 @@ app.service = {
 						$.each(["서울","경기","인천","강원","제주","대전","충북","충남","세종","부산","울산","경남","대구","경북","광주","전남","전주","전북"],(i,j)=>{
 							$('<option/>').attr({value:j}).html(j).appendTo('#accomAddr');
 						})
-/*
- * $('<div/>').attr({id:'checkinDate'}).html('체크인').appendTo('#mainInput'); $('<div/>').attr({id:'mainInput3'}).appendTo('#checkinDate');
- * $('<input/>').attr({type:'date', name:'checkin_date',
- * id:'checkin_date'}).appendTo('#mainInput3')
- * 
- * $('<div/>').attr({id:'checkoutDate'}).html('체크아웃').appendTo('#mainInput');
- * $('<div/>').attr({id:'mainInput4'}).appendTo('#checkoutDate'); $('<input/>').attr({type:'date',
- * name:'checkout_date', id:'checkout_date'}).appendTo('#mainInput4')
- */
 						
 						/*--------------------------------------------------------------------*/
 				let today = new Date(new Date().getFullYear(),new Date().getMonth(), new Date().getDate());
@@ -776,11 +779,7 @@ app.service = {
 				-$('#start_date').val().split('-')[2]+1+'박')
 			})
 			
-			
 						/*--------------------------------------------------------------------*/						
-						
-						
-					
 					
 				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
 					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
@@ -852,19 +851,18 @@ app.service = {
 							$('<li/>').append(
 									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
 											$('<img>').attr({src:$.img()+'/profile/'+d.profileimg}).addClass('avatar'),
-				 							$('<a/>').attr({href:'#', id:'mypage', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
+				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
 									).append($('<ul/>').addClass('mouseOverUl').append(
+										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')),		 															
 	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')),
-			 							$('<li/>').append($('<a/>').attr({href:'#', id:'reservationList'}).html('예약내역'))		 															
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역'))		 															
 									)))).appendTo('.menubar');
 		},
 		makeRandomLetter : d=>{
 		    var text = "";
 		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
 		    for( var i=0; i < d; i++ )
 		        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
 		    return text;
 		}
 }
