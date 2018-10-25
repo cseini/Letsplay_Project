@@ -10,6 +10,8 @@ public interface AccomMapper {
 	public List<Object> listRoom(HeeTaeBean p);
 	public List<Object> listReview(HeeTaeBean p);
 	public int count(HeeTaeBean p);
+	public boolean retrieveReservationStartDate(HeeTaeBean p);
+	public boolean retrieveReservationEndDate(HeeTaeBean p);
 	public void insertReview(HeeTaeBean p);
 	public void delete(HeeTaeBean p);
 }
