@@ -784,7 +784,31 @@ app.service = {
 				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
 					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
 					.click(e=>{
-					});
+                        let accom_type_eng = $('#accomSelect').val();
+                        if(accom_type_eng=="모텔"){
+                            accom_type_eng = "motel"
+                        }else{
+                            accom_type_eng = "hotel"
+                        }
+                        $.ajax({
+                            url:'/web/taehyeong/search',
+                            method:'post',
+                            contentType : 'application/json',
+                            data : JSON.stringify({accom_type:accom_type_eng,
+                                accom_addr:$('#accomAddr').val(),
+                                checkin_date:$('#start_date').val(),
+                                checkout_date:$('#end_date').val()}),
+                                success:x=>{
+                                    let d = x
+                                    $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
+                                        taehyeong.content1.surroundings(d);
+                                    });
+                                },
+                                error:()=>{
+                                    alert('에러')
+                                }
+                        })
+                    });
 			/* header 끝 */
 		},
 		content :x=>{
@@ -933,7 +957,7 @@ app.router = {
 		$('#mylocation').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
-				taehyeong.main.init();
+				taehyeong.content1.surroundings();
 			});
 		});
 		$('#hotelSearch').addClass('ya_cusor').click(e=>{
