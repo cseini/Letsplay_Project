@@ -28,5 +28,6 @@ public interface BoardMapper {
   
 	public HashMap<String,Object> check(HashMap<String, Object>map);
 	
-	public void room(Board vo);
+	public HashMap<String,Object> getaddr(HashMap<String, Object>map);
+	
 }

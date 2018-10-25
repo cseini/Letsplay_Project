@@ -188,5 +188,11 @@ public class BoardCtrl {
 		logger.info("\n--------- BoardCtrl {} !!-----","check()");
 		return brdMap.check(x);
 	}
+	
+	@PostMapping("/getaddr/")
+	public HashMap<String, Object> getaddr(@RequestBody HashMap<String, Object> x){
+		logger.info("\n--------- BoardCtrl {} !!-----","getaddr()");
+		return brdMap.getaddr(x);
+	}
 
 }

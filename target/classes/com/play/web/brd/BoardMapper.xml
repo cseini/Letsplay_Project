@@ -38,6 +38,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="like_check" column="LIKE_CHECK"/>
 	<result property="bookmark_check" column="BOOKMARK_CHECK"/>
 	<result property="saved_uinque" column="SAVED_UINQUE"/>
+	
+	<result property="accom_seq" column="ACCOM_SEQ"/>
+	<result property="accom_name" column="ACCOM_NAME"/>
+	<result property="accom_addr" column="ACCOM_ADDR"/>
+	<result property="accom_phone" column="ACCOM_PHONE"/>
+	<result property="accom_business_no" column="ACCOM_BUSINESS_NO"/>
+	<result property="accom_type" column="ACCOM_TYPE"/>
+	<result property="accom_date" column="ACCOM_DATE"/>
+	<result property="accom_grade" column="ACCOM_GRADE"/>
+	<result property="longitude" column="LONGITUDE"/>
+	<result property="latitude" column="LATITUDE"/>
 </resultMap>
 
   <insert id="write">
@@ -169,5 +180,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	FROM saved_accom
 	WHERE MSG_SEQ LIKE #{msg_seq}
 	AND MEMBER_ID LIKE #{member_id}
+  </select>
+  
+  <select id="getaddr" resultMap="seinResult">
+	SELECT accom_seq, accom_addr
+	FROM accommodation
   </select>
 </mapper>

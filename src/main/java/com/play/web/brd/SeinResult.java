@@ -29,5 +29,8 @@ public class SeinResult {
 	private String name, password, birthdate, joindate, gender, age, phone, customer_grade, point, nickname, address, zipcode, profileimg;
 	
 	/*SAVED_ACCOM*/
-//	private Integer like_check, bookmark_check, sub_check;
+	private Integer like_check, bookmark_check, sub_check;
+	
+	/*accom*/
+	private String accom_seq, accom_name, accom_addr,accom_phone, accom_business_no, accom_type, accom_date, accom_grade;
 }

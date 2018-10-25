@@ -1053,29 +1053,15 @@ sein.service ={
 	        level: 3 // 지도의 확대 레벨
 	    };
 		var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-		var positions = new Array();
 		var geocoder = new daum.maps.services.Geocoder();
-		var addr = [{title:'나나',addr:'제주특별자치도 제주시 첨단로 242'},{title:'가가',addr:'경기도 고양시 일산서구 고양대로 112번길 64'}];
-		$.each(addr,(i,j)=>{
-			geocoder.addressSearch(j.addr, function(result, status) {
-				var coords = new daum.maps.LatLng(result[0].y, result[0].x);
-				var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
-				// 마커 이미지의 이미지 크기 입니다
-			    var imageSize = new daum.maps.Size(34, 60); 
-			    
-			    // 마커 이미지를 생성합니다    
-			    var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize); 
-			    
-			    // 마커를 생성합니다
-			    var marker = new daum.maps.Marker({
-			        map: map, // 마커를 표시할 지도
-			        position: coords, // 마커를 표시할 위치
-			        title : j.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-			        image : markerImage // 마커 이미지 
-			    });
-			})
-			 alert(j.title);
+		$.getJSON($.ctx()+'/getaddr/',d=>{
+			console.log(d.accom_addr);
+			/*$.each(d.accom_addr,(i,j)=>{
+				geocoder.addressSearch(j.addr, function(result, status) {
+					var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+					$.getJSON($.ctx()+'/setposition/'+result[0].y+'/'+result[0].x)		
+				}
+			})*/
 		})
-
 	}
 }
