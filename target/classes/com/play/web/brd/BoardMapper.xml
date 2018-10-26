@@ -35,9 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="address" column="ADDRESS"/>
 	<result property="zipcode" column="ZIPCODE"/>
 	<result property="profileimg" column="PROFILEIMG"/>
+	<result property="saved_seq" column="SAVED_SEQ"/>
+	<result property="accom_id" column="ACCOM_ID"/>
 	<result property="like_check" column="LIKE_CHECK"/>
 	<result property="bookmark_check" column="BOOKMARK_CHECK"/>
 	<result property="saved_uinque" column="SAVED_UINQUE"/>
+	<result property="sub_mem_id" column="SUB_MEM_ID"/>
 	
 	<result property="accom_seq" column="ACCOM_SEQ"/>
 	<result property="accom_name" column="ACCOM_NAME"/>
@@ -170,11 +173,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	WHERE SAVED_UNIQUE LIKE #{saved_unique}
   </insert>
   
-  <insert id="room">
-  	INSERT INTO ROOM (ACCOM_SEQ, ROOM_NAME, ROOM_NO, ROOM_PRICE)
-  	VALUES (#{accom_seq},#{room_name},#{room_no},#{room_price})
-  </insert>
-  
   <select id="check" resultMap="seinResult">
 	SELECT *
 	FROM saved_accom
@@ -182,8 +180,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	AND MEMBER_ID LIKE #{member_id}
   </select>
   
-  <select id="getaddr" resultMap="seinResult">
-	SELECT accom_seq, accom_addr
-	FROM accommodation
+  <select id="recent" resultMap="seinResult">
+  	SELECT *
+  	FROM saved_accom
+  	WHERE MEMBER_ID LIKE #{member_id}
+  	AND SUB_MEM_ID IS NOT NULL
   </select>
 </mapper>

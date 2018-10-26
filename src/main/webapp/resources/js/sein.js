@@ -2,13 +2,18 @@
 
 sein.board ={
 	cast : x=>{
+		$.cookie.json=true;
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #BDBDBD'}).appendTo($('#content'));
 
 		/*map 테스트*/
 		$('<button/>').addClass('btn btn-primary').html('map').appendTo($('#sein_content')).click(e=>{
-   			sein.service.map(x);	
+   			sein.service.map();	
+		})
+		/*mycast*/
+		$('<button/>').addClass('btn btn-primary').html('mycast').appendTo($('#sein_content')).click(e=>{
+   			sein.service.mycast();	
 		})
 		
 		/*배너 슬라이드*/
@@ -240,6 +245,16 @@ sein.service ={
 			).appendTo($('#side_menu'));
 		},
 		detail : x=>{
+			if($.cookie('loginID')!==undefined){
+				var recent = new Array();
+				$.each($.cookie('recent'),(i,j)=>{
+					recent.push(j);
+				})
+				recent.push(x);
+				$.cookie('recent',recent);
+			}
+			
+			/*{msg_photo:x.msg_photo,profileimg:x.profileimg,nickname:x.nickname,msg_title:x.msg_title,like_count:x.like_count,msg_count:x.msg_count}*/
 			$('#wrapper').scroll(()=>{e.preventDefault()});
 			$('#sein_content').empty();
 			$('<div/>').addClass('contents').attr({id:'topContent'}).appendTo($('#sein_content'));
@@ -1043,25 +1058,145 @@ sein.service ={
 			})
 		})
 	},
+	mycast : x=>{
+		$('#sein_content').empty();	
+		$('<div/>').addClass('contents').attr({style:'padding:60px 0;;min-height:720px'}).append(
+			$('<div/>').attr({style:'background-color:white;'}).addClass('type ver2').append(
+				$('<div/>').addClass('inner').append(
+					$('<h3/>').html('마이캐스트').attr({style:'margin-top:20px'}),
+					$('<ul/>').addClass('nav_menu').append(
+						$('<li/>').append(
+							$('<a/>').attr({href:'#'}).html('최근본캐스트')).click(e=>{
+							$('.con_inner').remove();
+							$('<div/>').addClass('con_inner').append(
+								$('<div/>').addClass('mycast_rap bord_all').append(
+									$('<ul/>').addClass('mycast_list')
+								),
+								$('<div/>').addClass('bt_rap')
+							).appendTo($('.contents'))
+							$.each($.cookie('recent'),(i,j)=>{
+								sein.service.recent({index:i,page:j});
+							})
+						}),
+						$('<li/>').append(
+							$('<a/>').attr({href:'#'}).html('구독')
+						).click(e=>{
+								$('.con_inner').remove();
+							
+						}),
+						$('<li/>').append(
+								$('<a/>').attr({href:'#'}).html('북마크')).click(e=>{
+							
+						})
+					)
+				)
+			)		
+		).appendTo($('#sein_content'));
+		
+		$('<div/>').addClass('con_inner').append(
+			$('<div/>').addClass('mycast_rap bord_all').append(
+				$('<ul/>').addClass('mycast_list')
+			),
+			$('<div/>').addClass('bt_rap')
+		).appendTo($('.contents'))
+			
+		$.each($.cookie('recent'),(i,j)=>{
+			sein.service.recent({index:i,page:j});
+		})
+			
+		/*이건 구독한거...
+		$.getJSON($.ctx()+'/mysub/'+$.cookie('loginID')+'/',d=>{
+			$.each(d.list,(i,j)=>{
+				alert(j.sub_mem_id);
+				
+			})
+		})*/
+	},
+	recent : x=>{
+		$('<li/>').attr({id:'recent'+x.page.msg_seq}).append(
+			$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
+				$('<img/>').attr({src:$.img()+'/cast/'+x.page.msg_photo}).click(e=>{
+					sein.service.detail(x.page);
+				})
+			),
+			$('<div/>').append(
+				$('<a/>').attr({href:'#'}).html(x.page.msg_title).append(
+					$('<div/>').addClass('count').append(
+						$('<span/>').addClass('ico_like'),
+						$('<b/>').html(x.page.like_count),
+						$('<span/>').addClass('ico_read'),
+						$('<b/>').html(x.page.msg_count)
+					)		
+				),
+				$('<a/>').attr({href:'#'}).append(
+					$('<div/>').attr({style:'margin-top:30px;'}).append(
+						$('<img/>').attr({src:$.img()+'/profile/'+x.page.profileimg,style:'width:40px'}).click(e=>{
+							alert('프로필클릭 캐스터로 이동')
+						}),
+						$('<b/>').text(x.page.nickname).append(
+							$('<span/>').text(' 한줄 소개글')
+						)
+					)	
+				),
+				$('<div/>').addClass('list_del').append(
+					$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
+						$('<span/>').addClass('ico_del')	
+					),
+					$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
+						$('#recent'+x.page.msg_seq).remove();
+						var recent = new Array();
+						$.each($.cookie('recent'),(i,j)=>{
+							recent.push(j);
+						})
+						alert(x.index+"삭제");
+						recent.splice(x.index,1);
+						$.cookie('recent',null);
+						$.cookie('recent',recent);
+					})
+				)
+			)
+		).appendTo('.mycast_list')
+	},
 	map : x=>{
 		$('#sein_content').empty();
-		$('<div/>').attr({id:'location',style:'width:100%;min-height:800px'}).appendTo($('#sein_content'));
+		$('<div/>').attr({style:'width:800px;height:500px'}).attr({id:'location'}).appendTo($('#sein_content'));
+	var mapContainer = document.getElementById('location'), // 지도를 표시할 div 
+    mapOption = { 
+        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
 
-		var mapContainer = document.getElementById('location'), // 지도를 표시할 div  
-	    mapOption = { 
-	        center: new daum.maps.LatLng(37.566535,126.97796919999996), // 지도의 중심좌표
-	        level: 3 // 지도의 확대 레벨
-	    };
-		var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-		var geocoder = new daum.maps.services.Geocoder();
-		$.getJSON($.ctx()+'/getaddr/',d=>{
-			console.log(d.accom_addr);
-			/*$.each(d.accom_addr,(i,j)=>{
-				geocoder.addressSearch(j.addr, function(result, status) {
-					var coords = new daum.maps.LatLng(result[0].y, result[0].x);
-					$.getJSON($.ctx()+'/setposition/'+result[0].y+'/'+result[0].x)		
-				}
-			})*/
-		})
+	var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+	 
+	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다 
+	var points = [
+	    new daum.maps.LatLng(33.452278, 126.567803),
+	    new daum.maps.LatLng(33.452671, 126.574792),
+	    new daum.maps.LatLng(33.451744, 126.572441),
+	    new daum.maps.LatLng(37.52025364082772, 127.02847913674161)
+	];
+
+	// 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
+	var bounds = new daum.maps.LatLngBounds();    
+
+	var i, marker;
+	for (i = 0; i < points.length; i++) {
+	    // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
+	    marker =     new daum.maps.Marker({ position : points[i] });
+	    marker.setMap(map);
+	    
+	    // LatLngBounds 객체에 좌표를 추가합니다
+	    bounds.extend(points[i]);
+	}
+/*
+	function setBounds() {
+	    // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
+	    // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
+	    map.setBounds(bounds);
+	}*/
+		$('<button/>').addClass('btn btn-primary').text('재설정').appendTo($('#sein_content')).click(e=>{
+			setBounds();
+		});
+		 map.setBounds(bounds);
 	}
 }

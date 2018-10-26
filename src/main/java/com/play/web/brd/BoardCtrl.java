@@ -189,10 +189,15 @@ public class BoardCtrl {
 		return brdMap.check(x);
 	}
 	
-	@PostMapping("/getaddr/")
-	public HashMap<String, Object> getaddr(@RequestBody HashMap<String, Object> x){
-		logger.info("\n--------- BoardCtrl {} !!-----","getaddr()");
-		return brdMap.getaddr(x);
+	@GetMapping("/mysub/{member_id}/")
+	public HashMap<String, Object> recent(@PathVariable String member_id) {
+		logger.info("\n--------- BoardCtrl {} !!-----","mysub()");
+		smap.clear();
+		smap.put("member_id", member_id);
+		List<SeinResult> list = brdMap.mysub(smap); 
+		smap.clear();
+		smap.put("list", list);
+		return smap;
 	}
 
 }

@@ -27,7 +27,6 @@ public interface BoardMapper {
 	public void deleteLike(HashMap<String, Object>map);
   
 	public HashMap<String,Object> check(HashMap<String, Object>map);
-	
-	public HashMap<String,Object> getaddr(HashMap<String, Object>map);
+	public List<SeinResult> mysub(HashMap<String, Object>map);
 	
 }
