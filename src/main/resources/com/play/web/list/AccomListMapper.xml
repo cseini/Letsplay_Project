@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </resultMap>
 
   <select id="list" resultMap="TaehyeongResult">
-  SELECT a.ACCOM_SEQ, a.ACCOM_PHOTO1,a.ACCOM_ADDR, Min(b.ROOM_PRICE) AS PRICE, a.ACCOM_INTRODUCTION, a.ACCOM_PLACE, a.ACCOM_INTRODUCE, a.ACCOM_NAME
+  SELECT a.ACCOM_SEQ, a.ACCOM_PHOTO1,a.ACCOM_ADDR, Min(b.ROOM_PRICE) AS PRICE, a.ACCOM_INTRODUCTION, a.LONGITUDE, a.LATITUDE, a.ACCOM_INTRODUCE, a.ACCOM_NAME
   FROM accommodation a
   join room b
   on a.ACCOM_SEQ like b.ACCOM_SEQ

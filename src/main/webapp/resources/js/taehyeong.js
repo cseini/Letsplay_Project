@@ -47,7 +47,9 @@ taehyeong.list_map={
 		
 		$('<p/>').addClass('list_font').attr({id:'font_'}).html('필터 초기화').appendTo($('#list_ul'));
 		$('<i>').addClass('icono-reset').appendTo($('#font_'));
-		$('#list_li0').click(x=>{
+		
+		$("#list_li1_div0").click(()=>{
+			$('.radio__1').remove();
 			$('<div/>').addClass('radio__1').attr({id:'radio__1'}).appendTo($('#list_li1_div0'));
 			$.each(["기본순","인기순","가볼래요 많은 순"],(i,j)=>{
 				$('<div/>').addClass('radio1__input').attr({id:'radio1_input'+i}).appendTo($('#radio__1'))
@@ -62,17 +64,23 @@ taehyeong.list_map={
 			$('#radio1_writer2').click(x=>{
 				alert('dd');
 			});
-			$('#radio__1').click(()=>{
-					$('#radio__1').remove();
-				})
+
+			var q1 = $(document).ready(function(){
+				$(document).mouseup(function (e){
+					var container = $(".radio__1");
+					if( container.has(e.target).length === 0)
+					container.hide();
+					});
 		})
+		}) 
 		
 		$('#list_li1').click(x=>{
+			$('.radio__1').remove();
 			$('<div/>').addClass('radio__1').attr({id:'radio2__'}).appendTo($('#list_li1_div1'));
-			
+			q1;
 		})
 		$('#list_li2').click(x=>{
-			
+			$('.radio__1').remove();
 			$('<div/>').addClass('radio__1 radio__12').attr({id:'radio3__'}).appendTo($('#list_li1_div2'));
 			let radio3___checkBox = [{id:'choi_ju_ga',name:"최저가보상"},
 									{id:'molka',name:"몰카예방교육"},
@@ -86,13 +94,15 @@ taehyeong.list_map={
 			$('<button/>').addClass('radio3_button').attr({id:'radio3_button'}).html('확인').appendTo($('#radio3__'));
 			
 			$('#radio3_button').click(()=>{
-				$('#radio3__').remove();
+				$('.radio__1').remove();
 			})
+			q1;
 		})
 		
 		$('#list_li3').click(x=>{
+			$('.radio__1').remove();
 			$('<div/>').addClass('radio__1').attr({id:'radio4__'}).appendTo($('#list_li1_div3'));
-			
+			q1;
 		})
 		$('<div/>').addClass('font_1 font_weight800').html('이 지역 추천').appendTo($('#list'));
 		$('<div/>').addClass('first_list').attr({id:'first_list'}).appendTo($('#list'))
@@ -161,7 +171,6 @@ taehyeong.list_map={
 			$('<div/>').addClass('square').attr('style','background-color:'+square_color[i]).appendTo($('#map_header_writer'+i));
 			$('<p/>').addClass('font_2').html(j).appendTo($('#map_header_writer'+i));
 		})
-	//서울특별시 강남구 신사동 587-21
 	var mapContainer = document.getElementById('map1'), // 지도를 표시할 div  
     mapOption = { 
         center: new daum.maps.LatLng(37.566535,126.97796919999996), // 지도의 중심좌표
@@ -172,11 +181,13 @@ taehyeong.list_map={
 	var positions = new Array();
 	$.each(x.list,(i,j)=>{
 		positions.push({'title' : j.ACCOM_NAME,
-				'latlng': new daum.maps.LatLng(j.ACCOM_PLACE.split(',')[0],j.ACCOM_PLACE.split(',')[1])})
+				'latlng': new daum.maps.LatLng(j.LONGITUDE, j.LATITUDE)})
 	})
 	var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
 	var imageSize = new daum.maps.Size(34, 60); 
-	for (var i = 0; i < positions.length; i ++) {
+	
+	var position
+	$.each(x.list,(i,j)=>{
 	    // 마커 이미지를 생성합니다    
 	    var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize); 
 	    
@@ -188,19 +199,33 @@ taehyeong.list_map={
 	    });
 	    var content = '<div class="customoverlay">' +
 	    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
-	    '    <span class="title">구의야구공원</span>' +
+	    '    <span class="title">'+x.list[i].ACCOM_NAME+'</span>' +
 	    '  </a>' +
 	    '</div>';
-	    var position = positions[i].latlng;
+	    position = positions[i].latlng;
 	    var customOverlay = new daum.maps.CustomOverlay({
-	        map: map,
 	        position: position,
 	        content: content,
-	        yAnchor: 1 
+	        yAnchor: 2.7
 	    });
-	}
+	    daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+	    daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+	    daum.maps.event.addListener(marker, 'click', function() {
+	    	alert(j.ACCOM_SEQ);
+	  });
+	})
+	
+    function makeOverListener(map, marker, customOverlay) {
+        return function() {
+        	customOverlay.setMap(map);
+        };
+    }
+    // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+    function makeOutListener(customOverlay) {
+        return function() {
+        	customOverlay.setMap(null);
+        };
+    }
 		$('#footer').empty();//.appendTo($('#content'));
-	
-	
 	}
 }
