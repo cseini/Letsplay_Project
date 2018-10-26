@@ -35,6 +35,7 @@ public class AccomCtrl {
 	
 	@RequestMapping("/detail/{accom_seq}/")
 	public @ResponseBody Map<String,Object> retriveAccom(@PathVariable String accom_seq) {
+		map.clear();
 		hht.setAccom_seq(accom_seq);
 		map = (HashMap<String, Object>) mpr.retrieveAcom(hht);
 		return map;
@@ -52,28 +53,24 @@ public class AccomCtrl {
 			long diff = end.getTime() - start.getTime();
 			long diffDays = diff/(24 * 60 * 60 * 1000);
 			hht.setCheckout_date((String)p.get("end"));
-			
 			for (Object i : ((List<Object>) p.get("room_seq"))) {
 				cal.setTime(start);
 				hht.setCheckin_date(df.format(cal.getTime()));
 				hht.setRoom_seq(String.valueOf(i));
 				lst.add(true);
-				for(int j=0; j<diffDays; j++) {
+				for(int j=0; j<((int)diffDays)+1; j++) {
 					boolean s = mpr.retrieveReservationStartDate(hht);
 					boolean e = mpr.retrieveReservationEndDate(hht);
-					Util.log.accept("룸 시퀀스 : "+hht.getRoom_seq());
 					
 					if(s && e) {
 						lst.set(count, true);
 					}else {
 						lst.set(count, false);
-						Util.log.accept("멈춤");
 						break;
 					}
 					cal.add(Calendar.DATE, 1);
 				}
 				count++;
-				Util.log.accept("실행중인 날짜 : "+df.format(cal.getTime()));
 			}
 			map.put("reservation",lst);
 		} catch (ParseException e1) {
@@ -83,6 +80,8 @@ public class AccomCtrl {
 	}
 	@RequestMapping("/room/{accom_seq}/")
 	public @ResponseBody Map<String,Object> listRoom(@PathVariable String accom_seq) {
+		map.clear();
+		lst.clear();
 		hht.setAccom_seq(accom_seq);
 		lst = mpr.listRoom(hht);
 		map.put("list", lst);
@@ -90,6 +89,8 @@ public class AccomCtrl {
 	}
 	@RequestMapping("/review/{accom_seq}")
 	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq){
+		map.clear();
+		lst.clear();
 		hht.setAccom_seq(accom_seq);
 		lst = mpr.listReview(hht);
 		map.put("list", lst);

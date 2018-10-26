@@ -17,9 +17,10 @@ heetae.main =(()=>{
 	}
 	var setContentView =()=>{
 		let img, w ,nav ,header ,content , footer
-		,accom,accom2,testseq,today,rs,button_check;
-		
+		,accom,accom2,testseq,today,rs,button_check,save_start,save_end,save_reservation
+		,save_acom_start,save_acom_end;
 		button_check = "accom"
+		save_reservation = new Array()
 		img = $.img()
 		w = $('#wrapper');
 		nav = $('#nav')
@@ -30,9 +31,9 @@ heetae.main =(()=>{
 		testseq = 3;
 		today = new Date(new Date().getFullYear(),
 				new Date().getMonth(), new Date().getDate());	
-		
 		header.empty()
 		content.empty()
+		
 		$.getJSON($.ctx()+'/accom/detail/'+testseq+'/',d=>{
 			$('<div/>')
 			.attr({'id':'carouselExampleControls'
@@ -235,13 +236,12 @@ heetae.main =(()=>{
 			$('<div/>')
 			.addClass('heetae_tab_content')
 			.appendTo('.heetae_section3')
-			
 			$.getJSON($.ctx()+'/accom/room/'+d.accom_seq+'/',s=>{
 				$.each(s.list,(i,j)=>{
-					let d = ({'list':j,'num':i,'reservation':"true"})
-					heetae.detail.accom(d);
+					save_reservation.push(true)
+					let t = ({'list':j,'num':i,'reservation':true})
+					heetae.detail.accom(t);
 				})
-				//객실정보 리스트
 				$('<button/>')
 				.attr({'type':'button',
 					'id' : 'tab_button1'})
@@ -249,22 +249,32 @@ heetae.main =(()=>{
 				.addClass('heetae_tab_button_active')
 				.click(e=>{
 					e.preventDefault()
-					button_check = "accom"
-					$('#tab_button1')
-					.removeClass()
-					.addClass('heetae_tab_button_active')
-					$('#tab_button2')
-					.removeClass()
-					.addClass('heetae_tab_button')
-					
-					$('.heetae_tab_content')
-					.empty()
-					
-					$.each(s.list,(i,j)=>{
-						//여기 추가해야함
-						let d = ({'list':j,'num':i,'reservation':"true"})
-						heetae.detail.accom(d);
-					})
+					if(button_check!="accom"){
+						button_check = "accom"
+						if($('#start_date').val()!=save_acom_start
+								||$('#end_date').val()!=save_acom_end)
+						{
+							save_acom_start = $('#start_date').val()
+							save_acom_end = $('#end_date').val()
+							let t = {'list':s.list,'button_check':button_check}
+							heetae.detail.accom_controller(t);
+						}else{
+							$('#tab_button1')
+							.removeClass()
+							.addClass('heetae_tab_button_active')
+							
+							$('#tab_button2')
+							.removeClass()
+							.addClass('heetae_tab_button')
+							
+							$('.heetae_tab_content')
+							.empty()
+							$.each(s.list,(i,j)=>{
+								let t = ({'list':j,'num':i,'reservation':save_reservation[i]})
+								heetae.detail.accom(t);
+							})
+						}
+					}
 				})
 				.appendTo('.heetae_tab_head')
 					
@@ -353,10 +363,6 @@ heetae.main =(()=>{
 					$('<select/>')
 					.addClass(['custom-select','custom-select-lg','mb-3'])
 					.appendTo('.heetae_review_selectbox')
-					
-					/*$.each()
-					$('<option/>')*/
-					
 					
 					
 					$('<textarea/>')
@@ -511,7 +517,6 @@ heetae.main =(()=>{
 					$('<p/>')
 					.text('는 숙소에 직접 방문한 회원만 작성할 수 있습니다.')
 					.appendTo('.heetae_review_message')
-					
 					$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/',r=>{
 						$.each(r.list,(i,j)=>{
 							let review_temp = {
@@ -592,8 +597,20 @@ heetae.main =(()=>{
 						return new Date($('#start_date').val().split('-')[0]
 						,($('#start_date').val().split('-')[1]-1)
 						,$('#start_date').val().split('-')[2]);
+		            },
+		            maxDate: function () {
+						let td = new Date($('#start_date').val().split('-')[0]
+						,($('#start_date').val().split('-')[1]-1)
+						,$('#start_date').val().split('-')[2]);
+						td.setDate(td.getDate()+8)
+						return td
 		            }
-				});		
+				});	
+				//찾기
+				save_start = $('#start_date').val()
+				save_end = $('#end_date').val()
+				let ar = []
+				
 				
 				$('.gj-icon')
 				.addClass('heetae_hide_ico')
@@ -620,138 +637,177 @@ heetae.main =(()=>{
 				.addClass('heetae_check_bottom_con1')
 				.appendTo('.heetae_check_bottom')
 				$('<span/>')
-				.text('1박')
+				.text('1박 2일')
 				.addClass('heetae_check_bottom_con2')
 				.appendTo('.heetae_check_bottom')
 				
-				
 				$('#start_date')
 				.change(e=>{
-					if($('#start_date').val().split('-')[2]>$('#end_date').val().split('-')[2] 
-					|| $('#start_date').val().split('-')[1]>$('#end_date').val().split('-')[1]){
-						$('#end_date').val($('#start_date').val())
-					}
-					$('.heetae_check_bottom_con2')
-					.text($('#end_date').val().split('-')[2]
-					-$('#start_date').val().split('-')[2]+1+'박')
-					let ar = []
-					let em = s.list
-					$.each(s.list,(i,j)=>{
-						ar[i]=j.room_seq
-					})
-						$.ajax({
-							url:$.ctx()+'/accom/reservation/',
-							method:'post',
-							contentType:'application/json',
-							data:JSON.stringify({start:$('#start_date').val()
-								,end:$('#end_date').val(),room_seq:ar}),
-							success:d=>{
-								let sw = true;
-								$.each(s.list,(i,j)=>{
-									//여기 추가해야함
-									if(button_check==="accom"){
-										if(sw){
-											$('#tab_button1')
-											.removeClass()
-											.addClass('heetae_tab_button_active')
-											
-											$('#tab_button2')
-											.removeClass()
-											.addClass('heetae_tab_button')
-											
-											$('.heetae_tab_content')
-											.empty()
-											sw=false
-										}
-										let t = ({'list':j,'num':i,'reservation':d.reservation[i]})
-										heetae.detail.accom(t);
-									}
-								})
-							},
-							error:(m1,m2,m3)=>{
-								alert(에러임);
-							}	
-						})
+						if($('#start_date').val()!=save_start){
+							save_start = $('#start_date').val()
+							let sd = new Date($('#start_date').val().split('-')[0]
+							,($('#start_date').val().split('-')[1])
+							,$('#start_date').val().split('-')[2])
+							sd.setDate(sd.getDate()-1)
+							let ed = new Date($('#end_date').val().split('-')[0]
+							,($('#end_date').val().split('-')[1])
+							,$('#end_date').val().split('-')[2])
+							ed.setDate(ed.getDate()-1)
+							if(sd.getTime()>ed.getTime()){
+								$('#end_date').val($('#start_date').val())
+								save_end = $('#start_date').val()
+								ed = new Date($('#end_date').val().split('-')[0]
+								,($('#end_date').val().split('-')[1])
+								,$('#end_date').val().split('-')[2])
+								ed.setDate(ed.getDate()-1)
+								}
+								let ts = ed.getDate()-sd.getDate();
+								if(ts==0){
+									$('.heetae_check_bottom_con2')
+									.text('1박2일')
+								}else{
+									$('.heetae_check_bottom_con2')
+									.text((ts)+'박'+(ts+1)+'일')
+								}
+							let t = {'list':s.list,'button_check':button_check}
+							heetae.detail.accom_controller(t);
+							$.each(s.list,(i,j)=>{
+								ar[i]=j.room_seq
+							})
+							save_reservation = new Array()
+							$.ajax({
+								url:$.ctx()+'/accom/reservation/',
+								method:'post',
+								contentType:'application/json',
+								data:JSON.stringify({start:$('#start_date').val()
+									,end:$('#end_date').val(),room_seq:ar}),
+								success:d=>{
+									$.each(d.reservation,(i,j)=>{
+										save_reservation.push(j)
+									})
+								},
+								error:(m1,m2,m3)=>{
+									alert('에러');
+								}	
+							})
+						}
 				})
+				
 				$('#end_date')
 				.change(e=>{
-					$('.heetae_check_bottom_con2')
-					.text($('#end_date').val().split('-')[2]
-					-$('#start_date').val().split('-')[2]+1+'박')
-					let start = $('#start_date').val()
-					let end = $('#end_date').val()
+							if($('#end_date').val()!=save_end){
+								save_end = $('#end_date').val()
+								let sd = new Date($('#start_date').val().split('-')[0]
+								,($('#start_date').val().split('-')[1])
+								,$('#start_date').val().split('-')[2])
+								sd.setDate(sd.getDate()-1)
+								let ed = new Date($('#end_date').val().split('-')[0]
+								,($('#end_date').val().split('-')[1])
+								,$('#end_date').val().split('-')[2])
+								ed.setDate(ed.getDate()-1)
+								let ts = ed.getDate()-sd.getDate();
+								if(ts==0){
+									$('.heetae_check_bottom_con2')
+									.text('1박2일')
+								}else{
+									$('.heetae_check_bottom_con2')
+									.text((ts)+'박'+(ts+1)+'일')
+								}
+								let t = {'list':s.list,'button_check':button_check}
+								heetae.detail.accom_controller(t);
+								$.each(s.list,(i,j)=>{
+									ar[i]=j.room_seq
+								})
+								save_reservation = new Array()
+								$.ajax({
+									url:$.ctx()+'/accom/reservation/',
+									method:'post',
+									contentType:'application/json',
+									data:JSON.stringify({start:$('#start_date').val()
+										,end:$('#end_date').val(),room_seq:ar}),
+									success:d=>{
+										$.each(d.reservation,(i,j)=>{
+											save_reservation.push(j)
+										})
+									},
+									error:(m1,m2,m3)=>{
+										alert('에러');
+									}	
+								})
+							}
 				})
+				
+			
+				$('<div/>') //지도
+				.addClass('heetae_check_map')
+				.appendTo('.heetae_section2')
+				
+				$('<div/>')
+				.addClass('heetae_cupon_list')
+				.appendTo('.heetae_section2')
+				
+				$('<div/>')
+				.addClass('heetae_cupon_title')
+				.appendTo('.heetae_cupon_list')
+				
+				$('<em/>')
+				.text('할인 쿠폰 정보')
+				.appendTo('.heetae_cupon_title')
+				
+				$('<i/>')
+				.attr({'id':'example'
+					,'data-toggle':"tooltip" 
+					,'data-placement':"bottom" 
+				    ,'title':"이번 프로젝트에서 쿠폰은 구현되지 않았습니다."})
+				.appendTo('.heetae_cupon_title')
+				$('#example').tooltip()
+				
+				$('<div/>')
+				.addClass('heetae_cupon_content')
+				.appendTo('.heetae_cupon_list')
+				
+				$('<li/>')
+				.addClass('heetae_cupon_content_item')
+				.appendTo('.heetae_cupon_content')
+				
+				$('<div/>')
+				.addClass('heetae_cupon_content_item_info')
+				.appendTo('.heetae_cupon_content_item')
+				
+				$('<span/>')
+				.addClass('heetae_cupon_item_title')
+				.appendTo('.heetae_cupon_content_item_info')
+				
+				$('<em/>')
+				.text('1,000 원')
+				.appendTo('.heetae_cupon_item_title')
+				
+				$('<p/>')
+				.text('할인')
+				.appendTo('.heetae_cupon_item_title')
+				
+				$('<span/>')
+				.addClass('heetae_cupon_item_name')
+				.text('[요일 항목]')
+				.appendTo('.heetae_cupon_content_item_info')
+				$('<span/>')
+				.addClass('heetae_cupon_item_subtitle')
+				.text('숙실, 대실, 연박등..')
+				.appendTo('.heetae_cupon_content_item_info')
+				
+				$('<button/>')
+				.addClass('heetae_cupon_item_button')
+				.appendTo('.heetae_cupon_content_item')
+				
+				$('<i/>')
+				.appendTo('.heetae_cupon_item_button')
+				
+				$('<span/>')
+				.text('미구현')
+				.appendTo('.heetae_cupon_item_button')
 			})
-			
-			$('<div/>') //지도
-			.addClass('heetae_check_map')
-			.appendTo('.heetae_section2')
-			
-			$('<div/>')
-			.addClass('heetae_cupon_list')
-			.appendTo('.heetae_section2')
-			
-			$('<div/>')
-			.addClass('heetae_cupon_title')
-			.appendTo('.heetae_cupon_list')
-			
-			$('<em/>')
-			.text('할인 쿠폰 정보')
-			.appendTo('.heetae_cupon_title')
-			
-			$('<i/>')
-			.attr({'id':'example'
-				,'data-toggle':"tooltip" 
-				,'data-placement':"bottom" 
-			    ,'title':"이번 프로젝트에서 쿠폰은 구현되지 않았습니다."})
-			.appendTo('.heetae_cupon_title')
-			$('#example').tooltip()
-			
-			$('<div/>')
-			.addClass('heetae_cupon_content')
-			.appendTo('.heetae_cupon_list')
-			
-			$('<li/>')
-			.addClass('heetae_cupon_content_item')
-			.appendTo('.heetae_cupon_content')
-			
-			$('<div/>')
-			.addClass('heetae_cupon_content_item_info')
-			.appendTo('.heetae_cupon_content_item')
-			
-			$('<span/>')
-			.addClass('heetae_cupon_item_title')
-			.appendTo('.heetae_cupon_content_item_info')
-			
-			$('<em/>')
-			.text('1,000 원')
-			.appendTo('.heetae_cupon_item_title')
-			
-			$('<p/>')
-			.text('할인')
-			.appendTo('.heetae_cupon_item_title')
-			
-			$('<span/>')
-			.addClass('heetae_cupon_item_name')
-			.text('[요일 항목]')
-			.appendTo('.heetae_cupon_content_item_info')
-			$('<span/>')
-			.addClass('heetae_cupon_item_subtitle')
-			.text('숙실, 대실, 연박등..')
-			.appendTo('.heetae_cupon_content_item_info')
-			
-			$('<button/>')
-			.addClass('heetae_cupon_item_button')
-			.appendTo('.heetae_cupon_content_item')
-			
-			$('<i/>')
-			.appendTo('.heetae_cupon_item_button')
-			
-			$('<span/>')
-			.text('미구현')
-			.appendTo('.heetae_cupon_item_button')
 		})	
-	} //끝
+	}
 	return{init : init}
 })()
 
@@ -918,9 +974,51 @@ heetae.detail = {
 		    .text('예약 하기')
 		    .addClass('heetae_tab_info_reserve_btn')
 		    .appendTo('#'+x.num+'_room_info')
-		    .click(e=>{
-		    	e.preventDefault()
-		    })
+		    
+		    
+		    	if($.cookie("loginID")==null){
+		    		$('#'+x.num+'_room_info')
+		    		.click(e=>{
+		    			alert('비회원은 예약할 수 없습니다')
+		    		})
+		    	}else{
+		    		$('#'+x.num+'_room_info')
+				    .attr({'data-target':"#layerpop",'data-toggle':"modal"})
+				    
+		    		$('<button/>')
+		    		.addClass('btn btn-light')
+		    		.attr({'data-target':"#layerpop",'data-toggle':"modal"})
+		    		.text('변경').appendTo('#modifyPhone')
+		    		.click(e=>{
+		    			$.getScript($.ctx()+'/resources/js/app.js',()=>{
+		    				app.service.myModal();
+		    				$('<h4/>')
+							.html('휴대폰 번호 변경하기')
+							.appendTo('#modalTitle');
+							$('<div/>')
+							.html('현재 휴대폰번호')
+							.attr({style:'padding-bottom:15px; font-weight: bold'})
+							.appendTo('.modal-body');
+							$('<div/>')
+							.html(d.mbr.phone)
+							.attr({style:'padding-bottom:15px'})
+							.appendTo('.modal-body');
+							$('<div/>')
+							.html('변경 휴대폰번호')
+							.attr({style:'padding-bottom:15px;font-weight: bold'})
+							.appendTo('.modal-body');
+							$('<input/>')
+							.attr({type:'text', id:'changePhone', placeholder:'변경하려는 핸드폰 번호를 입력해주세요.'})
+							.addClass('inputData')
+							.appendTo('.modal-body');
+							$('<button/>')
+							.addClass('radi_button btn_save')
+							.attr({id:'update_phone'})
+							.text('수정완료')
+							.appendTo('.modal-body')
+		    			});
+		    		})
+		    	}
 	    }else{
 	    	$('<a/>')
 		    .attr('href','#')
@@ -932,6 +1030,49 @@ heetae.detail = {
 		    })
 	    }
 	    
+	},
+	accom_controller : x=>{
+		let ar = []
+		let rd = new Array()
+		$.each(x.list,(i,j)=>{
+			ar[i]=j.room_seq
+		})
+		$.ajax({
+			url:$.ctx()+'/accom/reservation/',
+			method:'post',
+			contentType:'application/json',
+			data:JSON.stringify({start:$('#start_date').val()
+				,end:$('#end_date').val(),room_seq:ar}),
+			success:d=>{
+				let sw = true;
+				$.each(x.list,(i,j)=>{
+					//여기 추가해야함
+					if(x.button_check==="accom"){
+						if(sw){
+							$('#tab_button1')
+							.removeClass()
+							.addClass('heetae_tab_button_active')
+							
+							$('#tab_button2')
+							.removeClass()
+							.addClass('heetae_tab_button')
+							
+							$('.heetae_tab_content')
+							.empty()
+							sw=false
+						}
+						
+						let t = ({'list':j,'num':i,'reservation':d.reservation[i]})
+						heetae.detail.accom(t);
+					}
+				})
+				rd = d
+			},
+			error:(m1,m2,m3)=>{
+				alert('에러');
+			}	
+		})
+		return rd
 	},
 	review : x=>{
 		let t = true
