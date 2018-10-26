@@ -25,21 +25,116 @@ app.main =(()=>{
 
 app.permision = (()=>{
 	var reservationList = d=>{
-		alert('reservationList 들어옴');
-		$('#header').empty();
-		$('#content').empty();
-		$('<div/>').addClass('reservationList').attr({style:'background: #f5f5f5'}).appendTo('#content');
-		$('<table/>').addClass('reservationTable').appendTo('.reservationList');
-		$('<tr/>').append(
-				$('<th/>').html('숙소이름'),
-				$('<th/>').html('방번호'),
-				$('<th/>').html('주소'),
-				$('<th/>').html('체크인'),
-				$('<th/>').html('체크아웃'),
-				$('<th/>').html('결제가격'),
-				$('<th/>').html('결제일')
-		).appendTo('.reservationTable')
+		$.getJSON($.ctx()+'/member/list/'+d.mbr.member_id, d=>{
+			$('#header').empty();
+			$('#content').empty();
+			$('<div/>').addClass('reserve-main-content').appendTo('#content');
+			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
+				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
+					$('<section/>').addClass('history-cont').appendTo('.reserve-content');
+						$('<div/>').addClass('history-item-ready-reserve').appendTo('.history-cont');
+							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
+						$.each(d.rlist,(i,j)=>{
+							$('.info').addClass('info_reservelist_'+i).append(
+								$('<div/>').append(
+													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({href:'http://www.yanolja.com/places/24050'}),
+													$('<span/>').html(j.room_no)),
+								$('<div/>').addClass('txt-address').html(j.accom_addr),
+								$('<ul/>').addClass('reserveinfo-list')
+									.append(
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('예약번호'),
+														$('<b/>').html(j.res_no).attr({style:'padding-left: 30px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('입실'),
+														$('<b/>').html(j.checkin_date).attr({style:'padding-left: 60px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('퇴실'),
+														$('<b/>').html(j.checkout_date).attr({style:'padding-left: 60px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('예약일'),
+														$('<b/>').html(j.pay_date).attr({style:'padding-left: 43px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('판매가'),
+														$('<b/>').html(j.pay_price).attr({style:'padding-left: 43px'}))
+									)
+								);
+								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
+									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
+									$('<button/>').addClass('btns-cancel').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
+										.click(e=>{
+											app.service.myModal();
+											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
+											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약취소하기').appendTo('.modal-body')
+												.click(e=>{
+													alert('모달 클릭');
+														$.ajax({
+															url :$.ctx()+'/member/cancel',
+															method:'post',
+															contentType:'application/json',
+															data:JSON.stringify({
+																member_id:$.cookie("loginID"),
+																nickname:$('#changeNickname').val()
+															}),
+															success:s=>{
+																$('#layerpop').modal('hide')
+																$('#layerpop').on('hidden.bs.modal',()=>{
+																	app.permision.mypage(d);
+																	$('#mypage').html($('#changeNickname').val());
+								                                })
+															},
+															error:(m1,m2,m3)=>{alert(m3);}
+														});
+													});
+										});
+						}); /*예약 현황 each 끝*/
+						
+						
+						
+						
+						
+					
+			
+			
+			
+			/*$('<div/>').addClass('reservationList').attr({style:'background: #f5f5f5'}).appendTo('#content');
+			$('<table/>').addClass('reservationTable').appendTo('.reservationList');
+			$('<tr/>').addClass('trColumn').append(
+					$('<th/>').html('방번호'),
+					$('<th/>').html('숙소이름'),
+					$('<th/>').html('방번호'),
+					$('<th/>').html('주소'),
+					$('<th/>').html('결제일'),
+					$('<th/>').html('체크인'),
+					$('<th/>').html('체크아웃'),
+					$('<th/>').html('결제가격'),
+					$('<th/>').html('결제타입')
+			).appendTo('.reservationTable');
+			$.each(d.rlist,(i,j)=>{
+				$('<tr/>').addClass('trContent').append(
+						$('<td/>').html(j.res_no),
+						$('<td/>').html(j.accom_name),
+						$('<td/>').html(j.room_no),
+						$('<td/>').html(j.accom_addr),
+						$('<td/>').html(j.pay_date),
+						$('<td/>').html(j.checkin_date),
+						$('<td/>').html(j.checkout_date),
+						$('<td/>').html(j.pay_price),
+						$('<td/>').html(j.pay_type)
+				).appendTo('.reservationTable')
+			}); */
+		})
 	};
+
+	
+	
+	
 	
 	var login = ()=>{
 		let validate ="";
@@ -159,9 +254,7 @@ app.permision = (()=>{
 																		member_id:res.id,
 																		profileimg :res.properties['profile_image']
 																	}),
-																	success:d=>{
-																		alert(d);
-																	},
+																	success:d=>{},
 																	error:(m1,m2,m3)=>{alert(m3);}
 																});
 												            /*카톡 불러온 사진 서버 저장*/

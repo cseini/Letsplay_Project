@@ -1,23 +1,22 @@
 package com.play.web.mbr;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.play.web.brd.Board;
 import com.play.web.cmm.Util2;
-import com.play.web.img.Image;
 
 @RestController
 @RequestMapping("/member")
@@ -27,6 +26,7 @@ public class MemberCtrl {
 	@Autowired MemberMapper mbrMap;
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
+	@Autowired List<HashMap<String, Object>> rlist;
 	
 	@PostMapping("/join")
 	public void join(@RequestBody Member param) {
@@ -99,13 +99,23 @@ public class MemberCtrl {
 		mbrMap.update(pm);
 	}
 	
-	@PostMapping("/fileUpload")
-	public Map<String,Object> login(
-			@RequestBody Image img) {
-		logger.info("\n--------- MemberController {} !!-----","fileUpload()");
-		logger.info("img " + img);
-		Map<String,Object> rm =  new HashMap<>();
-		rm.put("img", img);
-		return rm;
-	 }
+	@GetMapping("/list/{member_id}")
+	public HashMap<String, Object> rlist(@PathVariable String member_id){
+		logger.info("\n--------- MemberController {} !!-----","list()");
+		map.clear();
+		rlist = mbrMap.rlist(member_id);
+		System.out.println("rlist.size : " + rlist.size());
+		map.put("rlist", rlist);
+		return map;
+	}
+	
+	@GetMapping("/cancel/{member_id}")
+	public String result(@PathVariable String member_id){
+		logger.info("\n--------- MemberController {} !!-----","list()");
+		map.clear();
+		rlist = mbrMap.rlist(member_id);
+		System.out.println("rlist.size : " + rlist.size());
+		map.put("rlist", rlist);
+		return "";
+	}
 }
