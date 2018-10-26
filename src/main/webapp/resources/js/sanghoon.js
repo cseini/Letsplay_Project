@@ -231,11 +231,11 @@ googleChart.service = {
 		      google.charts.setOnLoadCallback(drawPrice);
 		      function drawPrice(){
 		    	  var data = new google.visualization.DataTable();
-		    	  data.addColumn('number', 'price');
+		    	  data.addColumn('string', 'price');
 		    	  data.addColumn('number', 'count');
 		    	  $.each(d.accomPrice, (i,j)=>{
 		    		  data.addRow([
-		    			  (j.byPrice * 1),
+		    			  j.byPrice,
 		    			  (j.reserCount * 1)
 		    		  ]);
 		    	  });
@@ -247,8 +247,67 @@ googleChart.service = {
 		    	        };
 		    	  var chart = new google.visualization.ScatterChart(document.getElementById('price_reservation'));
 		    	  chart.draw(data, options);
-		      }
+		      }// 가격대별 예약수 차트
+		      var mapContainer = document.getElementById('location'),	// 지도를 표시할 div
+			  mapOption = {
+				  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
+				  level: 9
+			  };
+			  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
+			  //var bounds = new daum.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
+			  var positions = [];
+			  $.each(d.accomPosition, (i,j)=>{
+				  positions.push({
+					  'title' : j.accomName,
+					  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+				  });
+			  });
+			  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+			  var imageSize = new daum.maps.Size(34, 60);
+			  
+			  var position
+			  for(var i = 0; i < positions.length; i++){
+				  // 마커 이미지를 생성
+				  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+				  var marker = new daum.maps.Marker({
+					  map: map,	// 마커를 표시할 지도
+					  position: positions[i].latlng,	// 마커를 표시할 위치
+					  image: markerImage	// 마커 이미지
+				  });
+				  var content = '<div class="customoverlay">' +
+				    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+				    '    <span class="title">'+d.accomPosition[i].accomName+'</span>' +
+				    '  </a>' +
+				    '</div>';
+				  position = positions[i].latlng;
+				  var customOverlay = new daum.maps.CustomOverlay({
+				        position: position,
+				        content: content,
+				        yAnchor: 0.5
+				    });
+				  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+				  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+			  }
+			  function makeOverListener(map, marker, customOverlay) {
+			        return function() {
+			        	customOverlay.setMap(map);
+			        };
+			    }
+			  // 인포윈도우를 닫는 클로저를 만드는 함수
+			  function makeOutListener(customOverlay) {
+			        return function() {
+			        	customOverlay.setMap(null);
+			        };
+			    }
+			  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
+			  for(var k = 0; k < positions.length; k++){
+				  marker = new daum.maps.Marker({points : positions[k].latlng});
+				  marker.setMap(map);
+				  bounds.extend(positions[k].latlng);
+			  }
+				  map.setBounds(bounds);
 		  });
+		  
 	  }
 	
 };
@@ -348,11 +407,11 @@ sanghoon.service = {
 							$('<img/>').attr({src:$.img()+'/admin_test/accom_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#accom_reservation');
 				$('<div/>').addClass('right_wrapper').appendTo('#page-wrapper');
 					$('<div/>').attr({id:'location'}).appendTo('.right_wrapper');
-					var mapContainer = document.getElementById('location'), // 지도를 표시할 div를 만들어놓음 
+					/*var mapContainer = document.getElementById('location'), // 지도를 표시할 div를 만들어놓음 
 				    mapOption = {
 				        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-				        level: 3 // 지도의 확대 레벨
-				    };  
+				        level: 10 // 지도의 확대 레벨
+				    };
 
 					// 지도를 생성합니다    
 					var map = new daum.maps.Map(mapContainer, mapOption); 
@@ -383,7 +442,7 @@ sanghoon.service = {
 							// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
 							map.setCenter(coords);
 						} 
-					});
+					});*/
 							//$('<img/>').attr({src:$.img()+'/admin_test/location.PNG', style:'width:500px; display:block; margin-left: auto; margin-right: auto'}).appendTo('#location');
 					googleChart.service.accomInfo('서울');
 		},

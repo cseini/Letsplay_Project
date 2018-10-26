@@ -17,4 +17,5 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getSumHotel ();
 	public List<HashMap<String,Object>> getSumMotel ();
 	public List<HashMap<String,Object>> getByPrice (String accom_addr);
+	public List<HashMap<String,Object>> getPosition (String accom_addr);
 }

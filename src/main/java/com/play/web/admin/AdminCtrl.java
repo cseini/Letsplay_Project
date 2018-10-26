@@ -112,10 +112,11 @@ public class AdminCtrl {
 	public Map<String,Object> accom(@PathVariable String accom_addr){
 		map.clear();
 		System.out.println(accom_addr);
-		//map.put("local",accom_addr);
+		accom_addr += "%";
 		map.put("accomPrice", admMap.getByPrice(accom_addr));
-		System.out.println(map.get("accomPrice"));
-		System.out.println(admMap.getByPrice(accom_addr));
+		//System.out.println(map.get("accomPrice"));
+		map.put("accomPosition", admMap.getPosition(accom_addr));
+		System.out.println(map.get("accomPosition"));
 		return map;
 		
 	}
