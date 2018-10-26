@@ -253,29 +253,29 @@
 	</select>
 	
 	<select id="getByPrice" resultType="hashmap">
-		SELECT concat(B.byPrice, '원대') AS byPrice,
-		       B.reserCount AS reserCount,
+		SELECT CONCAT(B.byPrice, '만원대') AS byPrice,
+		       SUM(B.reserCount) AS reserCount,
 		       B.roomSeq AS roomSeq
 		FROM (SELECT CASE
-		                WHEN A.room_price BETWEEN 30000 AND 39000 THEN 30000
-		                WHEN A.room_price BETWEEN 40000 AND 49000 THEN 40000
-		                WHEN A.room_price BETWEEN 50000 AND 59000 THEN 50000
-		                WHEN A.room_price BETWEEN 60000 AND 69000 THEN 60000
-		                WHEN A.room_price BETWEEN 70000 AND 79000 THEN 70000
-		                WHEN A.room_price BETWEEN 80000 AND 89000 THEN 80000
-		                WHEN A.room_price BETWEEN 90000 AND 99000 THEN 90000
-		                WHEN A.room_price BETWEEN 100000 AND 109000 THEN 100000
-		                WHEN A.room_price BETWEEN 110000 AND 119000 THEN 110000
-		                WHEN A.room_price BETWEEN 120000 AND 129000 THEN 120000
-		                WHEN A.room_price BETWEEN 130000 AND 139000 THEN 130000
-		                WHEN A.room_price BETWEEN 140000 AND 149000 THEN 140000
-		                WHEN A.room_price BETWEEN 150000 AND 159000 THEN 150000
-		                WHEN A.room_price BETWEEN 160000 AND 169000 THEN 160000
-		                WHEN A.room_price BETWEEN 170000 AND 179000 THEN 170000
-		                ELSE 180000
+		                WHEN A.room_price BETWEEN 30000 AND 39000 THEN 3
+		                WHEN A.room_price BETWEEN 40000 AND 49000 THEN 4
+		                WHEN A.room_price BETWEEN 50000 AND 59000 THEN 5
+		                WHEN A.room_price BETWEEN 60000 AND 69000 THEN 6
+		                WHEN A.room_price BETWEEN 70000 AND 79000 THEN 7
+		                WHEN A.room_price BETWEEN 80000 AND 89000 THEN 8
+		                WHEN A.room_price BETWEEN 90000 AND 99000 THEN 9
+		                WHEN A.room_price BETWEEN 100000 AND 109000 THEN 10
+		                WHEN A.room_price BETWEEN 110000 AND 119000 THEN 11
+		                WHEN A.room_price BETWEEN 120000 AND 129000 THEN 12
+		                WHEN A.room_price BETWEEN 130000 AND 139000 THEN 13
+		                WHEN A.room_price BETWEEN 140000 AND 149000 THEN 14
+		                WHEN A.room_price BETWEEN 150000 AND 159000 THEN 15
+		                WHEN A.room_price BETWEEN 160000 AND 169000 THEN 16
+		                WHEN A.room_price BETWEEN 170000 AND 179000 THEN 17
+		                ELSE 18
 		             END
 		                AS byPrice,
-		             count(reservation.res_no)
+		             COUNT(reservation.res_no)
 		                AS reserCount,
 		             A.room_seq
 		                AS roomSeq
@@ -295,30 +295,42 @@
 	</select>
 	
 	<select id="getLocalHo" resultType="hashmap">
-		select count(reservation.res_no) hoResrCount
-		from reservation
-		where reservation.room_seq
-		in (
-		    select room.room_seq
-		    from room
-		    where room.accom_seq
-		    in (
-		        select accom_seq
-		        from accommodation
-		        where accom_addr like '서울%' and accom_type ='HOTEL'))
+		SELECT COUNT(reservation.res_no) hoResrCount
+		FROM reservation
+		WHERE reservation.room_seq
+		IN (
+		    SELECT room.room_seq
+		    FROM room
+		    WHERE room.accom_seq
+		    IN (
+		        SELECT accom_seq
+		        FROM accommodation
+		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='HOTEL'))
+		AND reservation.res_date 
+		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01')) 
+		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
 	</select>
 	
 	<select id="getLocalMo" resultType="hashmap">
-		select count(reservation.res_no) moResrCount
-		from reservation
-		where reservation.room_seq
-		in (
-		    select room.room_seq
-		    from room
-		    where room.accom_seq
-		    in (
-		        select accom_seq
-		        from accommodation
-		        where accom_addr like '서울%' and accom_type ='MOTEL'))
+		SELECT count(reservation.res_no) moResrCount
+		FROM reservation
+		WHERE reservation.room_seq
+		IN (
+		    SELECT room.room_seq
+		    FROM room
+		    WHERE room.accom_seq
+		    IN (
+		        SELECT accom_seq
+		        FROM accommodation
+		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='MOTEL'))
+		AND reservation.res_date 
+		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01')) 
+		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+	</select>
+	
+	<select id="getPosition" resultType="hashmap">
+		SELECT accom_name AS accomName, longitude, latitude
+		FROM accommodation
+		WHERE accom_addr LIKE #{accom_addr}
 	</select>
 </mapper>
