@@ -82,6 +82,9 @@
 	  	<if test=" profileimg != null and profileimg != '' ">
     		PROFILEIMG = #{profileimg}
     	</if>
+	  	<if test=" comment != null and comment != '' ">
+    		COMMENT = #{comment}
+    	</if>
 	  WHERE MEMBER_ID LIKE #{member_id}
   </update>
   

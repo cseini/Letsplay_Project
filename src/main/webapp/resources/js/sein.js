@@ -1059,7 +1059,8 @@ sein.service ={
 		})
 	},
 	mycast : x=>{
-		$('#sein_content').empty();	
+		$('#header').empty();	
+		$('#content').empty();	
 		$('<div/>').addClass('contents').attr({style:'padding:60px 0;;min-height:720px'}).append(
 			$('<div/>').attr({style:'background-color:white;'}).addClass('type ver2').append(
 				$('<div/>').addClass('inner').append(
@@ -1091,7 +1092,7 @@ sein.service ={
 					)
 				)
 			)		
-		).appendTo($('#sein_content'));
+		).appendTo($('#content'));
 		
 		$('<div/>').addClass('con_inner').append(
 			$('<div/>').addClass('mycast_rap bord_all').append(

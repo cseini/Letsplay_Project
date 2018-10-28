@@ -34,7 +34,6 @@ public class MemberCtrl {
 		if(param.getBirthdate()!=null) {
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
-			param.setProfileimg("default.jpg");
 			mbrMap.post(param);
 		} else {
 			mbrMap.post(param);

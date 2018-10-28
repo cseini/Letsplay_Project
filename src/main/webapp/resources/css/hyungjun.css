@@ -1,8 +1,40 @@
 @charset "UTF-8";
 
-.info h4{
-    border-top: 1px solid #e5e5e5;
-    padding-top: 20px;
+.custom-login-btn {
+	cursor: pointer;
+	padding-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.guide-table {
+	color: #595f63;
+	border: 1px solid #595f63;
+	font-weight: 400;
+	vertical-align: middle;
+	margin: auto;
+	text-align: center;
+	width: 100%
+}
+
+.guide-table th {
+	text-align: center;
+}
+
+.guide-table thead {
+	color: #fff;
+	background-color: #595f63
+}
+
+.cancelColgroup {
+	color: #666666;
+	font-size: 16px;
+}
+
+.info h4 {
+	border-top: 1px solid #e5e5e5;
+	padding-top: 20px;
 }
 
 .reserve-main-content {
@@ -60,11 +92,11 @@
 }
 
 .reserveinfo-list {
-    margin-left: -40px;
-    padding-bottom: 50px;
-    padding-top: 150px;
-    margin-top: 50p;
-    padding-top: 25px;
+	margin-left: -40px;
+	padding-bottom: 50px;
+	padding-top: 150px;
+	margin-top: 50p;
+	padding-top: 25px;
 }
 
 .reserveinfo-item:first-child {
@@ -77,15 +109,15 @@
 }
 
 .tags-before {
-    margin-top: 250px;
-    margin-right: 370px;
-    position: absolute;
-    top: 40px;
-    right: 0;
-    min-width: 105px;
-    height: 15px;
-    font-size: 13px;
-    color: #fff;
+	margin-top: 250px;
+	margin-right: 370px;
+	position: absolute;
+	top: 40px;
+	right: 0;
+	min-width: 105px;
+	height: 15px;
+	font-size: 13px;
+	color: #fff;
 }
 
 .tags-before span {
@@ -97,8 +129,8 @@
 }
 
 .tags-after {
-    margin-top: 250px;
-    margin-right: 370px;
+	margin-top: 250px;
+	margin-right: 370px;
 	top: 40px;
 	right: 0;
 	min-width: 105px;
@@ -116,7 +148,7 @@
 }
 
 .btns {
-    margin-top: -200px;
+	margin-top: -200px;
 	width: 160px;
 	margin-left: 10px;
 	line-height: 1;
@@ -130,19 +162,18 @@
 }
 
 .btns-cancel {
-    margin-top: -200px;
+	margin-top: -200px;
 	width: 160px;
 	margin-left: 10px;
 	line-height: 1;
 	padding: 17px 0;
 	font-size: 16px !important;
-    color: #595f63 !important;
-    border: 1px solid #595f63 !important;
+	color: #595f63 !important;
+	border: 1px solid #595f63 !important;
 	text-align: center;
 	background-color: transparent;
 	cursor: pointer;
 }
-
 
 .btn-primary-btn-btn-reserve {
 	float: right;
@@ -218,13 +249,19 @@
 }
 
 .bigAvatar {
-	width: 180px;
-	height: 180px;
-	border-radius: 100px;
-	position: relative;
-	display: inline-block;
-	zoom: 1.1;
+    width: 165px;
+    height: 165px;
+    border-radius: 100px;
+    position: relative;
+    display: inline-block;
+    zoom: 1.1;
+    margin-left: 100px;
 }
+
+#photoChangeBtn{
+	text-align: center;
+}
+
 
 .avatar {
 	overflow: hidden;
@@ -289,7 +326,6 @@
 	vertical-align: middle;
 	color: white;
 	margin: auto;
-	text-align: center;
 }
 
 .mainNav {
@@ -592,7 +628,7 @@ nav {
 	color: #666666;
 	text-decoration: none;
 }
-
+	
 .menubar li ul {
 	background: white;
 	display: none;
@@ -613,9 +649,12 @@ nav {
 }
 
 .menubar li ul a {
-	display: block;
-	height: 50px;
-	padding: 10px 10px 0px 15px;
+    display: block;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
 }
 
 .menubar li ul a:hover, .menubar li ul li:hover a {
