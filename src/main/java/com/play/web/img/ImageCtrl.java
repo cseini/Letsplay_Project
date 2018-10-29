@@ -47,7 +47,6 @@ public class ImageCtrl {
 
 	@PostMapping("/profile/{member_id}")
 	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
-		logger.info("\n--------- ImageController {} !!-----","uploadProfile()");
 		map.clear();
 		String savedName = uploadPhoto(files.getOriginalFilename(), files.getBytes(), member_id);
 		mbr.setProfileimg(savedName);
@@ -57,9 +56,7 @@ public class ImageCtrl {
 	}
 	@PostMapping("/kakaoProfile/")
 	public String uploadKakaoProfile(@RequestBody Member mbr) throws Exception {
-		logger.info("\n--------- ImageController {} !!-----","uploadKakaoProfile()");
 		URL url = new URL(mbr.getProfileimg());
-		logger.info("url : " + url);
 		String ext = mbr.getProfileimg().substring(mbr.getProfileimg().lastIndexOf(".")+1,mbr.getProfileimg().length()); 
 		BufferedImage img = ImageIO.read(url);
         savedName = UUID.randomUUID() + "." +ext;
@@ -72,9 +69,7 @@ public class ImageCtrl {
 	}
 	
 	private String uploadPhoto(String originalName, byte[] fileData, String member_id) throws Exception {
-		logger.info("\n--------- ImageController {} !!-----","uploadFile()");
 		savedName = UUID.randomUUID() + "." + originalName.split("\\.")[1];		
-		Util.log.accept("savedName: " + savedName);
 		FileCopyUtils.copy(fileData, new File(uploadPath, savedName));
 		return savedName;
 	}

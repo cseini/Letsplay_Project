@@ -35,10 +35,10 @@
 	       A.ACCOM_SEQ,
 	       P.PAY_NO,
 	       R.RES_CHECK
-	FROM PAYMENT P
-	     JOIN RESERVATION R ON P.PAY_NO = R.PAY_NO
-	     JOIN ROOM O ON O.ROOM_SEQ = R.ROOM_SEQ
-	     JOIN ACCOMMODATION A ON A.ACCOM_SEQ = O.ACCOM_SEQ
+	FROM payment P
+	     JOIN reservation R ON P.PAY_NO = R.PAY_NO
+	     JOIN room O ON O.ROOM_SEQ = R.ROOM_SEQ
+	     JOIN accommodation A ON A.ACCOM_SEQ = O.ACCOM_SEQ
 	WHERE MEMBER_ID LIKE #{member_id}
 	ORDER BY P.PAY_DATE DESC
  </select>
@@ -66,7 +66,7 @@
     FROM member
   </select>
   <select id="count" resultType="int">
-  	SELECT COUNT(*) FROM MEMBER
+  	SELECT COUNT(*) FROM member
   	<where>
 	  	<if test=" member_id != null and member_id != '' ">
 	  		MEMBER_ID LIKE #{member_id}

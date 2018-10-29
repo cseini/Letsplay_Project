@@ -2,7 +2,6 @@
 var app = app || {};
 app =(()=>{
 	var init =x=>{
-		console.log('Step 1'+x);
 		app.router.init(x);
 	};
 	
@@ -146,8 +145,10 @@ app.permision = (()=>{
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
 										$.cookie("loginID", d.mbr.member_id);
+										$.cookie("profileimg", d.mbr.profileimg);
+										$.cookie("nickname", d.mbr.nickname);
 												app.router.home()
-					 							app.service.authNav(d.mbr);
+					 							app.service.authNav();
 									}
 									$('#validate').html(validate);
 								},
@@ -166,9 +167,6 @@ app.permision = (()=>{
 						        Kakao.API.request({
 						            url: '/v1/user/me',
 						            success: function(res) {
-						            	console.log('gender : ' + res.properties['gender'])
-						            	console.log('age_rang : '+ res.properties['age_rang'])
-						            	console.log('birthday : '+ res.properties['birthday'])
 						            	$.ajax({
 											url:$.ctx()+'/member/login',
 											method:'post',
@@ -189,7 +187,7 @@ app.permision = (()=>{
 																profileimg :res.properties['profile_image']
 															}),
 															success:d=>{
-																alert('카카오톡으로 가입이 성공하였습니다. 로그인 하시면 야놀자 서비스를 이용가능합니다.');
+																alert('\n 카카오톡으로 가입이 성공하였습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
 																login(); 
 																/*카톡 불러온 사진 서버 저장*/
 												                  $.ajax({
@@ -200,7 +198,11 @@ app.permision = (()=>{
 																			member_id:res.id,
 																			profileimg :res.properties['profile_image']
 																		}),
-																		success:d=>{},
+																		success:d=>{
+																			$.cookie("loginID", res.id)
+																			$.cookie("profileimg", d);
+																			$.cookie("nickname", res.properties['nickname']);
+																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
 																	});
 													            /*카톡 불러온 사진 서버 저장*/
@@ -209,8 +211,10 @@ app.permision = (()=>{
 														});
 												}else{
 													$.cookie("loginID", d.mbr.member_id);
+													$.cookie("profileimg", d.mbr.profileimg);
+													$.cookie("nickname", d.mbr.nickname);
 													app.router.home()
-													app.service.authNav(d.mbr);
+													app.service.authNav();
 															
 												}
 												$('#validate').html(validate);
@@ -298,7 +302,8 @@ app.permision = (()=>{
 					}
 				})
 	}
-	var mypage =d=>{
+	var mypage =()=>{
+		app.service.authNav();
 		$('#content').attr({style:'background: #f5f5f5'});
 		$.ajax({
 			url:$.ctx()+'/member/auth',
@@ -344,7 +349,8 @@ app.permision = (()=>{
 															success:s=>{
 																$('#layerpop').modal('hide')
 																$('#layerpop').on('hidden.bs.modal',()=>{
-																	app.permision.mypage(d);
+																	app.permision.mypage();
+																	$.cookie("nickname", $('#changeNickname').val());
 																	$('#mypage').html($('#changeNickname').val());
 								                                })
 															},
@@ -374,7 +380,7 @@ app.permision = (()=>{
 														success:d=>{
 															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
-																app.permision.mypage(d);
+																app.permision.mypage();
 							                                })
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
@@ -403,7 +409,7 @@ app.permision = (()=>{
 														success:d=>{
 															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
-																app.permision.mypage(d);
+																app.permision.mypage();
 															})
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
@@ -461,7 +467,7 @@ app.permision = (()=>{
 																		success:d=>{
 																			$('#layerpop').modal('hide')
 																			$('#layerpop').on('hidden.bs.modal',()=>{
-																				app.permision.mypage(d);
+																				app.permision.mypage();
 											                                })
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
@@ -477,7 +483,6 @@ app.permision = (()=>{
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
 								$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
-									alert('kakao : ' + d.mbr.kakao)
 									if(d.mbr.kakao == '1'){
 										$('<a/>').attr({id:'custom-login-btn2'}).append(
 												$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect_not.png',style:'margin-left: 0px; width:30%'})
@@ -497,7 +502,7 @@ app.permision = (()=>{
 													}),
 													success:d=>{
 														$('#deleteAlert').remove();
-														alert('탈퇴가 처리되었습니다. 이용해주셔서 감사드립니다.');
+														alert('\n탈퇴가 처리되었습니다. \n\n이용해주셔서 감사드립니다. \n');
 														app.router.home();
 														
 													},
@@ -604,9 +609,10 @@ app.permision = (()=>{
 									                success: d=>{
 									                        $('#layerpop').modal('hide')
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
-									                        	app.permision.mypage(d);
-									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.avatar');
-									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.bigAvatar');
+																$.cookie("profileimg", d);
+																app.permision.mypage();
+																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
+																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
 									                },
 									                error : e=>{
@@ -937,11 +943,123 @@ app.service = {
 		
 		footer : d=>{
 			$('#footer').remove()
-			$.getScript($.script()+'/footer.js',()=>{
-				$('<div/>').attr({id:'footer'}).appendTo('#wrapper');
+/*			$.getScript($.script()+'/footer.js',()=>{
 				$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
 				$('#mainFooter').append(footerUI());
-			})
+			})*/
+			
+			$('<div/>').attr({id:'footer'}).addClass('footer').appendTo('#wrapper');
+			$('<section/>').addClass(['footer-inner', 'column1']).append(
+					$('<h2/>').addClass(['icon-comm','icon-logo-footer']).append($('<span/>').addClass('sc-out').html('Yanolja')),
+					$('<ul/>').addClass('foot-menu').append(
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://yanolja.in/ko/companyinfo/',title:'회사소개로 이동'}).addClass('foot-menu__link').html('회사소개')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://www.yanoljalab.com/ad.php?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=ad_bottom',title:'제휴광고문의로 이동'}).addClass('foot-menu__link').html('제휴광고문의')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://yanolja.in/recruitment/',title:'인재채용으로 이동'}).addClass('foot-menu__link').html('인재채용')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://policy.yanolja.com/?t=service',title:'이용약관으로 이동'}).addClass('foot-menu__link').html('이용약관')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://policy.yanolja.com/?t=privacy',title:'개인정보처리방침으로 이동'}).addClass(['foot-menu__link']).html('개인정보처리방침'))
+					),
+					$('<div/>').addClass('familysite').append(
+							$('<div/>').addClass('familysite__select').append(
+									$('<select/>').addClass('sel-block').append(
+											$('<option/>').attr({value:""}).html('패밀리사이트'),
+											$('<option/>').attr({value:"http://www.yanoljalab.com/?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=family"}).html('좋은숙박연구소'),
+											$('<option/>').attr({value:"http://www.bipumstore.com"}).html('비품스토어'),
+											$('<option/>').attr({value:"http://smartfront.yanolja.com"}).html('스마트프런트'),
+											$('<option/>').attr({value:"http://www.yapen.co.kr/"}).html('야놀자 펜션'),
+											$('<option/>').attr({value:"http://www.hotelup.com/"}).html('호텔업'),
+											$('<option/>').attr({value:"http://www.hotelnow.co.kr/ko/"}).html('호텔나우'),
+											$('<option/>').attr({value:"http://www.ynjedu.co.kr"}).html('야놀자평생교육원')
+									)
+							)
+					),
+					$('<div/>').addClass('foot-address').append(
+							$('<address/>').html('(주)야놀자').append(
+									$('<i/>').html('대표이사: 이수진'),
+									$('<i/>').html('주소: 서울 강남구 테헤란로 108길 42'),
+									$('<i/>').html('메일:'),
+									$('<a/>').attr({href:'mailto:help@yanolja.com'}).html('help@yanolja.com'),
+									$('<br/>').html('사업자 등록번호: 220-87-42885'),
+									$('<i/>').html('통신판매업신고: 강남-14211호'),
+									$('<i/>').html('관광사업자 등록번호: 제2016-31호'),
+									$('<i/>').html('호스팅 서비스 제공자: (주)야놀자')
+							),
+							$('<p/>').html('(주)야놀자는 통신판매중개자로서, 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
+					),
+					$('<div/>').addClass('award').append(
+							$('<div/>').addClass(['award__item','item-01']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-01.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2017'),
+									$('<br/>').html('하이서울 브랜드 선정')
+							),
+							$('<div/>').addClass(['award__item','item-02']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-02.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2017 브랜드 스타'),
+									$('<br/>').html('숙박앱 부문 1위')
+							),
+							$('<div/>').addClass(['award__item','item-03']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-03.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2016 모바일 어워드 코리아'),
+									$('<br/>').html('숙박정보 부문 대상')
+							),
+							$('<div/>').addClass(['award__item','item-04']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-04.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2015앱 어워드 코리아'),
+									$('<br/>').html('숙박정보 부문 대상')
+							),
+							$('<div/>').addClass(['award__item','item-05']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-05.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2015 대한민국 마케팅 대상'),
+									$('<br/>').html('최우수상')
+							),
+							$('<div/>').addClass(['award__item','item-06']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-06.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('정보보호관리체계인증'),
+									$('<br/>').html('ISMS')
+							),
+							$('<div/>').addClass('award__message').html('[인증범위] 인터넷 정보 제공 서비스 운영(야놀자,바로예약,스마트프런트)').append(
+									$('<br/>').html('[유효기간] 2018.04.26 ~ 2021.04.25')
+							)
+					),
+					$('<div/>').addClass('foot-family').append(
+							$('<div/>').addClass('cs-center').append(
+									$('<a/>').attr({href:'http://help.yanolja.com/faq', title:'야놀자 고객센터로 이동'}).append(
+											$('<em/>').html('고객센터'),
+											$('<div/>').html('1644-1346(오전 9시 ~ 익일 새벽 3시)')
+									)
+							),
+							$('<div/>').addClass('snslink').append(
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.facebook.com/yanolja/?fref=ts', target:'_blank'
+										,title:'야놀자 페이스북으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-facebook'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.instagram.com/yanoljainsta/', target:'_blank'
+										,title:'야놀자 인스타그램으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-instargram'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.youtube.com/user/yanoljamedia', target:'_blank'
+										,title:'야놀자 유튜브으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-youtube'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://tv.naver.com/yanolja', target:'_blank'
+										,title:'야놀자 네이버TV로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-comm icon-sns-navertv'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://post.naver.com/my.nhn?memberNo=2768780', target:'_blank'
+										,title:'야놀자 네이버 포스트로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-naverpos'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://blog.naver.com/yanolog', target:'_blank'
+										,title:'야놀자 네이버블로그로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-naverblog']))
+							)
+					)
+			).appendTo('#footer');
 		},
 		myModal : d=>{
 			$('.modal fade').empty();
@@ -990,22 +1108,24 @@ app.service = {
 		        });
 			
 		},
-		authNav : d=>{
+		authNav : ()=>{
 				$('.nav_right').empty();
 				$('<div/>').addClass('menubar').appendTo('.nav_right');
 				$('<ul/>').append(
 							$('<li/>').append(
 									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
-											$('<img>').attr({src:$.img()+'/profile/'+d.profileimg}).addClass('avatar'),
-				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
+											$('<img>').attr({src:$.img()+'/profile/'+$.cookie('profileimg')}).addClass('avatar'),
+				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html($.cookie('nickname')).addClass('ya_cusor')
 									).append($('<ul/>').addClass('mouseOverUl').append(
 										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')).click(e=>{
 											e.preventDefault();
-											app.permision.mypage(d);
+											app.permision.mypage();
 										}),		 															
 	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')).click(e=>{
 	 										e.preventDefault();
 	 										$.cookie("loginID","");
+	 										$.cookie("nickname","");
+	 										$.cookie("profileimg","");
 	 										app.router.home();
 	 									}),
 			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')).click(e=>{
@@ -1019,6 +1139,18 @@ app.service = {
 			 								})
 			 							})		 															
 									)))).appendTo('.menubar');
+				
+			      $( document ).ready( function() {
+			          var jbOffset = $('.mainNav').offset();
+			          $( window ).scroll( function() {
+				            if ( $(this).scrollTop() > jbOffset.top ) {
+				              $('.mainNav').addClass('jbFixed');
+				            }
+				            else {
+				              $('.mainNav').removeClass('jbFixed');
+				            }
+				          	});
+			        });
 		},
 		makeRandomLetter : d=>{
 		    var text = "";
@@ -1036,7 +1168,7 @@ app.router = {
 			()=>{
 				$.extend(new Session(x));
 				$.getScript($.ctx()+'/resources/js/util.js')
-					.done(x=>{console.log('실행');})
+					.done(x=>{console.log('----- Lets play 야놀자와 함께합시다. -----');})
 					.fail(x=>{console.log('실패')});
 				app.main.init();
 			}

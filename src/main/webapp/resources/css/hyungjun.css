@@ -329,6 +329,10 @@
 	margin: auto;
 }
 
+#nav{
+	height: 70px;
+}
+
 .mainNav {
 	padding-left: 30px;
 	height: 70px;
@@ -398,7 +402,7 @@
 	cursor: pointer;
 }
 
-.footer_container {
+/* .footer_container {
 	background-color: #252425;
 	font-size: 13px;
 	position: relative;
@@ -410,7 +414,7 @@
 	color: #fff;
 	text-align: left;
 	font-family: 'NanumSquare';
-}
+} */
 
 .jbFixed {
 	z-index: 999;
@@ -669,3 +673,239 @@ nav {
 .menubar p {
 	clear: left;
 }
+
+.footer {
+    z-index: 1;
+    position: relative;
+    background-color: #292929;
+    font-size: 13px;
+    color: #aaa;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-inner {
+    position: relative;
+    padding: 32px 0 35px;
+     width: 1180px;
+    margin: 0 auto;
+}
+
+.footer-inner h2 {
+    position: absolute;
+    width: 100px;
+    height: 48px;
+    background-position: -55px -62px;
+};
+}
+
+.icon-logo-footer {
+    background-position: -55px -62px;
+}
+.icon-comm {
+    display: inline-block;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    text-indent: -9999px;
+    vertical-align: middle;
+    background: url(https://yaimg.yanolja.com/joy/pw/common/icon-comm.svg) no-repeat;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+}
+
+.sc-out {
+    overflow: hidden;
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    font-size: 0;
+    line-height: 0;
+    text-indent: -9999px;
+}
+
+.foot-menu {
+    margin-right: 250px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 22px;
+    text-align: right;
+    list-style: none;
+    outline: none;
+}
+
+.foot-menu__item {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: middle;
+    outline: none;
+}
+
+.foot-menu__link {
+    color: #888;
+    font-size: 14px;
+     text-decoration: none;
+    cursor: pointer;
+}
+
+.foot-menu__link.privacy {
+    color: #ccc;
+}
+
+.foot-menu__link:before {
+    content: "";
+    display: inline-block;
+    background-color: #666;
+    vertical-align: middle;
+    width: 1px;
+    height: 12px;
+    margin: 0 20px;
+}
+
+.familysite {
+    position: absolute;
+    top: 23px;
+    right: 0;
+    width: 220px;
+    margin: 0;
+    padding: 0;
+}
+
+.familysite__select {
+    position: relative;
+    padding: 7px 12px 8px;
+    border: 1px solid #aaa;
+}
+
+.familysite select {
+    cursor: pointer;
+    border: 0;
+    display: block;
+    width: 100%;
+    color: #aaa;
+    font-size: 14px;
+    background: url(https://yaimg.yanolja.com/joy/pw/common/select-off.png) no-repeat 100%;
+}
+
+.foot-address {
+    margin: 0 290px 0 0;
+    padding: 30px 0 36px;
+    line-height: 1.9;
+     display: block;
+}
+
+.foot-address i {
+    /* background-color: #aaa; */
+    display: inline-block;
+    vertical-align: middle;
+    width: px;
+    height: 12px;
+    margin: 0 10px;
+}
+
+
+.foot-address p {
+    margin-top: 6px;
+}
+
+.award{
+	margin: 0;
+    padding: 0;
+}
+
+.award:after {
+    content: "";
+    display: table;
+    clear: both;
+    *zoom: 1;
+}
+
+.award__item.item-01 {
+    margin-left: 0;
+    width: 170px;
+}
+
+.award__item {
+    position: relative;
+    float: left;
+    margin-left: 40px;
+    display: block;
+    height: 50px;
+}
+
+.award__item.item-02 {
+    width: 140px;
+}
+
+.award__item.item-03 {
+    width: 164px;
+}
+
+.award__item.item-04 {
+    width: 160px;
+}
+
+.award__item.item-05 {
+    width: 178px;
+}
+
+.award__item.item-06 {
+    width: 168px;
+}
+
+.award:after {
+    content: "";
+    display: table;
+    clear: both;
+    *zoom: 1;
+}
+
+.foot-family {
+    position: absolute;
+    top: 120px;
+    right: 0;
+    margin: 0;
+    padding: 0;
+}
+.foot-family .cs-center em {
+    font-size: 15px;
+    display: block;
+    margin-bottom: 8px;
+}
+.foot-family .cs-center div {
+    font-size: 13px;
+}
+
+.cs-center{
+   	margin: 0;
+    padding: 0;
+}
+.cs-center a{
+    color: #666666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.snslink {
+    margin-top: 12px;
+     margin: 0;
+    padding: 0;
+}
+.snslink a:first-child {
+    margin-left: 0;
+}
+.snslink a {
+    color: #666666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.address a{
+    color: #666666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
