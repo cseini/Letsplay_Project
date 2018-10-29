@@ -25,9 +25,9 @@ app.main =(()=>{
 
 app.permision = (()=>{
 	var reservationList = d=>{
-		$.getJSON($.ctx()+'/member/list/'+d.mbr.member_id, d=>{
-			$('#header').empty();
-			$('#content').empty();
+		$('#header').empty();
+		$('#content').empty();
+		$.getJSON($.ctx()+'/member/list/'+$.cookie("loginID"), d=>{
 			$('<div/>').addClass('reserve-main-content').appendTo('#content');
 			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
 				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
@@ -37,7 +37,13 @@ app.permision = (()=>{
 						$.each(d.rlist,(i,j)=>{
 							$('.info').addClass('info_reservelist_'+i).append(
 								$('<div/>').append(
-													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({href:'http://www.yanolja.com/places/24050'}),
+													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({style:'cursor:pointer;'}).click(e=>{
+														$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
+															let se = {'in_day':null,'out_day':null,'accom_seq':j.accom_seq}
+		                                                    heetae.main.init(se);
+															/*희태한테 던져줄 값 j.mbr.accom_seq*/
+														});
+													}),
 													$('<span/>').html(j.room_no)),
 								$('<div/>').addClass('txt-address').html(j.accom_addr),
 								$('<ul/>').addClass('reserveinfo-list')
@@ -66,85 +72,35 @@ app.permision = (()=>{
 								);
 								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
 									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
-									$('<button/>').addClass('btns-cancel').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
+									if(j.res_check==1){
+										$('<button/>').addClass('btns').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'btns'}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
 										.click(e=>{
 											app.service.myModal();
-											$('.modal-footer').remove();
 											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
 											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
 											$('<div/>').html('개인정보 수집/이용 약관, 개인정보 제 3자 제공 약관을 확인하였으며 이에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-											
 											$('<div/>').addClass('guide-box').appendTo('.modal-body');
 											$('<table/>').addClass('guide-table').appendTo('.guide-box');
 											$('<colgroup/>').addClass('cancelColgroup').append($('<col/>').attr({style:'width:50%'}),$('<col/>').attr({style:'width:50%'})).appendTo('.guide-table');
 											$('<thead/>').append($('<tr/>').append($('<th/>').html('취소기준일'),$('<th/>').html('취소수수료'))).appendTo('.guide-table');
-											
-											
 											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실 1일전 까지'),$('<th/>').html('없음'))).appendTo('.guide-table');
 											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실일 및 No-Show'),$('<th/>').html('환불불가'))).appendTo('.guide-table');
-											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약취소하기').appendTo('.modal-body')
+											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약 취소하기').appendTo('.modal-body')
 												.click(e=>{
-													alert('모달 클릭');
-														$.ajax({
-															url :$.ctx()+'/member/cancel',
-															method:'post',
-															contentType:'application/json',
-															data:JSON.stringify({
-																member_id:$.cookie("loginID"),
-																nickname:$('#changeNickname').val()
-															}),
-															success:s=>{
-																$('#layerpop').modal('hide')
-																$('#layerpop').on('hidden.bs.modal',()=>{
-																	app.permision.reservationList(d);
-								                                })
-															},
-															error:(m1,m2,m3)=>{alert(m3);}
-														});
-													});
+													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+$.cookie("loginID"));
+													$('#layerpop').modal('hide');
+													$('#layerpop').on('hidden.bs.modal',()=>{
+														app.permision.reservationList();
+					                                })
+												});
 										});
+									} else {
+										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i)										
+									}
+										
 						}); /*예약 현황 each 끝*/
-						
-						
-						
-						
-						
-					
-			
-			
-			
-			/*$('<div/>').addClass('reservationList').attr({style:'background: #f5f5f5'}).appendTo('#content');
-			$('<table/>').addClass('reservationTable').appendTo('.reservationList');
-			$('<tr/>').addClass('trColumn').append(
-					$('<th/>').html('방번호'),
-					$('<th/>').html('숙소이름'),
-					$('<th/>').html('방번호'),
-					$('<th/>').html('주소'),
-					$('<th/>').html('결제일'),
-					$('<th/>').html('체크인'),
-					$('<th/>').html('체크아웃'),
-					$('<th/>').html('결제가격'),
-					$('<th/>').html('결제타입')
-			).appendTo('.reservationTable');
-			$.each(d.rlist,(i,j)=>{
-				$('<tr/>').addClass('trContent').append(
-						$('<td/>').html(j.res_no),
-						$('<td/>').html(j.accom_name),
-						$('<td/>').html(j.room_no),
-						$('<td/>').html(j.accom_addr),
-						$('<td/>').html(j.pay_date),
-						$('<td/>').html(j.checkin_date),
-						$('<td/>').html(j.checkout_date),
-						$('<td/>').html(j.pay_price),
-						$('<td/>').html(j.pay_type)
-				).appendTo('.reservationTable')
-			}); */
 		})
 	};
-
-	
-	
-	
 	
 	var login = ()=>{
 		let validate ="";
@@ -190,32 +146,8 @@ app.permision = (()=>{
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
 										$.cookie("loginID", d.mbr.member_id);
-											app.service.header();
-											$('.nav_right').empty();
-											$('#content').empty();
-											app.service.content();
-					 							$('<div/>').addClass('menubar').appendTo('.nav_right');
-					 							app.service.nav(d.mbr);
-												$('#mypage').click(e=>{
-													e.preventDefault();
-													mypage(d);
-												})
-												$('#moveToReservationList').click(e=>{
-													e.preventDefault();
-													reservationList(d);
-												});
-												$('#logout').click(e=>{
-													e.preventDefault();
-													$.cookie("loginID","");
-													app.router.home();
-												});
-												
-												$('#mycast').click(e=>{
-													e.preventDefault();
-													$.getScript($.ctx()+'/resources/js/sein.js',()=>{
-														sein.service.mycast();
-													});
-												});	
+												app.router.home()
+					 							app.service.authNav(d.mbr);
 									}
 									$('#validate').html(validate);
 								},
@@ -277,25 +209,8 @@ app.permision = (()=>{
 														});
 												}else{
 													$.cookie("loginID", d.mbr.member_id);
-														app.service.header();
-														$('.nav_right').empty();
-														$('#content').empty();
-														app.service.content();
-								 							$('<div/>').addClass('menubar').appendTo('.nav_right');
-								 							app.service.nav(d.mbr);
-															$('#myinfo').click(e=>{
-																e.preventDefault();
-																mypage(d);
-															})
-														$('#moveToReservationList').click(e=>{
-															e.preventDefault();
-															reservationList(d);
-														});
-														$('#logout').click(e=>{
-															e.preventDefault();
-															$.cookie("loginID","");
-															app.router.home();
-														});	
+													app.router.home()
+													app.service.authNav(d.mbr);
 															
 												}
 												$('#validate').html(validate);
@@ -372,6 +287,7 @@ app.permision = (()=>{
 												zipcode:$('#zipcode').val(),
 											}),
 											success:d=>{
+												alert('성공적으로 가입되었습니다. 로그인하시면 야놀자 서비스를 이용가능합니다.');
 												login();
 											},
 											error:(m1,m2,m3)=>{alert(m3);}
@@ -383,6 +299,7 @@ app.permision = (()=>{
 				})
 	}
 	var mypage =d=>{
+		$('#content').attr({style:'background: #f5f5f5'});
 		$.ajax({
 			url:$.ctx()+'/member/auth',
 			method:'post',
@@ -393,7 +310,6 @@ app.permision = (()=>{
 			success:d=>{
 				$('#header').empty();
 				$('#content').empty();
-				$('#content').attr({style:'background: #f5f5f5'});
 				$('<div/>').addClass('mypageTableDiv').appendTo('#content');
 				$('<div/>').addClass('mypageBottomNav').appendTo('#content');
 					app.service.myBenefit(d);
@@ -561,29 +477,34 @@ app.permision = (()=>{
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
 								$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
-									$('<a/>').attr({id:'custom-login-btn'}).append(
-											$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect.png',style:'margin-left: 0px; width:30%'})
-									).appendTo('#modifyExternalService').click(e=>{
-										alert('카카오톡연결해제 클릭')
-										if(d.mbr.birthdate==null || d.mbr.birthdate!=""){
-											$.ajax({
-												url:$.ctx()+'/member/delete',
-												method:'post',
-												contentType:'application/json',
-												data:JSON.stringify({
-													member_id:$.cookie("loginID"),
-													password:d.mbr.password
-												}),
-												success:d=>{
-													$('#deleteAlert').remove();
-													alert('탈퇴가 처리되었습니다. 이용해주셔서 감사드립니다.');
-													app.router.home();
-													
-												},
-												error:(m1,m2,m3)=>{alert(m3);}
+									alert('kakao : ' + d.mbr.kakao)
+									if(d.mbr.kakao == '1'){
+										$('<a/>').attr({id:'custom-login-btn2'}).append(
+												$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect_not.png',style:'margin-left: 0px; width:30%'})
+										).appendTo('#modifyExternalService');									
+									} else {
+										$('<a/>').attr({id:'custom-login-btn1'}).append(
+												$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect.png',style:'margin-left: 0px; width:30%'})
+										).appendTo('#modifyExternalService')
+											.click(e=>{
+												$.ajax({
+													url:$.ctx()+'/member/delete',
+													method:'post',
+													contentType:'application/json',
+													data:JSON.stringify({
+														member_id:$.cookie("loginID"),
+														password:d.mbr.password
+													}),
+													success:d=>{
+														$('#deleteAlert').remove();
+														alert('탈퇴가 처리되었습니다. 이용해주셔서 감사드립니다.');
+														app.router.home();
+														
+													},
+													error:(m1,m2,m3)=>{alert(m3);}
+												});
 											});
-										}
-									});
+									}
 							
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain3'}).appendTo('#content');							
 								$('<div/>').addClass('nav-tabsHead').html('회원탈퇴').attr({id:'nav-tabsHead3', style:'padding-bottom:50px'}).appendTo('#nav-tabsHeadMain3');	
@@ -838,8 +759,9 @@ app.permision = (()=>{
 
 app.service = {
 		header :x=>{
+			$('#header').remove();
 			/* header 시작 */
-			$('<header/>').attr({id:'header'}).appendTo('#wrapper');
+			$('<div/>').attr({id:'header'}).appendTo('#wrapper');
 			$('<div/>').addClass('mainheader').appendTo('#header');		
 			/* banner 시작 */
 			$('<div/>').attr({id:'div_banner0',style:'margin-bottom:5%'}).appendTo($('.mainheader'));
@@ -974,6 +896,7 @@ app.service = {
 		},
 		content :x=>{
 			/* content 시작 */
+			$('#content').remove();
 			$('<div/>').attr({id:'content'}).appendTo('#wrapper');
 				$('<div/>').addClass('mainContent').appendTo('#content');
 				/* banner 시작 */
@@ -988,7 +911,6 @@ app.service = {
 					$('<div/>').addClass('carousel-item '+clazz[k-1]).attr({id:'item'+k}).append($("<img/>").attr({src:$.img()+'/banner/mainBanner'+k+'.JPG',style:'width:100%'}),
 					$('<h3/>').addClass('carousel-caption center').append($('<p></p>'))).appendTo($('#carousel-inner1'));
 				}
-				
 				$('<a/>').addClass('carousel-control-prev').attr({href:'#carousel1',role:'button','data-slide':'prev', id:'carousel-control-prev1'}).appendTo($('#carousel1'));
 				$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true'}).appendTo($('#carousel-control-prev1'));
 				$('<span/>').addClass('sr-only').html('이전').appendTo($('#carousel-control-prev1')).appendTo($('#carousel-control-prev1'));
@@ -1012,7 +934,17 @@ app.service = {
 					$('<ul/>').addClass('info_lists').attr({id:'info_lists2',style:'padding-left:130px;margin-bottom: unset;padding-top: 15px;padding-bottom: 15px;'}).appendTo('#nav-tabsHead2');	
 						$('<li/>').appendTo('#info_lists2').html(d.mbr.point);
 		},
+		
+		footer : d=>{
+			$('#footer').remove()
+			$.getScript($.script()+'/footer.js',()=>{
+				$('<div/>').attr({id:'footer'}).appendTo('#wrapper');
+				$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
+				$('#mainFooter').append(footerUI());
+			})
+		},
 		myModal : d=>{
+			$('.modal fade').empty();
 			$('#modalTitle').empty();
 			$('.modal-body').empty();
 			$('<div class="modal fade" id="layerpop">'
@@ -1031,17 +963,61 @@ app.service = {
 					+'  </div>'
 					+'</div>').appendTo('#content');
 		},
-		nav : d=>{
+		
+		nav : d =>{
+			$('#nav').remove()
+			$('<div/>').attr({id:'nav'}).appendTo($('#wrapper'));
+				$('<div/>').addClass('mainNav').appendTo($('#nav'));
+					$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
+					$('<div/>').addClass('nav_left').appendTo('.mainNav');
+						$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색').appendTo('.nav_left');
+						$('<a/>').attr({href:'#', id:'board'}).html('캐스트').appendTo('.nav_left');
+					$('<div/>').addClass('nav_right').appendTo('.mainNav');
+						$('<a/>').attr({href:'#', id:'amdin'}).html('관리자').appendTo('.nav_right');
+						$('<a/>').attr({href:'#', id:'add_btn'}).html('회원가입').appendTo('.nav_right');
+						$('<a/>').attr({href:'#', id:'login_btn'}).html('로그인').appendTo('.nav_right');
+
+		      $( document ).ready( function() {
+		          var jbOffset = $('.mainNav').offset();
+		          $( window ).scroll( function() {
+			            if ( $(this).scrollTop() > jbOffset.top ) {
+			              $('.mainNav').addClass('jbFixed');
+			            }
+			            else {
+			              $('.mainNav').removeClass('jbFixed');
+			            }
+			          	});
+		        });
+			
+		},
+		authNav : d=>{
+				$('.nav_right').empty();
+				$('<div/>').addClass('menubar').appendTo('.nav_right');
 				$('<ul/>').append(
 							$('<li/>').append(
 									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
 											$('<img>').attr({src:$.img()+'/profile/'+d.profileimg}).addClass('avatar'),
 				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
 									).append($('<ul/>').addClass('mouseOverUl').append(
-										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')),		 															
-	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')),
-			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')),		 															
-			 							$('<li/>').append($('<a/>').attr({href:'#', id:'mycast'}).html('마이캐스트'))		 															
+										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')).click(e=>{
+											e.preventDefault();
+											app.permision.mypage(d);
+										}),		 															
+	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')).click(e=>{
+	 										e.preventDefault();
+	 										$.cookie("loginID","");
+	 										app.router.home();
+	 									}),
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')).click(e=>{
+			 								e.preventDefault();
+			 								app.permision.reservationList();
+			 							}),		 															
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'mycast'}).html('마이캐스트')).click(e=>{
+			 								e.preventDefault();
+			 								$.getScript($.ctx()+'/resources/js/sein.js',()=>{
+			 									sein.service.mycast();
+			 								})
+			 							})		 															
 									)))).appendTo('.menubar');
 		},
 		makeRandomLetter : d=>{
@@ -1073,33 +1049,9 @@ app.router = {
 		$('#header').empty();
 		$('#content').empty();
 		$('#footer').empty();
-		$.getScript($.script()+'/footer.js',()=>{
 		/* nav 시작 */
-		$('<nav/>').attr({id:'nav'}).appendTo($('#wrapper'));
-			$('<div/>').addClass('mainNav').appendTo($('#nav'));
-				$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
-				$('<div/>').addClass('nav_left').appendTo('.mainNav');
-					$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색').appendTo('.nav_left');
-					$('<a/>').attr({href:'#', id:'board'}).html('캐스트').appendTo('.nav_left');
-				$('<div/>').addClass('nav_right').appendTo('.mainNav');
-					$('<a/>').attr({href:'#', id:'amdin'}).html('관리자').appendTo('.nav_right');
-					$('<a/>').attr({href:'#', id:'add_btn'}).html('회원가입').appendTo('.nav_right');
-					$('<a/>').attr({href:'#', id:'login_btn'}).html('로그인').appendTo('.nav_right');
-
-	      $( document ).ready( function() {
-	          var jbOffset = $('.mainNav').offset();
-	          $( window ).scroll( function() {
-		            if ( $(this).scrollTop() > jbOffset.top ) {
-		              $('.mainNav').addClass('jbFixed');
-		            }
-		            else {
-		              $('.mainNav').removeClass('jbFixed');
-		            }
-		          	});
-	        });
-
+		app.service.nav();
 		/* nav 끝 */
-					
 		
 		/* header 시작 */
 		app.service.header();			
@@ -1110,9 +1062,7 @@ app.router = {
 		/* content 끝 */
 		
 		/* footer 시작 */
-		$('<footer/>').attr({id:'footer'}).appendTo('#wrapper');
-		$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
-		$('#mainFooter').append(footerUI());
+		app.service.footer();
 		/* footer 끝 */
 					
 		/* 클릭 이벤트 시작 */
@@ -1135,10 +1085,9 @@ app.router = {
 					app.router.home();
 				}else{
 					e.preventDefault();
-					$('#content').empty();
-					$('#header').empty();
 					app.service.header();
 					app.service.content();
+					app.service.footer();
 				}
 			})
 		$('#login_btn').addClass('ya_cusor').click(e=>{
@@ -1157,5 +1106,4 @@ app.router = {
 			});
 		/* 클릭 이벤트 끝 */
 		}
-	)}
 };

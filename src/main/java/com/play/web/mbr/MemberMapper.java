@@ -16,4 +16,5 @@ public interface MemberMapper {
 	public void put(Member p);
 	public void delete(Member p);
 	public void update(Member p);
+	public void cancel(HashMap<String, Object> map);
 }

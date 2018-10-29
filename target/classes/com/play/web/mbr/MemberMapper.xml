@@ -15,6 +15,9 @@
 	<result property="checkout_date" column="CHECKOUT_DATE"/>
 	<result property="pay_price" column="PAY_PRICE"/>
 	<result property="pay_type" column="PAY_TYPE"/>
+	<result property="pay_no" column="PAY_NO"/>
+	<result property="accom_seq" column="ACCOM_SEQ"/>
+	<result property="res_check" column="RES_CHECK"/>
 </resultMap>
 
  <select id="rlist" resultMap="hjResult">
@@ -28,7 +31,10 @@
 	       CONCAT(R.CHECKOUT_DATE, ",", DAYNAME(R.CHECKOUT_DATE))
 	          AS CHECKOUT_DATE,
 	       P.PAY_PRICE,
-	       P.PAY_TYPE
+	       P.PAY_TYPE,
+	       A.ACCOM_SEQ,
+	       P.PAY_NO,
+	       R.RES_CHECK
 	FROM PAYMENT P
 	     JOIN RESERVATION R ON P.PAY_NO = R.PAY_NO
 	     JOIN ROOM O ON O.ROOM_SEQ = R.ROOM_SEQ
@@ -36,7 +42,7 @@
 	WHERE MEMBER_ID LIKE #{member_id}
 	ORDER BY P.PAY_DATE DESC
  </select>
-
+ 
   <select id="get" resultType="com.play.web.mbr.Member">
     SELECT *
     FROM member
@@ -52,8 +58,8 @@
   
   <insert id="post" >
   	INSERT INTO member
-		(MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, CUSTOMER_GRADE, NICKNAME, ADDRESS, PROFILEIMG)
-		VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{customer_grade}, #{nickname}, #{address}, #{profileimg})
+		(MEMBER_ID, NAME, PASSWORD, BIRTHDATE, GENDER, AGE, PHONE, NICKNAME, ADDRESS, PROFILEIMG, KAKAO)
+		VALUES (#{member_id}, #{name}, #{password}, #{birthdate}, #{gender}, #{age}, #{phone}, #{nickname}, #{address}, #{profileimg}, #{kakao})
   </insert>
   <select id="list" resultType="com.play.web.mbr.Member">
     SELECT * 
@@ -93,4 +99,14 @@
 	  WHERE MEMBER_ID = #{member_id}
 	  AND PASSWORD = #{password}
   </delete>
+  
+  <update id="cancel">
+  	  UPDATE RESERVATION R
+	  	JOIN PAYMENT P
+	  		ON R.PAY_NO = P.PAY_NO
+	  SET  R.RES_CHECK = '2'
+	  WHERE P.MEMBER_ID = #{member_id}
+	  AND R.PAY_NO = #{pay_no};
+  </update>
+  
 </mapper>

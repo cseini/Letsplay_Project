@@ -32,10 +32,12 @@ public class MemberCtrl {
 	public void join(@RequestBody Member param) {
 		logger.info("\n--------- MemberController {} !!-----","join()");
 		if(param.getBirthdate()!=null) {
+			param.setProfileimg("default.jpg");
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
 			mbrMap.post(param);
 		} else {
+			param.setKakao("2");  // 카톡 가입일 경우 2번임
 			mbrMap.post(param);
 		}
 	}
@@ -108,13 +110,14 @@ public class MemberCtrl {
 		return map;
 	}
 	
-	@GetMapping("/cancel/{member_id}")
-	public String result(@PathVariable String member_id){
-		logger.info("\n--------- MemberController {} !!-----","list()");
+	@GetMapping("/cancel/{pay_no}/{member_id}")
+	public void result(@PathVariable String pay_no, @PathVariable String member_id){
+		logger.info("\n--------- MemberController {} !!-----","cancel()");
+		System.out.println("member_id : " + member_id);
+		System.out.println("pay_no : " + pay_no);
 		map.clear();
-		rlist = mbrMap.rlist(member_id);
-		System.out.println("rlist.size : " + rlist.size());
-		map.put("rlist", rlist);
-		return "";
+		map.put("member_id", member_id);
+		map.put("pay_no", pay_no);
+		mbrMap.cancel(map);
 	}
 }

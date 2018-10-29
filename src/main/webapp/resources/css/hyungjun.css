@@ -38,6 +38,7 @@
 }
 
 .reserve-main-content {
+	min-height: 552px;
 	max-width: 980px;
 	margin: 0 auto;
 	padding: 60px 0;
@@ -172,7 +173,7 @@
 	border: 1px solid #595f63 !important;
 	text-align: center;
 	background-color: transparent;
-	cursor: pointer;
+	cursor:default;
 }
 
 .btn-primary-btn-btn-reserve {
@@ -301,7 +302,7 @@
 }
 
 #nav-tabs {
-	padding-left: 700px;
+   padding-left: 650px;
 }
 
 .nav-tabsHead {
@@ -350,13 +351,14 @@
 }
 
 .loginBox {
-	padding-top: 5%;
-	padding-bottom: 5%;
-	min-height: 568px;
+    padding-top: 9%;
+    padding-bottom: 5%;
+    min-height: 730px;
 }
 
 .joinBox {
 	padding-bottom: 50px;
+    min-height: 800px;
 }
 
 .loginHead {
