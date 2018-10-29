@@ -23,10 +23,19 @@ public interface BoardMapper {
 	public void readInc(int seq);
 	public void likeInc(int seq);
 	public void likeDes(int seq);
+	public void subInc(SeinResult sr);
+	public void subDes(SeinResult sr);
 	public void saveLike(HashMap<String, Object>map);
 	public void deleteLike(HashMap<String, Object>map);
+	public void saveBookmark(HashMap<String, Object>map);
+	public void deleteBookmark(HashMap<String, Object>map);
   
 	public HashMap<String,Object> check(HashMap<String, Object>map);
+	public int subcheck(SeinResult sr);
+	public int subcount(SeinResult sr);
+	public int castcount(SeinResult sr);
 	public List<SeinResult> mysub(HashMap<String, Object>map);
+	public List<SeinResult> myBookmark(HashMap<String, Object> smap);
+	public List<SeinResult> rankLike();
 	
 }

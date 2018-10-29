@@ -29,7 +29,7 @@ public class Board {
 	private Integer reply_seq;
 	private Integer msg_ref;
 	
-	
+	private String msg_photo1;
 	
 	private Integer accom_seq;
 	private String room_name;

@@ -55,7 +55,7 @@ sein.board ={
 							),
 							$('<div/>').addClass('card_bottom').append(
 								$('<div/>').addClass('user_pic').append(
-									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
+									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg,style:'cursor:pointer'}).click(e=>{
 										sein.service.caster(j);
 									})				
 								),
@@ -122,7 +122,9 @@ sein.board ={
 											),
 											$('<div/>').addClass('card_bottom').append(
 												$('<div/>').addClass('user_pic').append(
-													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg})				
+													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg,style:'cursor:pointer'}).click(e=>{
+														sein.service.caster(j);
+													})				
 												),
 												$('<div/>').addClass('user_info').append(
 													$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
@@ -137,7 +139,11 @@ sein.board ={
 													})
 												),
 												$('<div/>').addClass('user_cont').append(
-													$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))			
+													$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))	.click(e=>{
+														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+															sein.service.detail(j);	
+														})
+													})		
 												),
 												$('<div/>').addClass('count').append(
 													$('<span/>').addClass('ico_like'),
@@ -171,13 +177,20 @@ sein.service ={
 			$('<div/>').attr({id:'carousel','data-ride':'carousel'}).addClass('carousel slide').appendTo($('#div_banner'));
 			$('<ol/>').addClass('carousel-indicators').appendTo($('#carousel'));
 			$('<div/>').addClass('carousel-inner').appendTo($('#carousel'));
-			let k;
 			let clazz=['active'];
-			for(k=1;k<=3;k++){
-				$('<li/>').attr({'data-target':'#carousel', 'data-slide-to':k}).appendTo($('.carousel-indicators'));	
-				$('<div/>').addClass('carousel-item '+clazz[k-1]).attr({id:'item'+k}).append($("<img/>").attr({src:$.img()+'/banner/banner_img'+k+'.jpg'}),
-				$('<h3/>').addClass('carousel-caption center').append($('<p>테스트 캡션 글자입니다.'+k+'</p>'))).appendTo($('.carousel-inner'));
-			}
+			$.getJSON($.ctx()+'/rankLike/',d=>{
+				$.each(d.list,(i,j)=>{
+					$('<li/>').attr({'data-target':'#carousel', 'data-slide-to':i}).addClass(clazz[i]).appendTo($('.carousel-indicators'));	
+					$('<div/>').addClass('carousel-item '+clazz[i]).append(
+						$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'width:1300px;height:500px'}),
+						$('<h3/>').addClass('carousel-caption center').append(
+							$('<p>'+j.msg_title+'</p>')
+						)
+					).appendTo($('.carousel-inner')).click(e=>{
+						sein.service.detail(j);
+					});
+				})
+			})
 			
 			$('<a/>').addClass('carousel-control-prev').attr({href:'#carousel',role:'button','data-slide':'prev'}).appendTo($('#carousel'));
 			$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true'}).appendTo($('.carousel-control-prev'));
@@ -186,7 +199,9 @@ sein.service ={
 			$('<a/>').addClass('carousel-control-next').attr({href:'#carousel',role:'button','data-slide':'next'}).appendTo($('#carousel'));
 			$('<span/>').addClass('carousel-control-next-icon').attr({'aria-hidden':'true'}).appendTo($('.carousel-control-next'));
 			$('<span/>').addClass('sr-only').html('다음').appendTo($('.carousel-control-next')).appendTo($('.carousel-control-next'));
-			$('.carousel').carousel();
+			$('.carousel').carousel({
+				interval: 2000
+			});
 		},
 		side_menu : x=>{
 			let like_count=x.like_count;
@@ -221,12 +236,12 @@ sein.service ={
 									$('<span/>').addClass('bl_bookmark'))).click(e=>{
 										if($('.btnBookmark').hasClass('on')){
 											if(confirm('북마크 취소 하시겠습니까?')){
-												
+												$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
 												$('.btnBookmark').removeClass('on');
 											}											
 										}else{
 											if(confirm('북마크 하시겠습니까?')){
-
+												$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
 												$('.btnBookmark').addClass('on');
 											}	
 										}
@@ -245,16 +260,16 @@ sein.service ={
 			).appendTo($('#side_menu'));
 		},
 		detail : x=>{
-			if($.cookie('loginID')!==undefined){
-				var recent = new Array();
-				$.each($.cookie('recent'),(i,j)=>{
-					recent.push(j);
-				})
-				recent.push(x);
-				$.cookie('recent',recent);
+			let recent = new Array();
+			$.each($.cookie('recent'),(i,j)=>{
+				recent.unshift(j);
+			})
+			if(recent.length===6){
+				recent.splice(6,1);
 			}
+			recent.unshift(x);
+			$.cookie('recent',recent);
 			
-			/*{msg_photo:x.msg_photo,profileimg:x.profileimg,nickname:x.nickname,msg_title:x.msg_title,like_count:x.like_count,msg_count:x.msg_count}*/
 			$('#wrapper').scroll(()=>{e.preventDefault()});
 			$('#sein_content').empty();
 			$('<div/>').addClass('contents').attr({id:'topContent'}).appendTo($('#sein_content'));
@@ -263,7 +278,7 @@ sein.service ={
 			
 			$.getJSON($.ctx()+'/cast/read/'+x.msg_seq,d=>{
 				let like_count=d.like_count;
-				/*개인별 게시글 좋아요 북마크 구독 체크*/
+				/*개인별 게시글 좋아요 북마크  체크*/
 				$.ajax({
 					url:$.ctx()+'/cast/check/',
 					method:'post',
@@ -278,6 +293,16 @@ sein.service ={
 						}
 					},
 					error:(m1,m2,m3)=>{alert(m3)}
+				})
+				/*구독중체크*/
+				$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id,d=>{
+					if(d===1){
+						$('.bt_read').addClass('on')						
+					}
+				})
+				/*구독수체크*/
+				$.getJSON($.ctx()+'/cast/subcount/'+$.cookie('loginID')+'/',d=>{
+					$('#sub_count').html(d);
 				})
 				
 				sein.service.side_menu(d);
@@ -316,15 +341,19 @@ sein.service ={
 		        + dates.getMinutes()+":"
 		        + dates.getSeconds();
 		        
-				$('<div/>').addClass('detail_title').appendTo($('.inner_bg'));
-				$('<h3/>').addClass('sc_out').appendTo($('.detail_title'));
-				$('<p/>').html(d.msg_title).appendTo($('.detail_title'));
-				$('<div/>').addClass('count').appendTo($('.detail_title'));
-				$('<span/>').addClass('date').html(dt).appendTo($('.count'));
-				$('<span/>').addClass('ico_like').appendTo($('.count'));
-				$('<b/>').addClass('like_count').html(d.like_count).appendTo($('.count'));
-				$('<span/>').addClass('ico_read').appendTo($('.count'));
-				$('<b/>').html(d.msg_count).appendTo($('.count'));
+				$('<div/>').addClass('detail_title').append(
+					$('<h3/>').addClass('sc_out'),
+					$('<p/>').html(d.msg_title)		
+				).append(
+					$('<div/>').addClass('count').append(
+						$('<span/>').addClass('date').html(dt),
+						$('<span/>').addClass('ico_like'),
+						$('<b/>').addClass('like_count').html(d.like_count),
+						$('<span/>').addClass('ico_read'),
+						$('<b/>').html(d.msg_count)
+					)	
+				).appendTo($('.inner_bg'));
+				
 				$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
 					$('<a/>').attr({href:'#'}).addClass('reply').append(
 						$('<span/>').html('댓글'),$('<b/>').text(d.list.length))
@@ -339,9 +368,13 @@ sein.service ={
 				/*--------content시작-------*/
 				
 				$('<h3>'+d.msg_content+'</h3>').appendTo($('.detail_area'));
-				$('<div/>').attr({style:'text-align:center',align:'center'}).append(
-						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo}))
+				$('<div/>').attr({id:'imgAdd',style:'text-align:center',align:'center'}).append(
+						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo})
+				)
 				.appendTo($('.detail_area'));
+				if(d.msg_photo1!==undefined){
+					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1}).appendTo($('#imgAdd'));
+				}
 				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
 				$('<div/>').addClass('bt_detail').appendTo($('.bt_rap'));
@@ -354,15 +387,15 @@ sein.service ={
 					).click(e=>{
 						if($('.btnlike').hasClass('on')){
 							if(confirm('좋아요 취소 하시겠습니까?')){
+								$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
 								like_count=like_count-1;
-								$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq);
 								$('.like_count').html(like_count);
 								$('.btnlike').removeClass('on');
 							}											
 						}else{
 							if(confirm('좋아요 하시겠습니까?')){
 								like_count=like_count+1;
-								$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq);
+								$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
 								$('.like_count').html(like_count);
 								$('.btnlike').addClass('on');
 							}	
@@ -375,14 +408,12 @@ sein.service ={
 					).click(e=>{
 						if($('.btnBookmark').hasClass('on')){
 							if(confirm('북마크 취소 하시겠습니까?')){
-								
-								
+								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));								
 								$('.btnBookmark').removeClass('on');
 							}											
 						}else{
 							if(confirm('북마크 하시겠습니까?')){
-								
-								
+								$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
 								$('.btnBookmark').addClass('on');
 							}	
 						}
@@ -409,24 +440,71 @@ sein.service ={
 				$('<div/>').addClass('user_pic').appendTo($('.user_cast'));
 				$('<a/>').attr({href:'#'}).append(
 						$('<img/>').attr({src:$.img()+'/profile/'+d.profileimg,style:'position:static;width:100%;height:100%'})
-				).appendTo($('.user_pic'));
+				).appendTo($('.user_pic')).click(e=>{
+					sein.service.caster(d);
+				});
 				$('<div/>').addClass('user_txt').appendTo($('.user_cast'));
 				$('<a/>').attr({href:'#'}).addClass('user_name')
 				.append(
-						$('<strong/>').html(d.member_id)
-				).appendTo($('.user_txt'));
-				$('<p/>').html('캐스터 소개글').appendTo($('.user_txt'));
+						$('<strong/>').html(d.nickname)
+				).appendTo($('.user_txt')).click(e=>{
+					sein.service.caster(d);
+				});
+				$('<p/>').html(d.comment).appendTo($('.user_txt'));
 				$('<div/>').addClass('count').append(
 						$('<span/>').html('구독'),
-						$('<b/>').html(d.subscription_count)
+						$('<b/>').attr({id:'sub_count'})
 				).appendTo($('.user_txt'));
 				
-				/*bt_read on, bt_read off 로 구독중 조절해야하니 변수 처리 요망*/
 				$('<div/>').addClass('bt_read').append(
-						$('<button/>').addClass('jsonSubscribedStatus').append($('<span/>').addClass('bt_reading')))
-				.appendTo($('.user_cast'));
-				
+					$('<button/>').addClass('jsonSubscribedStatus').append($('<span/>').addClass('bt_reading'))
+				).appendTo($('.user_cast')).click(e=>{
+					if($('.bt_read').hasClass('on')){
+						if(confirm('구독을 해지 하시겠습니까?')){
+							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+d.member_id+'/')
+							$('.bt_read').removeClass('on');
+						}											
+					}else{
+						if(confirm(d.nickname+'님의 글을 구독하시겠습니까?')){
+							$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+d.member_id+'/')
+							$('.bt_read').addClass('on');
+						}	
+					}
+				});
+				if($.cookie('loginID')==d.member_id){
+					$('.bt_read').remove();
+				}
 				sein.service.reply(d);
+			})
+			$('<div/>').attr({style:'padding-top:30px'}).addClass('bottomContent contents bg_type').appendTo('#sein_content').append(
+				$('<div/>').addClass('con_inner').append(
+					$('<div/>').addClass('cast_area').append(
+						$('<strong/>').attr({style:'text-align:center;font-size:30px'}).html('최근 본 캐스트'),
+						$('<div/>').addClass('list_hidden').append(
+							$('<ul/>').attr({style:'width:1100px;margin:0 auto'}).addClass('recentUl')	
+						)
+					)
+				)	
+			);
+			$.each($.cookie('recent'),(i,j)=>{
+				if(i<4){
+					$('<li/>').append(
+						$('<a/>').attr({href:'#'}).append(
+							$('<span/>').append(
+								$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo}).addClass('view_img')	
+							),
+							$('<div/>').addClass('place_txt').append(
+								$('<strong/>').html(j.msg_title),
+								$('<div/>').addClass('count').append(
+									$('<span/>').addClass('ico_like'),
+									$('<b/>').html(j.like_count),
+									$('<span/>').addClass('ico_read'),
+									$('<b/>').html(j.msg_count)
+								)
+							)
+						)
+					).appendTo('.recentUl');
+				}
 			})
 			
 		},
@@ -599,197 +677,158 @@ sein.service ={
 		write : x=>{
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
 			$('<div/>').attr({style:'background-color:white'}).addClass('inner_bg').append(
-			$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
-			$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
-			$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
-			$('<form/>').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post"}).append(
-				$('<div/>').html('첨부할 이미지 파일을 드래그 해주세요.').attr({id:'dropZone',style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px'})
-			),
-			$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
-			.click(e=>{
-				// 등록할 파일 리스트
-				var uploadFileList = Object.keys(fileList);
-		        // 파일이 있는지 체크
-		        if(uploadFileList.length == 0){
-		            alert("파일이 없습니다.");
-		            return;
-		        }
-		        // 용량을 500MB를 넘을 경우 업로드 불가
-		        if(totalFileSize > maxUploadSize){
-		            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
-		            return;
-		        }
-		        var form = $('#uploadForm');
-	            var formData = new FormData(form);
-	            for(var i = 0; i < uploadFileList.length; i++){
-	                formData.append('files', fileList[uploadFileList[i]]);
-	            }
-				$.ajax({
-	            	url:$.ctx()+'/cast/upload/',
-	            	dataType:'text',
-	            	type:'post',
-	            	data:formData,
-	            	processData:false,
-	            	contentType:false,
-	                success: d=>{
-				        if(confirm("등록 하시겠습니까?")){
-				            // 등록할 파일 리스트를 formData로 데이터 입력
-		                	$.ajax({
-		    					url:$.ctx()+'/cast/write/',
-		    					method:'post',
-		    					contentType:'application/json',
-		    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:d}),
-		    					success:d=>{
-		    						 $('#layerpop').on('hidden.bs.modal',()=>{
-			            				sein.board.cast();
-			                		})
-		    					},
-		    					error:(m1,m2,m3)=>{alert(m3)}
-	    					})
-				        }
-	                },
-	                error : e=>{
-	                	alert("ERROR");
-	                }
-	            });
-				})
-			)
-			).appendTo($('#modalContent'));
+				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
+				$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
+				$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
+				$('<form/>').addClass('dragAndDropDiv').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post",style:'font-size:12px'}).text('이미지를 드래그해주세요. 최대 2개. 첫번째가 대표이미지입니다.'),
+				$('<div/>').attr({style:'margin-top:10px'}).append(
+					$('<button/>').addClass('btn btn-danger').attr({id:'write_submit',style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
+				)
+			).appendTo('#modalContent');
+			 var objDragAndDrop = $(".dragAndDropDiv");
+             
+			  $(document).on("dragenter",".dragAndDropDiv",function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                $(this).attr('style','border:2px solid #0B85A1');
+            });
+            $(document).on("dragover",".dragAndDropDiv",function(e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $(document).on("drop",".dragAndDropDiv",function(e){
+                 
+                $(this).attr('style','border:2px dotted #0B85A1');
+                e.preventDefault();
+                var files = e.originalEvent.dataTransfer.files;
+             
+                handleFileUpload(files,objDragAndDrop);
+            });
+             
+            $(document).on('dragenter', function (e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $(document).on('dragover', function (e){
+              e.stopPropagation();
+              e.preventDefault();
+              objDragAndDrop.attr('style','border:2px dotted #0B85A1');
+            });
+             $(document).on('drop', function (e){
+                 e.stopPropagation();
+                 e.preventDefault();
+             });
+              
+             function handleFileUpload(files,obj)
+             {
+                for (var i = 0; i < files.length; i++) 
+                {
+                     var fd = new FormData();
+                     fd.append('file', files[i]);
+               
+                     var status = new createStatusbar(obj); //Using this we can set progress.
+                     status.setFileNameSize(files[i].name,files[i].size);
+                     sendFileToServer(fd,status);
+               
+                }
+             }
+             var savedName=[];
+             var rowCount=0;
+             function createStatusbar(obj){
+                      
+                 rowCount++;
+                 var row="odd";
+                 if(rowCount %2 ==0) row ="even";
+                 this.statusbar = $("<div class='statusbar "+row+"'></div>");
+                 this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
+                 this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
+                 this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
+                 this.abort = $("<div class='abort'>취소</div>").appendTo(this.statusbar);
+                  
+                 obj.after(this.statusbar);
+               
+                 this.setFileNameSize = function(name,size){
+                     var sizeStr="";
+                     var sizeKB = size/1024;
+                     if(parseInt(sizeKB) > 1024){
+                         var sizeMB = sizeKB/1024;
+                         sizeStr = sizeMB.toFixed(2)+" MB";
+                     }else{
+                         sizeStr = sizeKB.toFixed(2)+" KB";
+                     }
+               
+                     this.filename.html(name);
+                     this.size.html(sizeStr);
+                 }
+                  
+                 this.setProgress = function(progress){       
+                     var progressBarWidth =progress*this.progressBar.width()/ 100;  
+                     this.progressBar.find('div').animate({ width: progressBarWidth }, 10).html(progress + "% ");
+                     if(parseInt(progress) >= 100)
+                     {
+                         this.abort.hide();
+                     }
+                 }
+                  
+                 this.setAbort = function(jqxhr){
+                     var sb = this.statusbar;
+                     this.abort.click(function()
+                     {
+                         jqxhr.abort();
+                         sb.hide();
+                     });
+                 }
+             }
+        	  function sendFileToServer(formData,status) {
+                  
+                	  
+                	  var extraData ={}; //Extra Data.
+                      var jqXHR=$.ajax({
+                              xhr: function() {
+                              var xhrobj = $.ajaxSettings.xhr();
+                              if (xhrobj.upload) {
+                                      xhrobj.upload.addEventListener('progress', function(event) {
+                                          var percent = 0;
+                                          var position = event.loaded || event.position;
+                                          var total = event.total;
+                                          if (event.lengthComputable) {
+                                              percent = Math.ceil(position / total * 100);
+                                          }
+                                          //Set progress
+                                          status.setProgress(percent);
+                                      }, false);
+                                  }
+                              return xhrobj;
+                          },
+                          url: $.ctx()+'/cast/upload/',
+                          type: "POST",
+                          contentType:false,
+                          processData: false,
+                          cache: false,
+                          data: formData,
+                          success: d=>{
+                              status.setProgress(100);
+                              savedName.push(d);
+                          }
+                      }); 
+                    
+                      status.setAbort(jqXHR);
+              }
+        	  $('#write_submit').click(e=>{
+            	  $.ajax({
+    					url:$.ctx()+'/cast/write/',
+    					method:'post',
+    					contentType:'application/json',
+    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1]}),
+    					success:d=>{
+    						 $('#layerpop').on('hidden.bs.modal',()=>{
+	            				sein.board.cast();
+	                		})
+    					},
+    					error:(m1,m2,m3)=>{alert(m3)}
+					})
+              })
 			
-	        
-			/*file upload 시작 */
-		    // 파일 리스트 번호
-		    var fileIndex = 0;
-		    // 등록할 전체 파일 사이즈
-		    var totalFileSize = 0;
-		    // 파일 리스트
-		    var fileList = new Array();
-		    // 파일 사이즈 리스트
-		    var fileSizeList = new Array();
-		    // 등록 가능한 파일 사이즈 MB
-		    var uploadSize = 1;
-		    // 등록 가능한 총 파일 사이즈 MB
-		    var maxUploadSize = 5;
-		 
-		    $(function (){
-		        fileDropDown();
-		    });
-		 
-		    // 파일 드롭 다운
-		    function fileDropDown(){
-		        var dropZone = $("#dropZone");
-		        // Drag기능
-		        dropZone.on('dragenter',function(e){
-		            e.stopPropagation();
-		            e.preventDefault();
-		            // 드롭다운 영역 css
-		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#E3F2FC'});
-		        });
-		        dropZone.on('dragleave',function(e){
-		            e.stopPropagation();
-		            e.preventDefault();
-		            // 드롭다운 영역 css
-		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'});
-		        });
-		        dropZone.on('dragover',function(e){
-		            e.stopPropagation();
-		            e.preventDefault();
-		            // 드롭다운 영역 css
-		            dropZone.attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#E3F2FC'});
-		        });
-		        dropZone.on('drop',function(e){
-		            e.preventDefault();
-		            // 드롭다운 영역 css
-		            var files = e.originalEvent.dataTransfer.files;
-		            if(files != null){
-		                if(files.length < 1){
-		                    alert("폴더 업로드 불가");
-		                    return;
-		                }
-		                selectFile(files)
-		            }else{
-		                alert("ERROR");
-		            }
-		        });
-		    }
-		 
-		    // 파일 선택시
-		    function selectFile(fileObject){
-		        var files = null;
-		        if(fileObject != null){
-		            // 파일 Drag 이용하여 등록시
-		            files = fileObject;
-		            $("#dropZone").attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'}).html('파일 드랍 완료');
-		        }else{
-		            // 직접 파일 등록시
-		            files = $('#multipaartFileList_' + fileIndex)[0].files;
-		            $("#dropZone").attr({style:'border:3px dotted black;width:100%;height:100px;text-align:center;line-height:90px;background-color:#FFFFFF'}).html('파일 등록 완료');
-		        }
-		        
-		        // 다중파일 등록
-		        if(files != null){
-		            for(var i = 0; i < files.length; i++){
-		                // 파일 이름
-		                var fileName = files[i].name;
-		                var fileNameArr = fileName.split("\.");
-		                // 확장자
-		                var ext = fileNameArr[fileNameArr.length - 1];
-		                // 파일 사이즈(단위 :MB)
-		                var fileSize = files[i].size / 1024 / 1024;
-		                
-		                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-		                    // 확장자 체크
-		                    alert("등록 불가 확장자");
-		                    break;
-		                }else if(fileSize > uploadSize){
-		                    // 파일 사이즈 체크
-		                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
-		                    break;
-		                }else{
-		                    // 전체 파일 사이즈
-		                    totalFileSize += fileSize;
-		                    // 파일 배열에 넣기
-		                    fileList[fileIndex] = files[i];
-		                    // 파일 사이즈 배열에 넣기
-		                    fileSizeList[fileIndex] = fileSize;
-		                    // 업로드 파일 목록 생성
-		                    addFileList(fileIndex, fileName, fileSize);
-		                    // 파일 번호 증가
-		                    fileIndex++;
-		                }
-		            }
-		        }else{
-		            alert("ERROR");
-		        }
-		    }
-		 
-		    // 업로드 파일 목록 생성
-		    function addFileList(fIndex, fileName, fileSize){
-		        var html = "";
-		        html += "<tr id='fileTr_" + fIndex + "'>";
-		        html += "    <td class='center' id='fileNameLocation'>";
-		        html +=         fileName
-		        html += "    </td>"
-		        html += "</tr>"
-		        $('#fileTableTbody').append(html);
-		    }
-		 
-		    // 업로드 파일 삭제
-		    function deleteFile(fIndex){
-		        // 전체 파일 사이즈 수정
-		        totalFileSize -= fileSizeList[fIndex];
-		        
-		        // 파일 배열에서 삭제
-		        delete fileList[fIndex];
-		        
-		        // 파일 사이즈 배열 삭제
-		        delete fileSizeList[fIndex];
-		        
-		        // 업로드 파일 테이블 목록에서 삭제
-		        $("#fileTr_" + fIndex).remove();
-		    }
-			
-	/* file upload 끝 */
 		},
 		modify : x=>{
 			$('#layerpop').draggable();
@@ -798,22 +837,158 @@ sein.service ={
 				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%'}).text(x.msg_title),
 				$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px'}).text(x.msg_content),
 				$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%'}).text(x.tag),
-				$('<div/>').attr({style:'margin-top:10px'}).append($('<button/>').addClass('btn btn-danger').attr({style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('수정하기')
-					.click(e=>{
-						$.ajax({
-							url:$.ctx()+'/cast/modify/',
-							method:'post',
-							contentType:'application/json',
-							data:JSON.stringify({member_id:$.cookie("loginID"),msg_seq:x.msg_seq,board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val()}),
-							success:d=>{
-								$('#layerpop').on('hidden.bs.modal',()=>{
-									sein.board.cast();
-								})
-							},
-							error:(m1,m2,m3)=>{alert(m3)}})
-						})
-					)
-			).appendTo($('#modalContent'));
+				$('<form/>').addClass('dragAndDropDiv').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post",style:'font-size:12px'}).text('수정할 이미지를 드래그해주세요. 최대 2개. 첫번째가 대표이미지입니다.'),
+				$('<div/>').attr({style:'margin-top:10px'}).append(
+					$('<button/>').addClass('btn btn-danger').attr({id:'mod_submit',style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('수정하기')
+				)
+			).appendTo('#modalContent');
+			
+			var objDragAndDrop = $(".dragAndDropDiv");
+            
+            $(document).on("dragenter",".dragAndDropDiv",function(e){
+                e.stopPropagation();
+                e.preventDefault();
+                $(this).attr('style','border:2px solid #0B85A1');
+            });
+            $(document).on("dragover",".dragAndDropDiv",function(e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $(document).on("drop",".dragAndDropDiv",function(e){
+                 
+                $(this).attr('style','border:2px dotted #0B85A1');
+                e.preventDefault();
+                var files = e.originalEvent.dataTransfer.files;
+             
+                handleFileUpload(files,objDragAndDrop);
+            });
+             
+            $(document).on('dragenter', function (e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $(document).on('dragover', function (e){
+              e.stopPropagation();
+              e.preventDefault();
+              objDragAndDrop.attr('style','border:2px dotted #0B85A1');
+            });
+            $(document).on('drop', function (e){
+                e.stopPropagation();
+                e.preventDefault();
+            });
+             
+            function handleFileUpload(files,obj)
+            {
+               for (var i = 0; i < files.length; i++) 
+               {
+                    var fd = new FormData();
+                    fd.append('file', files[i]);
+              
+                    var status = new createStatusbar(obj); //Using this we can set progress.
+                    status.setFileNameSize(files[i].name,files[i].size);
+                    sendFileToServer(fd,status);
+              
+               }
+            }
+            var savedName=[];
+            var rowCount=0;
+            function createStatusbar(obj){
+                     
+                rowCount++;
+                var row="odd";
+                if(rowCount %2 ==0) row ="even";
+                this.statusbar = $("<div class='statusbar "+row+"'></div>");
+                this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
+                this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
+                this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
+                this.abort = $("<div class='abort'>중지</div>").appendTo(this.statusbar);
+                 
+                obj.after(this.statusbar);
+              
+                this.setFileNameSize = function(name,size){
+                    var sizeStr="";
+                    var sizeKB = size/1024;
+                    if(parseInt(sizeKB) > 1024){
+                        var sizeMB = sizeKB/1024;
+                        sizeStr = sizeMB.toFixed(2)+" MB";
+                    }else{
+                        sizeStr = sizeKB.toFixed(2)+" KB";
+                    }
+              
+                    this.filename.html(name);
+                    this.size.html(sizeStr);
+                }
+                 
+                this.setProgress = function(progress){       
+                    var progressBarWidth =progress*this.progressBar.width()/ 100;  
+                    this.progressBar.find('div').animate({ width: progressBarWidth }, 10).html(progress + "% ");
+                    if(parseInt(progress) >= 100)
+                    {
+                        this.abort.hide();
+                    }
+                }
+                 
+                this.setAbort = function(jqxhr){
+                    var sb = this.statusbar;
+                    this.abort.click(function()
+                    {
+                        jqxhr.abort();
+                        sb.hide();
+                    });
+                }
+            }
+       	  function sendFileToServer(formData,status) {
+                 
+               	  
+               	  var extraData ={}; //Extra Data.
+                     var jqXHR=$.ajax({
+                             xhr: function() {
+                             var xhrobj = $.ajaxSettings.xhr();
+                             if (xhrobj.upload) {
+                                     xhrobj.upload.addEventListener('progress', function(event) {
+                                         var percent = 0;
+                                         var position = event.loaded || event.position;
+                                         var total = event.total;
+                                         if (event.lengthComputable) {
+                                             percent = Math.ceil(position / total * 100);
+                                         }
+                                         //Set progress
+                                         status.setProgress(percent);
+                                     }, false);
+                                 }
+                             return xhrobj;
+                         },
+                         url: $.ctx()+'/cast/uploadMod/'+x.msg_photo+'/'+x.msg_photo1+'/',
+                         type: "POST",
+                         contentType:false,
+                         processData: false,
+                         cache: false,
+                         data: formData,
+                         success: d=>{
+                             status.setProgress(100);
+                             savedName.push(d);
+                         }
+                     }); 
+                   
+                     status.setAbort(jqXHR);
+             }
+       	  $('#mod_submit').click(e=>{
+           	  $.ajax({
+   					url:$.ctx()+'/cast/modify/',
+   					method:'post',
+   					contentType:'application/json',
+   					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1]}),
+   					success:d=>{
+   						 $('#layerpop').on('hidden.bs.modal',()=>{
+	            				sein.board.cast();
+	                		})
+   					},
+   					error:(m1,m2,m3)=>{alert(m3)}
+					})
+             })
+			
+			
+			
 			
 		},
 		modal : x=>{
@@ -901,6 +1076,24 @@ sein.service ={
 	},
 	caster : x=>{
 		$('#sein_content').empty();
+		var sub_count;
+		$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id,d=>{
+			if(d===1){
+				$('.bt_read').addClass('on')						
+			}
+		})
+
+		/*구독수*/
+		$.getJSON($.ctx()+'/cast/subcount/'+x.member_id+'/',d=>{
+			$('#sub_count').html(d);
+			sub_count = d;
+		})
+		/*캐스트수*/
+		$.getJSON($.ctx()+'/cast/castcount/'+x.member_id+'/',d=>{
+			$('#cast_count').html(d);
+		})
+		
+		
 		$('<div/>').addClass('contents bg_type2').attr({style:'min-height: 400px;'}).appendTo($('#sein_content'));
 		$('<div/>').addClass('caster_rap').appendTo($('.bg_type2'));
 		$('<div/>').addClass('caster_inner').append(
@@ -910,7 +1103,7 @@ sein.service ={
 				),
 				$('<span/>').addClass('ico_caster'),
 				$('<strong/>').html(x.nickname),
-				$('<p/>').html(x.nickname), /*디비에 소개글 필요*/
+				$('<p/>').html(x.comment), 
 				$('<div/>').addClass('nav_sns').append(
 					$('<li/>').addClass('ico_face').attr({style:'display:none'}).append($('<a/>').attr({href:''}).append($('<span/>').addClass('ico_face'))),
 					$('<li/>').addClass('ico_blog').attr({style:'display:none'}).append($('<a/>').attr({href:''}).append($('<span/>').addClass('ico_blog'))),
@@ -920,11 +1113,29 @@ sein.service ={
 					$('<button/>').attr({type:'button',title:'구독하기'}).append(
 						$('<span/>').addClass('bt_reading')
 					)
-				)
+				).click(e=>{
+					if($('.bt_read').hasClass('on')){
+						if(confirm('구독을 해지 하시겠습니까?')){
+							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							$('.bt_read').removeClass('on');
+							sub_count=sub_count-1;
+							$('#sub_count').html(sub_count);
+						}			
+					}else{
+						if(confirm(x.nickname+'님의 글을 구독하시겠습니까?')){
+							$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							$('.bt_read').addClass('on');
+							sub_count=sub_count+1;
+							$('#sub_count').html(sub_count);
+						}	
+					}
+				})
 			),
-			$('<div/>').addClass('caster_l').append($('<b/>').html('캐스터'),$('<br/>'),$('<span/>').html('캐스트수')),
-			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').html('구독수'))
+			$('<div/>').addClass('caster_l').append($('<b/>').html('캐스트'),$('<br/>'),$('<span/>').attr({id:'cast_count'})),
+			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').attr({id:'sub_count'}))
 		).appendTo($('.caster_rap'));
+		
+		
 		$('<div/>').addClass('contents').appendTo($('#sein_content'));
 		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
@@ -1081,12 +1292,33 @@ sein.service ={
 						$('<li/>').append(
 							$('<a/>').attr({href:'#'}).html('구독')
 						).click(e=>{
-								$('.con_inner').remove();
-							
+							$('.con_inner').remove();
+							$('<div/>').addClass('con_inner').append(
+								$('<div/>').addClass('mycast_rap2').append(
+									$('<ul/>').addClass('mycast_list2')
+								),
+								$('<div/>').addClass('bt_rap')
+							).appendTo($('.contents'))
+							$.getJSON($.ctx()+'/mysub/'+$.cookie('loginID')+'/',d=>{
+								$.each(d.list,(i,j)=>{
+									sein.service.mysub(j);	
+								})
+							})
 						}),
 						$('<li/>').append(
-								$('<a/>').attr({href:'#'}).html('북마크')).click(e=>{
-							
+							$('<a/>').attr({href:'#'}).html('북마크')).click(e=>{
+								$('.con_inner').remove();
+								$('<div/>').addClass('con_inner').append(
+									$('<div/>').addClass('mycast_rap bord_all').append(
+										$('<ul/>').addClass('mycast_list')
+									),
+									$('<div/>').addClass('bt_rap')
+								).appendTo($('.contents'))
+								$.getJSON($.ctx()+'/myBookmark/'+$.cookie('loginID')+'/',d=>{
+								$.each(d.list,(i,j)=>{
+									sein.service.mybookmark(j);	
+								})
+							})
 						})
 					)
 				)
@@ -1104,58 +1336,130 @@ sein.service ={
 			sein.service.recent({index:i,page:j});
 		})
 			
-		/*이건 구독한거...
-		$.getJSON($.ctx()+'/mysub/'+$.cookie('loginID')+'/',d=>{
-			$.each(d.list,(i,j)=>{
-				alert(j.sub_mem_id);
-				
-			})
-		})*/
 	},
 	recent : x=>{
 		$('<li/>').attr({id:'recent'+x.page.msg_seq}).append(
 			$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
-				$('<img/>').attr({src:$.img()+'/cast/'+x.page.msg_photo}).click(e=>{
+				$('<img/>').attr({src:$.img()+'/cast/'+x.page.msg_photo,style:'cursor:pointer'}).click(e=>{
 					sein.service.detail(x.page);
 				})
 			),
 			$('<div/>').append(
-				$('<a/>').attr({href:'#'}).html(x.page.msg_title).append(
+				$('<a/>').attr({href:'#',style:'font-size: 18px;color: #444;'}).html(x.page.msg_title).append(
 					$('<div/>').addClass('count').append(
 						$('<span/>').addClass('ico_like'),
 						$('<b/>').html(x.page.like_count),
 						$('<span/>').addClass('ico_read'),
 						$('<b/>').html(x.page.msg_count)
 					)		
-				),
+				).click(e=>{
+					sein.service.detail(x.page);
+				}),
 				$('<a/>').attr({href:'#'}).append(
 					$('<div/>').attr({style:'margin-top:30px;'}).append(
-						$('<img/>').attr({src:$.img()+'/profile/'+x.page.profileimg,style:'width:40px'}).click(e=>{
-							alert('프로필클릭 캐스터로 이동')
-						}),
-						$('<b/>').text(x.page.nickname).append(
-							$('<span/>').text(' 한줄 소개글')
+						$('<img/>').attr({src:$.img()+'/profile/'+x.page.profileimg,style:'width:35px'}),
+						$('<b/>').text(x.page.nickname).attr({style:'margin-left:5px;font-size: 12px; color: #ff5f81; font-weight: normal;'}).append(
+							$('<span/>').attr({style:'font-size: 12px; color: #999;'}).text(' '+x.page.comment)
 						)
 					)	
-				),
+				).click(e=>{
+					sein.service.caster(x.page);
+				}),
 				$('<div/>').addClass('list_del').append(
 					$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
-						$('<span/>').addClass('ico_del')	
+						$('<span/>').addClass('ico_del').html(x.index)	
 					),
 					$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
-						$('#recent'+x.page.msg_seq).remove();
-						var recent = new Array();
-						$.each($.cookie('recent'),(i,j)=>{
-							recent.push(j);
-						})
-						alert(x.index+"삭제");
-						recent.splice(x.index,1);
-						$.cookie('recent',null);
-						$.cookie('recent',recent);
+						if(confirm('삭제 하시겠습니까?')){
+							$('#recent'+x.page.msg_seq).remove();
+							let recent = new Array();
+							$.each($.cookie('recent').reverse(),(i,j)=>{
+								recent.unshift(j);
+							})
+							recent.splice(x.index,1);
+							$.cookie('recent',recent);
+						}
 					})
 				)
 			)
 		).appendTo('.mycast_list')
+	},
+	mybookmark : x=>{
+		$('<li/>').attr({id:'bookmark'+x.msg_seq}).append(
+				$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
+					$('<img/>').attr({src:$.img()+'/cast/'+x.msg_photo,style:'cursor:pointer'}).click(e=>{
+						sein.service.detail(x);
+					})
+				),
+				$('<div/>').append(
+					$('<a/>').attr({href:'#',style:'font-size: 18px;color: #444;'}).html(x.msg_title).append(
+						$('<div/>').addClass('count').append(
+							$('<span/>').addClass('ico_like'),
+							$('<b/>').html(x.like_count),
+							$('<span/>').addClass('ico_read'),
+							$('<b/>').html(x.msg_count)
+						)		
+					).click(e=>{
+						sein.service.detail(x);
+					}),
+					$('<a/>').attr({href:'#'}).append(
+						$('<div/>').attr({style:'margin-top:30px;'}).append(
+							$('<img/>').attr({src:$.img()+'/profile/'+x.profileimg,style:'width:35px'}),
+							$('<b/>').text(x.nickname).attr({style:'margin-left:5px;font-size: 12px; color: #ff5f81; font-weight: normal;'}).append(
+								$('<span/>').attr({style:'font-size: 12px; color: #999;'}).text(' '+x.comment)
+							)
+						)	
+					).click(e=>{
+						sein.service.caster(x);
+					}),
+					$('<div/>').addClass('list_del').append(
+						$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
+							$('<span/>').addClass('ico_del')	
+						),
+						$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
+							if(confirm('삭제 하시겠습니까?')){
+								$('#bookmark'+x.msg_seq).remove();
+								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
+							}
+						})
+					)
+				)
+			).appendTo('.mycast_list')
+		},
+	mysub : x=>{
+		$('<li/>').attr({id:'mybook_'+x.member_id,style:'height:240px;'}).addClass('bord_all').append(
+				$('<div/>').addClass('list_inner').append(
+					$('<a/>').attr({href:'#'}).append(
+						$('<div/>').addClass('user_pic').append(
+							$('<img/>').addClass('profile_pic').attr({src:$.img()+'/profile/'+x.profileimg}).click(e=>{
+								sein.service.caster(x);
+							})			
+						),
+						$('<div/>').addClass('user_info').append(
+							$('<a/>').attr({href:'#'}).append(
+								$('<strong>'+x.nickname+'</strong>'),
+								$('<span>'+x.comment+'</span>')
+							)
+						),
+						$('<div/>').addClass('count2').attr({style:'margin-top:10px'}).append(
+							$('<span/>').html('캐스트'),
+							$('<b/>').html(x.count)
+						)
+					),
+					$('<div/>').addClass('list_del type2').append(
+						$('<a/>').attr({href:'#',title:'구독취소'}).append(
+							$('<span/>').addClass('ico_del')	
+						),
+						$('<b/>').attr({style:'width:100px;height:30px'}).addClass('bg_del').html('구독취소').click(e=>{
+							if(confirm('구독을 해지 하시겠습니까?')){
+								$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
+								$('.bt_read').removeClass('on');
+								$('#mybook_'+x.member_id).remove()
+							}
+						})
+					)
+				)
+			).appendTo('.mycast_list2')
 	},
 	map : x=>{
 		$('#sein_content').empty();
