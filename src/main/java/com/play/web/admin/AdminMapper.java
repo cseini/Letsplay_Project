@@ -16,6 +16,12 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getTopSales ();
 	public List<HashMap<String,Object>> getSumHotel ();
 	public List<HashMap<String,Object>> getSumMotel ();
-	public List<HashMap<String,Object>> getByPrice (String accom_addr);
-	public List<HashMap<String,Object>> getPosition (String accom_addr);
+	public List<HashMap<String,Object>> getByPriceAll (HashMap<String,Object>map);
+	public List<HashMap<String,Object>> getByPricePart (HashMap<String,Object>map);
+	//public List<HashMap<String,Object>> getByPricePart (String accom_addr, String start, String end);
+	public List<HashMap<String,Object>> getPosition (HashMap<String,Object>map);
+	//public List<HashMap<String,Object>> getAgeUse();
+	public List<HashMap<String,Object>> getCustoAccom(HashMap<String,Object>map);
+	public List<HashMap<String,Object>> getTopRes();
+	public List<HashMap<String,Object>> getCustoPop();
 }

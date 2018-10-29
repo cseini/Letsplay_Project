@@ -16,6 +16,7 @@ public class AdminCtrl {
 	//@Autowired MemberAge mbrAge;
 	@Autowired AdminMapper admMap;
 	@Autowired Map<String, Object> map;
+	@Autowired HashMap<String,Object> smap;
 	
 	@RequestMapping("/count")
 	public Map<String, Object> byAgeList(){
@@ -108,16 +109,58 @@ public class AdminCtrl {
 		System.out.println(admMap.getSumMotel().get(0).get("sales"));*/
 		return map;
 	}
-	@GetMapping("/admin/accom/{accom_addr}")
-	public Map<String,Object> accom(@PathVariable String accom_addr){
+	/*@GetMapping("/admin/custo")
+	public Map<String,Object> custo(){
 		map.clear();
-		System.out.println(accom_addr);
+		map.put("percent", admMap.getAgeUse());
+		return map;
+	}*/
+	@GetMapping("/admin/accom/{accom_addr}")
+	public Map<String,Object> accomAll(@PathVariable String accom_addr){
+		map.clear();
+		smap.clear();
+		//System.out.println(accom_addr);
 		accom_addr += "%";
-		map.put("accomPrice", admMap.getByPrice(accom_addr));
+		smap.put("accom_addr", accom_addr);
+		map.put("accomPrice", admMap.getByPriceAll(smap));
 		//System.out.println(map.get("accomPrice"));
-		map.put("accomPosition", admMap.getPosition(accom_addr));
-		System.out.println(map.get("accomPosition"));
+		map.put("accomPosition", admMap.getPosition(smap));
+		//System.out.println(map.get("accomPosition"));
 		return map;
 		
+	}
+	@GetMapping("/admin/accom/{accom_addr}/{start}/{end}")
+	public Map<String,Object> accomPart(@PathVariable String accom_addr, @PathVariable String start, @PathVariable String end){
+		map.clear();
+		smap.clear();
+		//System.out.println(accom_addr + "   " + start + "    " + end);
+		accom_addr += "%";
+		smap.put("accom_addr", accom_addr);
+		smap.put("start", start);
+		smap.put("end", end);
+		map.put("accomPrice", admMap.getByPricePart(smap));
+		map.put("accomPosition", admMap.getPosition(smap));
+		return map;
+	}
+	@GetMapping("/admin/custo/{type}/{start}/{end}")
+	public Map<String,Object> custo(@PathVariable String type, @PathVariable String start, @PathVariable String end){
+		map.clear();
+		smap.clear();
+		System.out.println(type+"   "+start+"자바   "+end);
+		smap.put("type", type);
+		smap.put("start", start);
+		smap.put("end", end);
+		map.put("custoAccom", admMap.getCustoAccom(smap));
+		System.out.println(map.get("custoAccom"));
+		//map.put("custoHo", admMap.getCustoHo(smap));
+		//map.put("custoMo", admMap.getCustoMo(smap));
+		map.put("custoPop", admMap.getCustoPop());
+		return map;
+	}
+	@GetMapping("/admin/top")
+	public Map<String,Object> top(){
+		map.clear();
+		map.put("top", admMap.getTopRes());
+		return map;
 	}
 }

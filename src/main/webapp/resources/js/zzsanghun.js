@@ -498,7 +498,7 @@ googleChart.service = {
 		  console.log(x);
 		  var info = {};
 		  var year = new Date().getFullYear();
-		  if(x.type == 'MOTEL'){
+		  if(x.type == 'Motel'){
 			  switch(x.quarter){
 			  case '1quarter':
 				  info = {
@@ -506,7 +506,6 @@ googleChart.service = {
 					  'start' : year+'-01-01',
 					  'end' : year+'-03-31'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  case '2quarter':
 				  info = {
@@ -514,7 +513,6 @@ googleChart.service = {
 					  'start' : year+'-04-01',
 					  'end' : year+'-06-30'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  case '3quarter':
 				  info = {
@@ -522,7 +520,6 @@ googleChart.service = {
 					  'start' : year+'-07-01',
 					  'end' : year+'-09-30'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  default:
 				  info = {
@@ -530,7 +527,6 @@ googleChart.service = {
 					  'start' : year+'-10-01',
 					  'end' : year+'-12-31'
 			      }
-			  googleChart.service.custoChart(info);
 				  break;
 			  }
 		  }else{
@@ -541,7 +537,6 @@ googleChart.service = {
 					  'start' : year+'-01-01',
 					  'end' : year+'-03-31'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  case '2quarter':
 				  info = {
@@ -549,7 +544,6 @@ googleChart.service = {
 					  'start' : year+'-04-01',
 					  'end' : year+'-06-30'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  case '3quarter':
 				  info = {
@@ -557,7 +551,6 @@ googleChart.service = {
 					  'start' : year+'-07-01',
 					  'end' : year+'-09-30'
 			      }
-				  googleChart.service.custoChart(info);
 				  break;
 			  default:
 				  info = {
@@ -565,98 +558,41 @@ googleChart.service = {
 					  'start' : year+'-10-01',
 					  'end' : year+'-12-31'
 			      }
-			  		googleChart.service.custoChart(info);
 				  break;
 			  }
 		  }
-		  //googleChart.service.custoChart(info);
-		/*
+		/*  
+		  switch(x.quarter){
+		  case '1quarter':
+			  x.quarter = {
+				  'start' : year+'-01-01',
+				  'end' : year+'-03-31'
+		      }
+			  break;
+		  case '2quarter':
+			  quarter = {
+				  'start' : year+'-04-01',
+				  'end' : year+'-06-30'
+		      }
+			  break;
+		  case '3quarter':
+			  quarter = {
+				  'start' : year+'-07-01',
+				  'end' : year+'-09-30'
+		      }
+			  break;
+		  default:
+			  quarter = {
+				  'start' : year+'-10-01',
+				  'end' : year+'-12-31'
+		      }
+			  break;
+		  }
+		  */
 		  $.getJSON($.ctx()+'/admin/custo/'+info.type+'/'+info.start+'/'+info.end, d=>{
-			  var custoAccom = [];
-			  for(var i = 1; i < d.custoAccom.length; i++){
-				  custoAccom.push(d.custoAccom[i].payCount);
-			  }
-			  var arrMo = [];
-			  for(var i = 1; i < d.custoMo.length; i++){
-				  arrMo.push(d.custoMo[i].payCount);
-			  }
-			  var options = {
-						'legend':{
-							names: [
-								'20대',
-								'30대',
-								'40대',
-								'50대',
-								'60대 이상'
-								'Operable',
-								'Navigation',
-								'Error Prevent'
-							],
-							hrefs: [
-								'http://nuli.navercorp.com//sharing/a11y#k1',
-								'http://nuli.navercorp.com//sharing/a11y#k2',
-								'http://nuli.navercorp.com//sharing/a11y#k3',
-								'http://nuli.navercorp.com//sharing/a11y#k4',
-								'http://nuli.navercorp.com//sharing/a11y#k5'
-								'http://nuli.navercorp.com//sharing/a11y#k6',
-								'http://nuli.navercorp.com//sharing/a11y#k7',
-								'http://nuli.navercorp.com//sharing/a11y#k8'
-							]
-						},
-						'dataset': {
-							title: 'Accommodation',
-							values: [custoAccom],
-							bgColor: '#f9f9f9',
-							fgColor: '#30a1ce',
-						},
-						'chartDiv': 'accom_chart',
-						'chartType': 'radar',
-						'chartSize': { width: 500, height: 300 }
-					};
-			  Nwagon.chart(options);
-			  console.log('1');
-			  console.log(options.dataset.values);
-			 
-			  
-			  google.charts.load('current', {'packages':['corechart']});
-		      google.charts.setOnLoadCallback(drawCustoPop);
-		      
-		      function drawCustoPop(){
-		    	  var data = new google.visualization.DataTable();
-		    	  data.addColumn('string', 'local');
-		    	  data.addColumn('number', 'reservationCnt');
-		    	  data.addColumn('number', 'populationRate');
-		    	  data.addColumn('number', 'populationCnt');
-		    	 
-		    	  
-		    	  $.each(d.custoPop, (i,j)=>{
-		    		 data.addRow([
-		    			 j.byAddr,
-		    			 (j.payCnt * 1),
-		    			 (j.popRate * 1),
-		    			 (j.population * 1)
-		    		 ]); 
-		    	  });
-		    	  
-		    	  var options = {
-		    		        title: ' 지역별 고객 ',
-		    		        hAxis: {title: 'Population'},
-		    		        vAxis: {title: 'Population rate'},
-		    		        bubble: {textStyle: {fontSize: 11}}
-		    		      };
-		    	  var chart = new google.visualization.BubbleChart(document.getElementById('pop_chart'));
-		          chart.draw(data, options);
-		      }// 버블차트
-		      
-		  });
-		 */
-		 
-	  },//custoInfo()
-	  custoChart : x=>{
-		  $.getJSON($.ctx()+'/admin/custo/'+x.type+'/'+x.start+'/'+x.end, d=>{
-			  var custoAccom = [];
-			  for(var i = 1; i < d.custoAccom.length; i++){
-				  custoAccom.push(d.custoAccom[i].payCount);
+			  var arrAccom = [];
+			  for(var i = 1; i < d.arrAccom.length; i++){
+				  arrAccom.push(d.arrAccom[i].payCount);
 			  }
 			  /*var arrMo = [];
 			  for(var i = 1; i < d.custoMo.length; i++){
@@ -687,7 +623,7 @@ googleChart.service = {
 						},
 						'dataset': {
 							title: 'Accommodation',
-							values: [custoAccom],
+							values: [arrAccom],
 							bgColor: '#f9f9f9',
 							fgColor: '#30a1ce',
 						},
@@ -698,7 +634,43 @@ googleChart.service = {
 			  Nwagon.chart(options);
 			  console.log('1');
 			  console.log(options.dataset.values);
-			 
+			 /* 
+			  모텔부분
+			  var arrMo = [];
+			  for(var j = 1; i < d.custoMo.length; j++){
+				  arrMo.push(d.custoMo[j].payCount);
+			  }
+			  var options = {
+						'legend':{
+							names: [
+								'20대',
+								'30대',
+								'40대',
+								'50대',
+								'60대 이상'
+							],
+							hrefs: [
+								'http://nuli.navercorp.com//sharing/a11y#k1',
+								'http://nuli.navercorp.com//sharing/a11y#k2',
+								'http://nuli.navercorp.com//sharing/a11y#k3',
+								'http://nuli.navercorp.com//sharing/a11y#k4',
+								'http://nuli.navercorp.com//sharing/a11y#k5'
+							]
+						},
+						'dataset': {
+							title: 'Web accessibility status',
+							values: [arrMo],
+							bgColor: '#f9f9f9',
+							fgColor: '#30a1ce',
+						},
+						'chartDiv': 'age_mo',
+						'chartType': 'radar',
+						'chartSize': { width: 500, height: 200 }
+					};
+			  Nwagon.chart(options);
+			  console.log('2');
+			  console.log(options.dataset.values);
+			  */
 			  
 			  google.charts.load('current', {'packages':['corechart']});
 		      google.charts.setOnLoadCallback(drawCustoPop);
@@ -709,7 +681,23 @@ googleChart.service = {
 		    	  data.addColumn('number', 'reservationCnt');
 		    	  data.addColumn('number', 'populationRate');
 		    	  data.addColumn('number', 'populationCnt');
-		    	 
+		    	  /*
+		    	  for(var k = 0; k < d.custoPop.length; k++){
+		    		  data.addRow([
+		    			  d.custoPop[k].byAddr, d.custoPop[k]
+		    		  ])
+		    	  }
+		    	  */
+		    	 /* $.each(d.custoPop, (i,j)=>{
+			    		 data.addRow([
+			    			 j.byAddr,
+			    			 (j.payCnt * 1),
+			    			 (j.population * 1)
+			    		 ]); 
+			    	  });
+		    	  for(var k = 0; k < 10; k++){
+		    		  data.addRow([k]);
+		    	  }*/
 		    	  
 		    	  $.each(d.custoPop, (i,j)=>{
 		    		 data.addRow([
@@ -731,7 +719,101 @@ googleChart.service = {
 		      }// 버블차트
 		      
 		  });
-	  }
+		 /*
+		  $.getJSON($.ctx()+'/admin/custo/'+quarter.start+'/'+quarter.end, d=>{
+			  var arrMo = [];
+			  for(var j = 1; i < d.custoMo.length; j++){
+				  arrMo.push(d.custoMo[j].payCount);
+			  }
+			  var options = {
+						'legend':{
+							names: [
+								'20대',
+								'30대',
+								'40대',
+								'50대',
+								'60대 이상'
+								'Operable',
+								'Navigation',
+								'Error Prevent'
+							],
+							hrefs: [
+								'http://nuli.navercorp.com//sharing/a11y#k1',
+								'http://nuli.navercorp.com//sharing/a11y#k2',
+								'http://nuli.navercorp.com//sharing/a11y#k3',
+								'http://nuli.navercorp.com//sharing/a11y#k4',
+								'http://nuli.navercorp.com//sharing/a11y#k5'
+								'http://nuli.navercorp.com//sharing/a11y#k6',
+								'http://nuli.navercorp.com//sharing/a11y#k7',
+								'http://nuli.navercorp.com//sharing/a11y#k8'
+							]
+						},
+						'dataset': {
+							title: 'Web accessibility status',
+							values: [arrMo],
+							bgColor: '#f9f9f9',
+							fgColor: '#30a1ce',
+						},
+						'chartDiv': 'age_mo',
+						'chartType': 'radar',
+						'chartSize': { width: 500, height: 200 }
+					};
+			  Nwagon.chart(options);
+			  console.log('2');
+			  console.log(options.dataset.values);
+		  });
+		  */
+		  
+		  
+		 /* 
+		   ajax 데이터를 가져왔따고 가정한다. 
+		  $.getJSON($.ctx()+'/admin/custo', d=>{
+			  var arr = [];
+			  for(var i = 0; i < d.percent.length; i++){
+				  arr.push(d.percent[i].percent);
+			  }
+			  
+			  var options = {
+						'legend':{
+							names: [
+								'20',
+								'30',
+								'40',
+								'50',
+								'60+'
+								'Operable',
+								'Navigation',
+								'Error Prevent'
+							],
+							hrefs: [
+								'http://nuli.navercorp.com//sharing/a11y#k1',
+								'http://nuli.navercorp.com//sharing/a11y#k2',
+								'http://nuli.navercorp.com//sharing/a11y#k3',
+								'http://nuli.navercorp.com//sharing/a11y#k4',
+								'http://nuli.navercorp.com//sharing/a11y#k5'
+								'http://nuli.navercorp.com//sharing/a11y#k6',
+								'http://nuli.navercorp.com//sharing/a11y#k7',
+								'http://nuli.navercorp.com//sharing/a11y#k8'
+							]
+						},
+						'dataset': {
+							title: 'Web accessibility status',
+							values: [arr],
+							bgColor: '#f9f9f9',
+							fgColor: '#30a1ce',
+						},
+						'chartDiv': 'age_reservation',
+						'chartType': 'radar',
+						'chartSize': { width: 500, height: 300 }
+					};
+			  Nwagon.chart(options);
+			  console.log('1');
+			  console.log(options.dataset.values);
+			  
+		  });
+		  */
+		 
+	  }//custoInfo()
 	
 };
 
@@ -749,7 +831,38 @@ sanghoon.service = {
 			//$('<div/>').addClass('basic_box_2').appendTo($('.basic_wrapper'));
 			$('<div/>').attr({id:'top_local_div'}).appendTo($('.basic_box_1'));
 			$('<div/>').attr({id:'top_sales_div'}).appendTo($('.basic_box_1'));
+			/*
+			console.log('basic 버튼 클릭');
+			console.log($.img());
+			console.log($.img()+'/pie_graph_1.PNG');
+			$('#content').empty();
+			$('#footer').empty();
+			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
+			$('<div/>').addClass('basic_first').appendTo('#page-wrapper');
 			
+			$('<div/>').attr({id:'pay_type_div'}).appendTo('.basic_first');
+			//$('<img/>').attr({src:$.img()+'/admin_test/pie_graph_1.PNG'}).appendTo('#pay_type_div');
+			$('<div/>').attr({id:'booked_div'}).appendTo('.basic_first');
+			//$('<img/>').attr({src:$.img()+'/admin_test/pie_graph_2.PNG'}).appendTo('#booked');
+			$('<div/>').attr({id:'have_accom_div'}).appendTo('.basic_first');
+			//$('<img/>').attr({src:$.img()+'/admin_test/accom_type_graph.PNG'}).appendTo('#have_accom_type');
+			
+			$('<div/>').addClass('basic_middle').appendTo('#page-wrapper');
+			$('<div/>').attr({id:'age_member'}).appendTo('.basic_middle');
+			//$('<img/>').attr({src:$.img()+'/admin_test/customer_graph.PNG', style:'width:600px; height:210px'}).appendTo('#age_member');
+			$('<div/>').attr({id:'member_gender_div'}).appendTo('.basic_middle');
+			//$('<img/>').attr({src:$.img()+'/admin_test/customer_gen_graph.PNG', style:'width:300px; height:210px'}).appendTo('#member_gender');
+			
+			$('<div/>').addClass('basic_last').appendTo('#page-wrapper');
+			
+			
+			$('<div/>').attr({id:'top_local_div'}).appendTo('.basic_last');
+			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_local.PNG'}).appendTo('#top_local');주석
+			$('<div/>').attr({id:'top_sales_div'}).appendTo('.basic_last');
+			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_views.PNG'}).appendTo('#top_sales');
+			$('<div/>').attr({id:'top_average'}).appendTo('.basic_last');
+			//$('<img/>').attr({src:$.img()+'/admin_test/TOP_average.PNG'}).appendTo('#top_average');
+			*/
 			googleChart.service.basicInfo();
 			
 		},
@@ -758,7 +871,32 @@ sanghoon.service = {
 			$('#content').empty();
 			$('<div/>').attr({id:'page-wrapper'}).appendTo('#content');
 			$('<div/>').attr({id:'sales_div'}).appendTo('#page-wrapper');
-			
+			//$('<div/>').addClass('sales_div').appendTo('#page-wrapper');
+			//$('<img/>').attr({src:$.img()+'/admin_test/sales_graph.PNG', style:'display:block; margin-left: auto; margin-right: auto'}).appendTo('.sales_graph');
+			/*$('<div/>').addClass('sales_table').appendTo('#page-wrapper');
+			let revenue = ['수익','1100','2200','3300','4400','5500','6600','7700','8800','9900','11000','12100','13200'];
+			let hotel = ['호텔','1000','2000','3000','4000','5000','6000','7000','8000','9000','10000','11000','12000'];
+			let motel = ['모텔','100','200','300','400','500','600','700','800','900','1000','1100','1200'];
+			let thead = ['','1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+			$('<table/>').addClass('table').appendTo('.sales_table');
+			$('<thead/>').addClass('thead').appendTo('.table');
+			$('<tr/>').attr({id:'thead_tr'}).appendTo('.thead');
+			$.each(thead,(i,j)=>{
+				$('<th/>').addClass('sales_th').html(j).appendTo('#thead_tr');
+			});
+			$('<tbody/>').addClass('tbody').appendTo('.table');
+			$('<tr/>').attr({id:'tbody_tr_1'}).appendTo('.tbody');
+			$.each(hotel,(i,j)=>{
+				$('<td/>').html(j).appendTo('#tbody_tr_1');
+			});
+			$('<tr/>').attr({id:'tbody_tr_2'}).appendTo('.tbody');
+			$.each(motel,(i,j)=>{
+				$('<td/>').html(j).appendTo('#tbody_tr_2');
+			});
+			$('<tr/>').attr({id:'tbody_tr_3'}).appendTo('.tbody');
+			$.each(revenue,(i,j)=>{
+				$('<td/>').html(j).appendTo('#tbody_tr_3');
+			});*/
 			
 			googleChart.service.salesInfo();
 			
@@ -915,7 +1053,7 @@ sanghoon.service = {
 			});
 			var info = {};
 			info = {
-					'type' : 'MOTEL',
+					'type' : 'Motel',
 					'quarter' : '1quarter'
 			}
 			$('<button/>').addClass('btn btn-light').attr({id:'custo_button', type: 'button'}).html('검색').appendTo($('#select_box'))
@@ -924,8 +1062,6 @@ sanghoon.service = {
 					'type' : $('#reser_type').val(),
 					'quarter' : $('#quarter_sel').val()
 				};
-				$('#accom_chart').empty();
-				googleChart.service.custoInfo(info);
 			});
 			$('<div/>').addClass('custo_box_2').appendTo($('.custo_wrapper'));
 			$('<div/>').attr({id:'accom_chart'}).appendTo($('.custo_box_2'));
@@ -933,28 +1069,65 @@ sanghoon.service = {
 			googleChart.service.custoInfo(info);
 			
 			
+			/*
+			$('#content').empty();
+			$('<div/>').addClass('custo_wrapper').appendTo($('#content'));
+			$('<div/>').addClass('custo_box').appendTo($('.custo_wrapper'));
+			$('<div/>').attr({id:'quarter_box'}).appendTo($('.custo_box'));
+			$('<select/>').addClass('form-control').attr({id:'quarter_sel'}).appendTo($('#quarter_box'));
+			$.each(['1quarter', '2quarter', '3quarter', '4quarter'], (i,j)=>{
+				$('<option/>').attr({value:j}).html(j).appendTo($('#quarter_sel'));
+			});
+			$('#quarter_sel').change(function(){
+				$('#age_ho').empty();
+				$('#age_mo').empty();
+				var quarter = $(this).val();
+				googleChart.service.custoInfo(quarter);
+			});
+			$('<div/>').attr({id:'age_ho'}).appendTo($('.custo_box'));
+			$('<div/>').attr({id:'chart_ho'}).appendTo($('#age_ho'));
+			$('<h4/>').html('연령대별 호텔 예약').appendTo($('#age_ho'));
+			$('<div/>').attr({id:'age_mo'}).appendTo($('.custo_box'));
+			$('<h4/>').html('연령대별 모텔 예약').appendTo($('#age_mo'));
+			$('<div/>').attr({id:'custo_pop'}).appendTo($('.custo_box'));
+			
+			googleChart.service.custoInfo('1quarter');
+			*/
+			/*
+			console.log('custo 버튼 클릭');
+			$('#content').empty();
+			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
+			$('<div/>').addClass('custo_div_1').appendTo('#page-wrapper');
+			
+			$('<div/>').attr({id:'age_reservation'}).appendTo('.custo_div_1');
+			//$('<img/>').attr({src:$.img()+'/admin_test/age_reservation.PNG', style:'width:400px; height:303px; display:block;margin-left:auto;margin-right:auto'}).appendTo('#age_reservation');
+			$('<div/>').attr({id:'age_accom'}).appendTo('.custo_div_1');
+			
+			$('<img/>').attr({src:$.img()+'/admin_test/accom_compare.PNG', style:'display:block;margin-left:auto;margin-right:auto'}).appendTo('#age_accom');
+			$('<div/>').addClass('custo_div_2').appendTo('#page-wrapper');
+			$('<div/>').attr({id:'reser_count'}).appendTo('.custo_div_2');
+			$('<img/>').attr({src:$.img()+'/admin_test/reservation_count.PNG', style:'width:1050px; display:block; margin-left:auto;margin-right:auto'}).appendTo('#reser_count');
+			$('<div/>').attr({id:'page-wrapper', style:"padding:30px" }).appendTo($('#content'));
+			$('<div/>').addClass('row').appendTo('#page-wrapper');
+				$('<div/>').addClass('col-lg-5').appendTo('.row');
+					$('<img/>').attr({src:$.img()+'/admin_test/age_reservation.PNG', style:'padding:30px; width:90%'}).appendTo('.col-lg-5');
+				$('<div/>').addClass('col-lg-7').appendTo('.row');
+					$('<img/>').attr({src:$.img()+'/admin_test/accom_compare.PNG', style:'padding:30px; width:80%; height:100%'}).appendTo('.col-lg-7');
+				
+				$('<div/>').addClass('col-lg-12').appendTo('.row');
+					$('<img/>').attr({src:$.img()+'/admin_test/reservation_count.PNG', style:'padding:30px; width:90%'}).appendTo('.col-lg-12');
+			googleChart.service.custoInfo();*/
 		},
 		top_accom : x=>{
-			$.getJSON($.ctx()+'/admin/top', d=>{
-				
-			});
-			$('#content').empty();
-			$('<div/>').addClass('top_wrapper').attr({id:'top_wrapper'}).appendTo($('#content'));
-			$('<div/>').addClass('top_box').attr({id:'top_box'}).appendTo($('#top_box'));
-			$('<p/>').addClass('font_1 font_weight800 padding_top_30').html('TOP 숙소').appendTo($('#top_box'));
-			
-			
-			
-			
 			console.log('top_accom 버튼 클릭');
 			$('#content').empty();
 			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
 			$('<img/>').attr({src:$.img()+'/admin_test/accom_list.PNG', style:'width:60%;display:block;margin-left:auto;margin-right:auto'}).appendTo('.accom_list');
-			
-		},
-		top_list : x=>{
-			
+			/*$('<div/>').attr({id:'page-wrapper', style:"padding:30px"}).appendTo($('#content'));
+			$('<div/>').addClass('row').appendTo('#page-wrapper');
+				$('<div/>').addClass('col-lg-12').appendTo('.row');
+					$('<img/>').attr({src:$.img()+'/admin_test/accom_list.PNG'}).appendTo('.col-lg-12');*/
 		}
 		
 }
