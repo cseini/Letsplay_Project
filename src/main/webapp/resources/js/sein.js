@@ -15,6 +15,10 @@ sein.board ={
 		$('<button/>').addClass('btn btn-primary').html('mycast').appendTo($('#sein_content')).click(e=>{
    			sein.service.mycast();	
 		})
+		/*tag wordcloud*/
+		$('<button/>').addClass('btn btn-primary').html('tagcloud').appendTo($('#sein_content')).click(e=>{
+			sein.service.tagcloud();	
+		})
 		
 		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
@@ -690,7 +694,7 @@ sein.service ={
 			  $(document).on("dragenter",".dragAndDropDiv",function(e){
                 e.stopPropagation();
                 e.preventDefault();
-                $(this).attr('style','border:2px solid #0B85A1');
+                $(this).attr('style','border:2px solid #0B85A1;font-size:12px');
             });
             $(document).on("dragover",".dragAndDropDiv",function(e){
                 e.stopPropagation();
@@ -698,7 +702,7 @@ sein.service ={
             });
             $(document).on("drop",".dragAndDropDiv",function(e){
                  
-                $(this).attr('style','border:2px dotted #0B85A1');
+                $(this).attr('style','border:2px dotted #0B85A1;font-size:12px');
                 e.preventDefault();
                 var files = e.originalEvent.dataTransfer.files;
              
@@ -712,7 +716,7 @@ sein.service ={
             $(document).on('dragover', function (e){
               e.stopPropagation();
               e.preventDefault();
-              objDragAndDrop.attr('style','border:2px dotted #0B85A1');
+              objDragAndDrop.attr('style','border:2px dotted #0B85A1;font-size:12px');
             });
              $(document).on('drop', function (e){
                  e.stopPropagation();
@@ -732,19 +736,25 @@ sein.service ={
                
                 }
              }
+             
              var savedName=[];
              var rowCount=0;
+             var row="odd";
              function createStatusbar(obj){
                       
                  rowCount++;
-                 var row="odd";
                  if(rowCount %2 ==0) row ="even";
                  this.statusbar = $("<div class='statusbar "+row+"'></div>");
                  this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
                  this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
                  this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
-                 this.abort = $("<div class='abort'>취소</div>").appendTo(this.statusbar);
-                  
+                 this.abort = $("<div class='abort'>중지</div>").appendTo(this.statusbar);
+                 this.cancel = $('<div id=cancelbtn class="abort">취소</div>').appendTo(this.statusbar).click(e=>{
+            	 	alert(savedName);
+                	 this.statusbar.remove();
+                	 $.getJSON($.ctx()+'/cast/removeImg/'+savedName+'/');
+                 });
+           			 
                  obj.after(this.statusbar);
                
                  this.setFileNameSize = function(name,size){
@@ -780,8 +790,6 @@ sein.service ={
                  }
              }
         	  function sendFileToServer(formData,status) {
-                  
-                	  
                 	  var extraData ={}; //Extra Data.
                       var jqXHR=$.ajax({
                               xhr: function() {
@@ -814,6 +822,7 @@ sein.service ={
                     
                       status.setAbort(jqXHR);
               }
+        	  
         	  $('#write_submit').click(e=>{
             	  $.ajax({
     					url:$.ctx()+'/cast/write/',
@@ -902,6 +911,11 @@ sein.service ={
                 this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
                 this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
                 this.abort = $("<div class='abort'>중지</div>").appendTo(this.statusbar);
+                this.cancel = $('<div id=cancelbtn class="abort">취소</div>').appendTo(this.statusbar).click(e=>{
+            	 	alert(savedName);
+                	 this.statusbar.remove();
+                	 $.getJSON($.ctx()+'/cast/removeImg/'+savedName+'/');
+                 });
                  
                 obj.after(this.statusbar);
               
@@ -1367,7 +1381,7 @@ sein.service ={
 				}),
 				$('<div/>').addClass('list_del').append(
 					$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
-						$('<span/>').addClass('ico_del').html(x.index)	
+						$('<span/>').addClass('ico_del')	
 					),
 					$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
 						if(confirm('삭제 하시겠습니까?')){
@@ -1461,46 +1475,10 @@ sein.service ={
 				)
 			).appendTo('.mycast_list2')
 	},
-	map : x=>{
+	tagcloud : x=>{
 		$('#sein_content').empty();
-		$('<div/>').attr({style:'width:800px;height:500px'}).attr({id:'location'}).appendTo($('#sein_content'));
-	var mapContainer = document.getElementById('location'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
-
-	var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-	 
-	// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다 
-	var points = [
-	    new daum.maps.LatLng(33.452278, 126.567803),
-	    new daum.maps.LatLng(33.452671, 126.574792),
-	    new daum.maps.LatLng(33.451744, 126.572441),
-	    new daum.maps.LatLng(37.52025364082772, 127.02847913674161)
-	];
-
-	// 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
-	var bounds = new daum.maps.LatLngBounds();    
-
-	var i, marker;
-	for (i = 0; i < points.length; i++) {
-	    // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
-	    marker =     new daum.maps.Marker({ position : points[i] });
-	    marker.setMap(map);
-	    
-	    // LatLngBounds 객체에 좌표를 추가합니다
-	    bounds.extend(points[i]);
-	}
-/*
-	function setBounds() {
-	    // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
-	    // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-	    map.setBounds(bounds);
-	}*/
-		$('<button/>').addClass('btn btn-primary').text('재설정').appendTo($('#sein_content')).click(e=>{
-			setBounds();
-		});
-		 map.setBounds(bounds);
+		$.getJSON($.ctx()+'/cast/countTag/',d=>{
+			console.log(d.tag);
+		})
 	}
 }

@@ -31,6 +31,7 @@ public interface BoardMapper {
 	public void deleteBookmark(HashMap<String, Object>map);
   
 	public HashMap<String,Object> check(HashMap<String, Object>map);
+	
 	public int subcheck(SeinResult sr);
 	public int subcount(SeinResult sr);
 	public int castcount(SeinResult sr);
@@ -38,4 +39,5 @@ public interface BoardMapper {
 	public List<SeinResult> myBookmark(HashMap<String, Object> smap);
 	public List<SeinResult> rankLike();
 	
+	public List<SeinResult> countTag();
 }

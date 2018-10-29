@@ -90,7 +90,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <update id="modify">
-  	UPDATE board SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}, MSG_PHOTO=#{msg_photo}, MSG_PHOTO1=#{msg_photo1}
+  	UPDATE board SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}
+  	<if test="msg_photo != null">
+  	,MSG_PHOTO=#{msg_photo}
+  	</if>
+  	<if test="msg_photo1 != null">
+  	,MSG_PHOTO1=#{msg_photo1}
+  	</if>
   	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
   </update>
@@ -228,8 +234,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   
   <select id="mysub" resultMap="seinResult">
   	SELECT COUNT(*) AS COUNT, B.MEMBER_ID, M.NICKNAME, M.PROFILEIMG, M.COMMENT
-	FROM BOARD B
-		JOIN MEMBER M
+	FROM board B
+		JOIN member M
 		ON B.MEMBER_ID LIKE M.MEMBER_ID
 	WHERE B.MEMBER_ID IN (SELECT SUB_MEM_ID 
 							FROM SAVED_ACCOM 
@@ -252,11 +258,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   <select id="rankLike" resultMap="seinResult">
   	SELECT *
 	FROM (SELECT ROW_NUMBER() OVER(ORDER BY LIKE_COUNT DESC) AS NUM, board.*
-		FROM BOARD
+		FROM board
 		WHERE BOARD_ID LIKE 'CAST'
 		AND BOARD_DEPTH LIKE 0
 		ORDER BY NUM) A
 	WHERE NUM BETWEEN 1 AND 5;
   </select>
-  
+
+  <select id="countTag" resultMap="seinResult">
+	SELECT TAG, COUNT(TAG) COUNT
+	FROM board
+	WHERE BOARD_ID LIKE 'cast'
+	AND BOARD_DEPTH =0
+	GROUP BY TAG
+  </select>
 </mapper>

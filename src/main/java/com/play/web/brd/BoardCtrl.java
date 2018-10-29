@@ -254,9 +254,7 @@ public class BoardCtrl {
 		 Iterator<String> itr =  multipartRequest.getFileNames();
 		 String savedName="";
 		 new File(castUploadPath,oldfile).delete();
-		 new File(castUploadPath,oldfile1).delete();
-		 Util.log.accept(castUploadPath+oldfile);
-		 Util.log.accept(castUploadPath+oldfile1);
+    	 new File(castUploadPath,oldfile1).delete();
 		 while (itr.hasNext()) { //받은 파일들을 모두 돌린다.
            MultipartFile mpf = multipartRequest.getFile(itr.next());
            String originalFilename = mpf.getOriginalFilename(); //파일명
@@ -266,9 +264,6 @@ public class BoardCtrl {
                savedName = uuid + originalFilename.substring(originalFilename.lastIndexOf('.'));
        		Util.log.accept(castUploadPath+savedName);
        		FileCopyUtils.copy(mpf.getBytes(), new File(castUploadPath, savedName));
-               System.out.println("originalFilename => "+originalFilename);
-               System.out.println("fullpath => "+castUploadPath+savedName);
-     
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -312,6 +307,21 @@ public class BoardCtrl {
 		List<SeinResult> list = brdMap.rankLike();
 		smap.clear();
 		smap.put("list", list);
+		return smap;
+	}
+	
+	@GetMapping("/cast/removeImg/{filename}")
+	public void removeImg(@PathVariable String filename) {
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","removeImg()");
+		Util.log.accept(filename);
+		new File(castUploadPath,filename).delete();
+	}
+
+	@GetMapping("/cast/countTag/")
+	public HashMap<String,Object> countTag() {
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","removeImg()");
+		List<SeinResult> list= brdMap.countTag();
+		Util.log.accept(list+"");
 		return smap;
 	}
 	
