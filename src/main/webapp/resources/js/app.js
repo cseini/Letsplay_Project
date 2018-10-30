@@ -8,6 +8,7 @@ app =(()=>{
 	return {init : init};
 })();
 
+
 app.main =(()=>{
 	var init =()=>{
 		onCreate();

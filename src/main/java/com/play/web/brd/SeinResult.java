@@ -29,6 +29,7 @@ public class SeinResult {
 	private String name, password, birthdate, joindate, gender, age, phone, customer_grade, point, nickname, address, zipcode, profileimg;
 	
 	/*SAVED_ACCOM*/
-	private Integer like_check, bookmark_check, sub_mem_id;
+	private Integer like_check, bookmark_check;
+	private String sub_mem_id, saved_unique;
 	
 }
