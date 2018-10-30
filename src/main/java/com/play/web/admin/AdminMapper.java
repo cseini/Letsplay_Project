@@ -30,3 +30,4 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getTopRes();
 	public List<HashMap<String,Object>> getCustoPop();
 }
+

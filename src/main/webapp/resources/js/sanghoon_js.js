@@ -708,7 +708,7 @@ googleChart.service = {
 						},
 						'chartDiv': 'accom_chart',
 						'chartType': 'radar',
-						'chartSize': { width: 1000, height: 1000 }
+						'chartSize': { width: 500, height: 300 }
 					};
 			  Nwagon.chart(options);
 			  console.log('1');
@@ -952,31 +952,20 @@ sanghoon.service = {
 			$.getJSON($.ctx()+'/admin/top', d=>{
 				
 			});
-/*			$('#content').empty();
+			$('#content').empty();
 			$('<div/>').addClass('top_wrapper').attr({id:'top_wrapper'}).appendTo($('#content'));
 			$('<div/>').addClass('top_box').attr({id:'top_box'}).appendTo($('#top_box'));
-			$('<p/>').addClass('font_1 font_weight800 padding_top_30').html('TOP 숙소').appendTo($('#top_box'));*/
-			$('#content').empty();
+			$('<p/>').addClass('font_1 font_weight800 padding_top_30').html('TOP 숙소').appendTo($('#top_box'));
 			
-			var i = 1;
+			
+			
+			
+			console.log('top_accom 버튼 클릭');
+			$('#content').empty();
 			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
-			$('<div/>').html('TOP10 숙소 현황').addClass('top10title').appendTo('#page-wrapper');
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
-			$('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+i}).appendTo($('.accom_list'));
-				$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+i}).appendTo($('#premium_selecter'+i))
-					$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+i,src:'//yaimg.yanolja.com/v5/2017/11/16/17/640/5a0d5025becc08.90955197.jpg'}).appendTo($('#premium_selecter_li'+i))
-					$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+i}).appendTo($('#premium_selecter_li'+i));
-						$('<h3/>').attr({id:'list_title'+i}).html('H호텔').appendTo($('#premium_selecter_writer'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('대실').appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('최대 4시간').appendTo($('#premium_selecter_explanation'+i));
-							$('<h4/>').addClass('p_span p_padding20').html(50000).appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h4/>').addClass('p_span p_padding30').html(50000+40000).appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+i));
+			$('<img/>').attr({src:$.img()+'/admin_test/accom_list.PNG', style:'width:60%;display:block;margin-left:auto;margin-right:auto'}).appendTo('.accom_list');
+			
 		},
 		top_list : x=>{
 			
