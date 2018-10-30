@@ -1220,7 +1220,9 @@ app.router = {
 		$('#hotelSearch').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-				heetae.main.init();
+				let se = {'in_day':null,'out_day':null,'accom_seq':null}
+				heetae.main.init(se);
+				//제거 필요
 			});
 		});
 		$('#amdin').addClass('ya_cusor').click(e=>{

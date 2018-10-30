@@ -204,9 +204,11 @@ em{
 
 .heetae_check_bottom_con2{
 	float: right;
+    width: 64.64px;
     margin: -17px 8px;
     font-size: 21px;
     color: #ff777a;
+    text-align: right;
 }
 
 .heetae_section1{
@@ -250,7 +252,6 @@ em{
 
 .heetae_content_info{
 	display: block;
-	width: 50%;
 	height: 220px;
 }
 
@@ -492,6 +493,7 @@ em{
 
 .heetae_support_header div{
 	display: inline-block;
+    margin-left: 5px;
 }
 
 .heetae_review_input_title{
@@ -524,6 +526,14 @@ em{
     border-right: 1px solid #ced0d1;
     border-left: 1px solid #ced0d1;
 }
+
+.heetae_review_select_box{
+    position: relative;
+    top: 22px;
+    font-size: 12px;
+    float: right;
+}
+
 
 .heetae_tab_content_room{
 	box-sizing: border-box;
@@ -653,6 +663,18 @@ em{
 .heetae_tab_info_reserve_btn:hover{
 	text-decoration: none;
 	color: #fff;  
+}
+
+.heetae_info_modal_btn{
+    width: 48.8%;
+    background: #fc7093;
+    display: inline-block;
+    padding: 10px 0;
+    font-size: 13px;
+    color: #fefefe;
+    font-weight: 600;
+    height: 50px;
+    font-size: 16px;
 }
 
 
