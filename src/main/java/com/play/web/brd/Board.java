@@ -28,6 +28,7 @@ public class Board {
 	private Integer accom_reco;
 	private Integer reply_seq;
 	private Integer msg_ref;
+	private String msg_addr;
 	
 	private String msg_photo1;
 	

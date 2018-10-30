@@ -35,7 +35,6 @@ public class BoardCtrl {
 	@Autowired Pagination page;
 	@Autowired SeinResult sr;
 	@Autowired TxService tx;
-	@Autowired Map<String,Object> map;
 	@Autowired HashMap<String,Object> smap;
 	@Resource(name="castUploadPath")
 	private String castUploadPath;
@@ -47,26 +46,22 @@ public class BoardCtrl {
 	}
 	
 	@PostMapping("/cast/")
-	public Map<String,Object> list(@RequestBody Map<String,Object>cast){
-		logger.info("\n BoardCtrl :::::::::: {} !!-----","list");
-		map.clear();
-		Util.log.accept(cast.get("member_id")+"");
-		int count = brdMap.count();
-		map.put("countRow",count);
-		if(Integer.parseInt((String) cast.get("pageNumber"))<count) {
-			Util.log.accept("페이지 : "+cast.get("pageNumber")+"");
-			map.put("pageNumber",Integer.parseInt((String) cast.get("pageNumber")));
-			page.carryOut(map);
-			map.clear();
-			map.put("beginRow", page.getBeginRow());
-			map.put("endRow", page.getEndRow());
-			map.put("board_id", cast.get("board_id"));
-			map.put("member_id", cast.get("member_id"));
-			List<Board> ls = brdMap.list(map);
-			map.put("list", ls);
-			map.put("page", page);
-		}
-		return map;
+	public HashMap<String,Object> list(@RequestBody HashMap<String,Object>cast){
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","cast");
+		int count = brdMap.count(cast);
+		Util.log.accept(count+"");
+		cast.put("countRow",count);
+		Util.log.accept("페이지 : "+cast.get("pageNumber")+"");
+		page.carryOut(cast);
+		cast.put("beginRow", page.getBeginRow());
+		cast.put("endRow", page.getEndRow());
+		cast.put("member_id", cast.get("member_id"));
+		List<SeinResult> ls = brdMap.list(cast);
+		cast.put("list", ls);
+		cast.put("page", page);
+		Util.log.accept(page+"");
+		Util.log.accept(ls+"");
+		return cast;
 	}
 	
 	@GetMapping("/cast/read/{seq}")
@@ -101,28 +96,28 @@ public class BoardCtrl {
 	}
 	
 	@GetMapping("/cast/reply/{board_id}/{seq}")
-	public Map<String,Object> replyRead(@PathVariable String board_id, @PathVariable int seq){
+	public HashMap<String,Object> replyRead(@PathVariable String board_id, @PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyRead()");
 		brd.setMsg_ref(seq);
 		brd.setBoard_id(board_id);
 		brd.setBoard_depth(1);
 		List<Board> ls = brdMap.reply(brd);
-		map.clear();
-		map.put("list", ls);
-		return map;
+		smap.clear();
+		smap.put("list", ls);
+		return smap;
 	}
 	
 	@GetMapping("/cast/rereply/{board_id}/{seq}")
-	public Map<String,Object> rereplyRead(@PathVariable String board_id, @PathVariable int seq){
+	public HashMap<String,Object> rereplyRead(@PathVariable String board_id, @PathVariable int seq){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","rereplyRead()");
 		brd = new Board();
 		brd.setMsg_ref(seq);
 		brd.setBoard_id(board_id);
 		brd.setBoard_depth(2);
 		List<Board> ls = brdMap.reply(brd);
-		map.clear();
-		map.put("list", ls);
-		return map;
+		smap.clear();
+		smap.put("list", ls);
+		return smap;
 	}
 	
 	@PostMapping("/cast/reModify/")
@@ -220,8 +215,6 @@ public class BoardCtrl {
 		return brdMap.castcount(sr); 
 	}
 	
-	
-	
 	@PostMapping("/cast/upload/")
 	public String uploadImg(MultipartHttpServletRequest multipartRequest) {
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","uploadImg()");
@@ -316,13 +309,24 @@ public class BoardCtrl {
 		Util.log.accept(filename);
 		new File(castUploadPath,filename).delete();
 	}
-
-	@GetMapping("/cast/countTag/")
-	public HashMap<String,Object> countTag() {
-		logger.info("\n BoardCtrl :::::::::: {} !!-----","removeImg()");
-		List<SeinResult> list= brdMap.countTag();
-		Util.log.accept(list+"");
-		return smap;
-	}
 	
+	@PostMapping("/cast/search/{search}")
+	public HashMap<String,Object> search(@RequestBody HashMap<String, Object> cast,@PathVariable String search) {
+		logger.info("\n BoardCtrl :::::::::: {} !!-----","search()");
+		Util.log.accept("페이지 : "+cast.get("pageNumber")+"");
+		cast.put("countRow", brdMap.searchCount("%"+search+"%"));
+		page.carryOut(cast);
+		cast.put("search", "%"+search+"%");
+		Util.log.accept(cast.get("search")+"");
+		cast.put("beginRow", page.getBeginRow());
+		cast.put("endRow", page.getEndRow());
+		List<SeinResult> list = brdMap.search(cast);
+		cast.put("page", page);
+		cast.put("list", list);
+		Util.log.accept(cast+"");
+		Util.log.accept(page+"");
+		Util.log.accept(list+"");
+		return cast;
+	}
+
 }

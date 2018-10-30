@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="member_id" column="MEMBER_ID"/>
 	<result property="pay_no" column="PAY_NO"/>
 	<result property="tag" column="TAG"/>
+	<result property="msg_addr" column="MSG_ADDR"/>
 	<result property="like_count" column="LIKE_COUNT"/>
 	<result property="reply_count" column="REPLY_COUNT"/>
 	<result property="accom_grade" column="ACCOM_GRADE"/>
@@ -58,8 +59,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </resultMap>
 
   <insert id="write">
-   INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG, MSG_PHOTO, MSG_PHOTO1)
-   VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}, #{msg_photo}, #{msg_photo1}) 
+   INSERT INTO board (MSG_TITLE, MSG_CONTENT, BOARD_ID, MEMBER_ID, TAG, MSG_PHOTO, MSG_PHOTO1, MSG_ADDR)
+   VALUES (#{msg_title}, #{msg_content}, #{board_id}, #{member_id}, #{tag}, #{msg_photo}, #{msg_photo1}, #{msg_addr}) 
   </insert>
   
   <select id="list" resultMap="seinResult">
@@ -90,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <update id="modify">
-  	UPDATE board SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}
+  	UPDATE board SET MSG_TITLE=#{msg_title}, MSG_CONTENT=#{msg_content}, TAG=#{tag}, MSG_ADDR=#{msg_addr}
   	<if test="msg_photo != null">
   	,MSG_PHOTO=#{msg_photo}
   	</if>
@@ -238,7 +239,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		JOIN member M
 		ON B.MEMBER_ID LIKE M.MEMBER_ID
 	WHERE B.MEMBER_ID IN (SELECT SUB_MEM_ID 
-							FROM SAVED_ACCOM 
+							FROM saved_accom 
 							WHERE MEMBER_ID LIKE #{member_id} 
 							AND SUB_MEM_ID IS NOT NULL)
 	GROUP BY B.MEMBER_ID;
@@ -264,12 +265,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ORDER BY NUM) A
 	WHERE NUM BETWEEN 1 AND 5;
   </select>
-
-  <select id="countTag" resultMap="seinResult">
-	SELECT TAG, COUNT(TAG) COUNT
-	FROM board
-	WHERE BOARD_ID LIKE 'cast'
-	AND BOARD_DEPTH =0
-	GROUP BY TAG
+  
+  <select id="search" resultMap="seinResult">
+ 	SELECT *
+     FROM (
+         SELECT
+             ROW_NUMBER() OVER(ORDER BY msg_seq DESC) AS NUM,
+             a.*, m.NICKNAME, m.PROFILEIMG, m.COMMENT
+         FROM (SELECT *
+	 		 FROM board
+			 WHERE BOARD_ID LIKE 'CAST'
+			 AND BOARD_DEPTH LIKE 0) a
+     		JOIN member m
+	 			ON a.MEMBER_ID LIKE m.MEMBER_ID
+			WHERE a.MSG_TITLE LIKE #{search}
+		    OR a.MSG_CONTENT LIKE #{search}
+		    OR a.MSG_ADDR LIKE #{search}
+		    OR m.NICKNAME LIKE #{search}
+     ) b
+     WHERE b.NUM BETWEEN #{beginRow} AND #{endRow}
+     ORDER BY b.NUM;
   </select>
+  <select id="searchCount" resultType="int">
+	SELECT COUNT(*)
+	 FROM (SELECT *
+	 		 FROM board
+			 WHERE BOARD_ID LIKE 'CAST'
+			 AND BOARD_DEPTH LIKE 0) b
+	 JOIN member m
+	 	ON b.MEMBER_ID LIKE m.MEMBER_ID
+	 WHERE b.MSG_TITLE LIKE #{search}
+	 OR b.MSG_CONTENT LIKE #{search}
+	 OR b.MSG_ADDR LIKE #{search}
+	 OR m.NICKNAME LIKE #{search}
+  </select>
+
 </mapper>

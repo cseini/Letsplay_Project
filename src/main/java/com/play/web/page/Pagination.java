@@ -18,7 +18,7 @@ public class Pagination implements Proxy {
 		this.pageSize=4;
 		this.blockSize=1;
 		this.beginRow = pageNumber*pageSize-(pageSize-1);
-		this.endRow = pageNumber*pageSize;
+		this.endRow = (pageNumber*pageSize>=countRow)?countRow:pageNumber*pageSize;
 		this.pageCount = countRow%pageSize==0?countRow/pageSize:countRow/pageSize+1;
 		this.blockCount = pageCount%blockSize==0?pageCount/blockSize:pageCount/blockSize+1;
 		this.beginPage= pageNumber-((pageNumber-1)%blockSize);

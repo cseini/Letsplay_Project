@@ -1,31 +1,34 @@
-/*디비에 소개글 필요*/var sein = sein || {};
+"use strict";
+var sein = sein || {};
 
 sein.board ={
 	cast : x=>{
+
 		$.cookie.json=true;
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #BDBDBD'}).appendTo($('#content'));
 
-		/*map 테스트*/
-		$('<button/>').addClass('btn btn-primary').html('map').appendTo($('#sein_content')).click(e=>{
-   			sein.service.map();	
-		})
 		/*mycast*/
 		$('<button/>').addClass('btn btn-primary').html('mycast').appendTo($('#sein_content')).click(e=>{
    			sein.service.mycast();	
 		})
-		/*tag wordcloud*/
-		$('<button/>').addClass('btn btn-primary').html('tagcloud').appendTo($('#sein_content')).click(e=>{
-			sein.service.tagcloud();	
-		})
+		
+		/*검색창*/
+		$('<div/>').addClass('search_rap').append(
+			$('<div/>').addClass('input-group').append(
+				$('<input/>').attr({id:'search',type:'text',placeholder:'검색어를 입력하세요.',style:'text-align:center;'}).addClass('form-control'),
+				$('<div/>').addClass('input-group-btn').append(
+					$('<button/>').addClass('btn btn-danger').attr({type:'button'}).text('통합검색').click(e=>{
+						sein.service.search($('#search').val())
+					})
+				)
+			)
+		).appendTo($('#sein_content'));
 		
 		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
 
-		/*컨텐츠 리스트 전체*/
-		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
-		
 		/*글쓰기 버튼*/
 		if($.cookie('loginID')){
 		$('<div/>').addClass('bt_rap').append(
@@ -37,17 +40,17 @@ sein.board ={
 		})
 		.appendTo($('#cardlist_rap'));
 		}
-		
+		/*컨텐츠 리스트 전체*/
+		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
-		let page=0;;
-		$(window).off("scroll");
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
 			contentType:'application/json',
-			data:JSON.stringify({board_id:'cast',pageNumber:'1'}),
+			data:JSON.stringify({board_id:'cast',pageNumber:1}),
 			success:d=>{
 				$.each(d.list,(i,j)=>{
+					console.log('캐스트 리스트 진입')
 					$('<div/>').addClass('grid-item card_inner').append(
 							$('<div/>').addClass('card_top').append(
 								$('<a/>').attr({href:'#'}).append(
@@ -87,7 +90,9 @@ sein.board ={
 								)
 							)
 						).appendTo($('.grid'));
-					page=d.page.pageNumber;
+					if(!d.page.nextBlock){
+						$('#bt_more').empty();
+					}
 				})
 				var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 					$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
@@ -96,11 +101,13 @@ sein.board ={
 				alert(m3);
 			}
 		})
+		
 		$('<div/>').attr({id:'bt_more'}).addClass('bt_rap').append(
 				$('<span/>').addClass('bt_more').append(
 					$('<button>').addClass('b_all').html('더보기')))
 			.appendTo($('#cardlist_rap'))
 			.click(e=>{
+			let page=1;
 			$(window).off("scroll");
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
@@ -109,7 +116,7 @@ sein.board ={
 						url:$.ctx()+'/cast/',
 						method:'post',
 						contentType:'application/json',
-						data:JSON.stringify({board_id:'cast',pageNumber:++page+""}),
+						data:JSON.stringify({board_id:'cast',pageNumber:++page}),
 						success:d=>{
 							$.each(d.list,(i,j)=>{
 								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
@@ -161,7 +168,7 @@ sein.board ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(page>=d.page.pageCount){
+							if(d.page.pageNumber>=d.page.pageCount){
 								$(window).off("scroll");
 							}
 						},
@@ -177,6 +184,7 @@ sein.board ={
 }
 sein.service ={
 		banner : x=>{
+			console.log('배너 진입');
 			$('<div/>').addClass('banner_rap').attr({id:'div_banner',style:'margin-bottom:10px'}).appendTo($('#sein_content'));
 			$('<div/>').attr({id:'carousel','data-ride':'carousel'}).addClass('carousel slide').appendTo($('#div_banner'));
 			$('<ol/>').addClass('carousel-indicators').appendTo($('#carousel'));
@@ -185,7 +193,7 @@ sein.service ={
 			$.getJSON($.ctx()+'/rankLike/',d=>{
 				$.each(d.list,(i,j)=>{
 					$('<li/>').attr({'data-target':'#carousel', 'data-slide-to':i}).addClass(clazz[i]).appendTo($('.carousel-indicators'));	
-					$('<div/>').addClass('carousel-item '+clazz[i]).append(
+					$('<div/>').attr({style:'cursor:pointer'}).addClass('carousel-item '+clazz[i]).append(
 						$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'width:1300px;height:500px'}),
 						$('<h3/>').addClass('carousel-caption center').append(
 							$('<p>'+j.msg_title+'</p>')
@@ -264,13 +272,11 @@ sein.service ={
 			).appendTo($('#side_menu'));
 		},
 		detail : x=>{
+			$(window).off("scroll");
 			let recent = new Array();
 			$.each($.cookie('recent'),(i,j)=>{
 				recent.unshift(j);
 			})
-			if(recent.length===6){
-				recent.splice(6,1);
-			}
 			recent.unshift(x);
 			$.cookie('recent',recent);
 			
@@ -314,7 +320,9 @@ sein.service ={
 				$('<div/>').addClass('detail_user').appendTo($('.inner_bg'));
 				$('<div/>').addClass('user_pic').appendTo($('.inner_bg'));
 				$('<a/>').attr({href:'#'})
-				.append($('<img src="'+$.img()+'/profile/'+d.member_id+'.jpg"'+' alt="" style="position: static; width: 100%; height: 100%;">'))
+				.append(
+					$('<img/>').attr({src:$.img()+'/profile/'+d.profileimg,style:'position: static; width: 100%; height: 100%'})
+				)
 				.appendTo($('.user_pic')).click(e=>{
 					sein.service.caster(d);
 				});
@@ -379,6 +387,13 @@ sein.service ={
 				if(d.msg_photo1!==undefined){
 					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1}).appendTo($('#imgAdd'));
 				}
+				
+				/*해당 주소 지도*/
+				if(!d.msg_addr==''||!d.msg_addr==undefined){
+					sein.service.map({detail:d,appendTo:'.inner_bg'});
+				}
+					
+					
 				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
 				$('<div/>').addClass('bt_detail').appendTo($('.bt_rap'));
@@ -684,6 +699,7 @@ sein.service ={
 				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%',placeholder:'제목을 입력해주세요.'}),
 				$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px',placeholder:'내용을 입력해주세요.'}),
 				$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%',placeholder:'태그를 입력해주세요.'}),
+				$('<textarea/>').attr({id:'msg_addr',rows:'1',style:'width:100%',placeholder:'주소를 입력해주세요.'}),
 				$('<form/>').addClass('dragAndDropDiv').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post",style:'font-size:12px'}).text('이미지를 드래그해주세요. 최대 2개. 첫번째가 대표이미지입니다.'),
 				$('<div/>').attr({style:'margin-top:10px'}).append(
 					$('<button/>').addClass('btn btn-danger').attr({id:'write_submit',style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('글쓰기')
@@ -828,7 +844,7 @@ sein.service ={
     					url:$.ctx()+'/cast/write/',
     					method:'post',
     					contentType:'application/json',
-    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1]}),
+    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr')}),
     					success:d=>{
     						 $('#layerpop').on('hidden.bs.modal',()=>{
 	            				sein.board.cast();
@@ -846,6 +862,7 @@ sein.service ={
 				$('<textarea/>').attr({id:'msg_title',rows:'1',style:'width:100%'}).text(x.msg_title),
 				$('<textarea/>').attr({id:'msg_content',style:'width:100%; height:500px'}).text(x.msg_content),
 				$('<textarea/>').attr({id:'tag',rows:'1',style:'width:100%'}).text(x.tag),
+				$('<textarea/>').attr({id:'msg_addr',rows:'1',style:'width:100%'}).text(x.msg_addr),
 				$('<form/>').addClass('dragAndDropDiv').attr({name:"uploadForm", id:"uploadForm", enctype:"multipart/form-data", method:"post",style:'font-size:12px'}).text('수정할 이미지를 드래그해주세요. 최대 2개. 첫번째가 대표이미지입니다.'),
 				$('<div/>').attr({style:'margin-top:10px'}).append(
 					$('<button/>').addClass('btn btn-danger').attr({id:'mod_submit',style:'width:100%','data-dismiss':'modal','aria-hidden':'true'}).html('수정하기')
@@ -952,8 +969,6 @@ sein.service ={
                 }
             }
        	  function sendFileToServer(formData,status) {
-                 
-               	  
                	  var extraData ={}; //Extra Data.
                      var jqXHR=$.ajax({
                              xhr: function() {
@@ -1089,6 +1104,7 @@ sein.service ={
 		).appendTo($('#reply_empty'+x.msg_seq));
 	},
 	caster : x=>{
+		$(window).off("scroll");
 		$('#sein_content').empty();
 		var sub_count;
 		$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id,d=>{
@@ -1154,12 +1170,11 @@ sein.service ={
 		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
-		let page=0;
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
 			contentType:'application/json',
-			data:JSON.stringify({board_id:'cast',pageNumber:'1',member_id:x.member_id}),
+			data:JSON.stringify({board_id:'cast',pageNumber:1,member_id:x.member_id}),
 			success:d=>{
 				$.each(d.list,(i,j)=>{
 					$('<div/>').addClass('grid-item card_inner').append(
@@ -1201,7 +1216,9 @@ sein.service ={
 								)
 							)
 						).appendTo($('.grid'));
-					page=d.page.pageNumber;
+					if(!d.page.nextBlock){
+						$('#bt_more').empty();
+					}
 				})
 				var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 					$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
@@ -1215,14 +1232,15 @@ sein.service ={
 					$('<button>').addClass('b_all').html('더보기')))
 			.appendTo($('#cardlist_rap'))
 			.click(e=>{
+				let castPage =1;
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
-				if($(document).height() <= $(window).scrollTop()+$(window).height()+10){
+				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
 					$.ajax({
 						url:$.ctx()+'/cast/',
 						method:'post',
 						contentType:'application/json',
-						data:JSON.stringify({board_id:'cast',pageNumber:++page+"",member_id:x.member_id}),
+						data:JSON.stringify({board_id:'cast',pageNumber:++castPage,member_id:x.member_id}),
 						success:d=>{
 							$.each(d.list,(i,j)=>{
 								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
@@ -1271,7 +1289,7 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(page>=d.page.pageCount){
+							if(d.page.pageNumber>=d.page.pageCount){
 								$(window).off("scroll");
 							}
 						},
@@ -1284,6 +1302,7 @@ sein.service ={
 		})
 	},
 	mycast : x=>{
+		$(window).off("scroll");
 		$('#sein_content').empty();	
 		$('<div/>').addClass('contents').attr({style:'padding:60px 0;;min-height:720px'}).append(
 			$('<div/>').attr({style:'background-color:white;'}).addClass('type ver2').append(
@@ -1442,43 +1461,216 @@ sein.service ={
 		},
 	mysub : x=>{
 		$('<li/>').attr({id:'mybook_'+x.member_id,style:'height:240px;'}).addClass('bord_all').append(
-				$('<div/>').addClass('list_inner').append(
-					$('<a/>').attr({href:'#'}).append(
-						$('<div/>').addClass('user_pic').append(
-							$('<img/>').addClass('profile_pic').attr({src:$.img()+'/profile/'+x.profileimg}).click(e=>{
-								sein.service.caster(x);
-							})			
-						),
-						$('<div/>').addClass('user_info').append(
-							$('<a/>').attr({href:'#'}).append(
-								$('<strong>'+x.nickname+'</strong>'),
-								$('<span>'+x.comment+'</span>')
-							)
-						),
-						$('<div/>').addClass('count2').attr({style:'margin-top:10px'}).append(
-							$('<span/>').html('캐스트'),
-							$('<b/>').html(x.count)
+			$('<div/>').addClass('list_inner').append(
+				$('<a/>').attr({href:'#'}).append(
+					$('<div/>').addClass('user_pic').append(
+						$('<img/>').addClass('profile_pic').attr({src:$.img()+'/profile/'+x.profileimg}).click(e=>{
+							sein.service.caster(x);
+						})			
+					),
+					$('<div/>').addClass('user_info').append(
+						$('<a/>').attr({href:'#'}).append(
+							$('<strong>'+x.nickname+'</strong>'),
+							$('<span>'+x.comment+'</span>')
 						)
 					),
-					$('<div/>').addClass('list_del type2').append(
-						$('<a/>').attr({href:'#',title:'구독취소'}).append(
-							$('<span/>').addClass('ico_del')	
-						),
-						$('<b/>').attr({style:'width:100px;height:30px'}).addClass('bg_del').html('구독취소').click(e=>{
-							if(confirm('구독을 해지 하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
-								$('.bt_read').removeClass('on');
-								$('#mybook_'+x.member_id).remove()
-							}
-						})
+					$('<div/>').addClass('count2').attr({style:'margin-top:10px'}).append(
+						$('<span/>').html('캐스트'),
+						$('<b/>').html(x.count)
 					)
+				),
+				$('<div/>').addClass('list_del type2').append(
+					$('<a/>').attr({href:'#',title:'구독취소'}).append(
+						$('<span/>').addClass('ico_del')	
+					),
+					$('<b/>').attr({style:'width:100px;height:30px'}).addClass('bg_del').html('구독취소').click(e=>{
+						if(confirm('구독을 해지 하시겠습니까?')){
+							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							$('.bt_read').removeClass('on');
+							$('#mybook_'+x.member_id).remove()
+						}
+					})
 				)
-			).appendTo('.mycast_list2')
+			)
+		).appendTo('.mycast_list2')
 	},
-	tagcloud : x=>{
-		$('#sein_content').empty();
-		$.getJSON($.ctx()+'/cast/countTag/',d=>{
-			console.log(d.tag);
+	map :x=>{
+		$('<div/>').attr({id:'map'}).append('<br>').appendTo($(x.appendTo));
+		$('<div/>').attr({id:'location',style:'width:100%;height:400px'}).appendTo($($(x.appendTo)));
+		var mapContainer = document.getElementById('location'), // 지도를 표시할 div 
+	    mapOption = {
+	        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+	        level: 2 // 지도의 확대 레벨
+	    };  
+	
+		// 지도를 생성합니다    
+		var map = new daum.maps.Map(mapContainer, mapOption); 
+	
+		// 주소-좌표 변환 객체를 생성합니다
+		var geocoder = new daum.maps.services.Geocoder();
+	
+		// 주소로 좌표를 검색합니다
+		geocoder.addressSearch(x.detail.msg_addr, function(result, status) {
+		    // 정상적으로 검색이 완료됐으면 
+		     if (status === daum.maps.services.Status.OK) {
+	
+		        var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+	
+		        // 결과값으로 받은 위치를 마커로 표시합니다
+		        var marker = new daum.maps.Marker({
+		            map: map,
+		            position: coords
+		        });
+	
+		        // 인포윈도우로 장소에 대한 설명을 표시합니다
+		        var infowindow = new daum.maps.InfoWindow({
+		            content: '<div id="marker" style="width:150px;text-align:center;padding:6px 0;">Here</div>'
+		        });
+		        infowindow.open(map, marker);
+	
+		        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+		        map.setCenter(coords);
+		        $('#marker').click(e=>{
+		        	
+		        })
+		    } 
+		});    
+	},
+	search : x=>{
+		$(window).off("scroll");
+		$('#cardlist_rap').remove();
+		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
+		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
+		let page=0;
+		$.ajax({
+			url:$.ctx()+'/cast/search/'+x+'/',
+			method:'post',
+			contentType:'application/json',
+			data:JSON.stringify({board_id:'cast',pageNumber:1}),
+			success:d=>{
+				$.each(d.list,(i,j)=>{
+					$('<div/>').addClass('grid-item card_inner').append(
+							$('<div/>').addClass('card_top').append(
+								$('<a/>').attr({href:'#'}).append(
+									$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
+									.click(e=>{
+										sein.service.detail(j);	
+									})
+								)
+							),
+							$('<div/>').addClass('card_bottom').append(
+								$('<div/>').addClass('user_pic').append(
+									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
+										sein.service.caster(j);
+									})				
+								),
+								$('<div/>').addClass('user_info').append(
+									$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
+									.click(e=>{
+										sein.service.detail(j);	
+									}),
+									$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
+									.click(e=>{
+										sein.service.caster(j);
+									})
+								),
+								$('<div/>').addClass('user_cont').append(
+									$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))
+									.click(e=>{
+										sein.service.detail(j);
+									})
+								),
+								$('<div/>').addClass('count').append(
+									$('<span/>').addClass('ico_like'),
+									$('<b/>').html(j.like_count),
+									$('<span/>').addClass('ico_read'),
+									$('<b/>').html(j.msg_count)
+								)
+							)
+						).appendTo($('.grid'));
+					if(!d.page.nextBlock){
+						$('#bt_more').empty();
+					}
+				})
+				var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
+					$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+			},
+			error:(m1,m2,m3)=>{
+				alert(m3);
+			}	
+		})
+		$('<div/>').attr({id:'bt_more'}).addClass('bt_rap').append(
+				$('<span/>').addClass('bt_more').append(
+					$('<button>').addClass('b_all').html('더보기')))
+			.appendTo($('#cardlist_rap'))
+			.click(e=>{
+			let searchPage =1;
+			$('#bt_more').remove();
+			$(window).scroll(()=>{
+				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
+					$.ajax({
+						url:$.ctx()+'/cast/search/'+x+'/',
+						method:'post',
+						contentType:'application/json',
+						data:JSON.stringify({board_id:'cast',pageNumber:++searchPage}),
+						success:d=>{
+							$.each(d.list,(i,j)=>{
+								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
+								var $item = $('<div/>').addClass('grid-item card_inner').append(
+										$('<div/>').addClass('card_top').append(
+												$('<a/>').attr({href:'#'}).append(
+													$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
+													.click(e=>{
+														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+															sein.service.detail(j);	
+														})
+													})
+												)
+											),
+											$('<div/>').addClass('card_bottom').append(
+												$('<div/>').addClass('user_pic').append(
+													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg})
+													.click(e=>{
+														sein.service.caster(j);
+													})
+												),
+												$('<div/>').addClass('user_info').append(
+													$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
+													.click(e=>{
+														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+															sein.service.detail(j);	
+														})
+													}),
+													$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
+													.click(e=>{
+														sein.service.caster(j);
+													})
+												),
+												$('<div/>').addClass('user_cont').append(
+													$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))			
+												),
+												$('<div/>').addClass('count').append(
+													$('<span/>').addClass('ico_like'),
+													$('<b/>').html(j.like_count),
+													$('<span/>').addClass('ico_read'),
+													$('<b/>').html(j.msg_count)
+												)
+											)
+										)
+								$grid.append($item).isotope('appended',$item).isotope('layout');
+							})
+							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
+							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+							if(d.page.pageNumber>=d.page.pageCount){
+								$(window).off("scroll");
+							}
+						},
+						error:(m1,m2,m3)=>{
+							alert(m3);
+						}
+					})
+				}
+			})
 		})
 	}
 }
