@@ -1,201 +1,259 @@
 @charset "UTF-8";
-
 #page-wrapper{
-	padding: 30px;
-	width:100%;
-	//height:800px;
-	position: absolute;
+    padding-left: 30px;
+    margin-top: 5px;
+    width: 100%;
+    position: absolute;
+    border-bottom: 1px solid #e5e5e5;
 }
 /* 숙소정보 css */
-#page-wrapper .left_wrapper{
-	width:50%;
-	height:555px;
-	float: left;
-	position:relative;
+.accom_wrapper{
+    display: grid;
+    width: 90%;
+}
+.accom_box{
+    display:grid;
+    grid-template-columns: 1fr;
+    margin-left: 73px;
+    margin-top: 15px;
+}
+#price_reservation{
+}
+#accom_reservation{
+    grid-column-start: 1;
+}
+#local_sel{
+    display: inline;
+    width:100px;
+}
+#date{
+    display: inline;
+    width:150px;
+}
+#accom_button{
+    widthd:50px;
+}
+#location{
+	margin-top: 20px;
+    position: relative;
+    width: 1100px;
+    height: 430px;
+    margin: auto;
 }
 
-#page-wrapper .right_wrapper{
-	width:50%;
-	height:555px;
-	float: right;
-	position:relative;
+#local_box{
+    margin-left: 105px;
+    margin-top: 10px;
 }
 
-#page-wrapper .left_wrapper #price_reservation{
-	position: relative;
-	width: 100%;
-	left: 50px;
-	margin: auto;
+#accom_reservation{
+    height: 200%;
 }
-
-
-#page-wrapper .left_wrapper #accom_reservation{
-	position: relative;
-	width: 100%;
-	top: 40px;
-	left: 50px;
-	margin: auto;
-}
-
-#page-wrapper .left_wrapper #local_box{
-	position: relative;
-	width:80px;
-	left: 185px;
-	border: 2px solid black;
-}
-
-#page-wrapper .left_wrapper #local_box #local_sel{
-	width:100%;
-	font-size:20px;
-	margin
-}
-#page-wrapper .right_wrapper #location{
-	position: relative;
-	width: 80%;
-	height: 95%; /* 지도 api 테스트 css */
-	right: 50px;
-	margin: auto;
-}
-
 /* 지도 api css */
 .customoverlay {
-	position:relative;
-	border-radius:6px;
-	border: 1px solid #ccc;
-	border-bottom:2px solid #ddd;
-	float:left;
-	}
+    position:relative;
+    border-radius:6px;
+    border: 1px solid #ccc;
+    border-bottom:2px solid #ddd;
+    float:left;
+    }
 .customoverlay:nth-of-type(n) {
-	border:0; 
-	box-shadow:0px 1px 2px #888;
-	}
+    border:0; 
+    box-shadow:0px 1px 2px #888;
+    }
 .customoverlay a {
-	display:block;
-	text-decoration:none;
-	color:#000;
-	text-align:center;
-	border-radius:6px;
-	font-size:14px;
-	font-weight:bold;
-	overflow:hidden;
-	background: #d95050;
-	background: #d95050 url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
-	}
+    display:block;
+    text-decoration:none;
+    color:#000;
+    text-align:center;
+    border-radius:6px;
+    font-size:14px;
+    font-weight:bold;
+    overflow:hidden;
+    background: #d95050;
+    background: #d95050 url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+    }
 .customoverlay .title {
-	display:block;
-	text-align:center;
-	background:#fff;
-	margin-right:35px;
-	padding:10px 15px;
-	font-size:14px;
-	font-weight:bold;
-	}
+    display:block;
+    text-align:center;
+    background:#fff;
+    margin-right:35px;
+    padding:10px 15px;
+    font-size:14px;
+    font-weight:bold;
+    }
 .customoverlay:after {
-	content:'';
-	position:absolute;
-	margin-left:-12px;
-	left:50%;
-	bottom:-12px;
-	width:22px;
-	height:12px;
-	background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
-	}
-
+    content:'';
+    position:absolute;
+    margin-left:-12px;
+    left:50%;
+    bottom:-12px;
+    width:22px;
+    height:12px;
+    background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+    }
 /* ------------------------------------------------------- */
 /* 매출정보 css */
 .sales_graph{
-	margin: auto;
+    margin: auto;
 }
 .sales_th{
-	text-align: center;
-	width: 5%;
+    text-align: center;
+    width: 5%;
 }
 .sales_table{
-	position: relative;
-	top: 50px;
+    position: relative;
+    top: 50px;
 }
-
 #sales_div{
-	height: 600px;
+    height: 600px;
 }
 /* 고객정보 css */
-.custo_div_1{
-	display: inline-blaock;
-	width:100%;
-	height:310px;
+.custo_wrapper{
+    width: 100%;
+    height: 100%;
 }
-.custo_div_2{
-	width:100%;
-	height:400px;
+.custo_box_1{
+    width: 100%;
 }
-#age_reservation{
-	float: left;
-	width:50%;
-	position: relative;
-	left:60px;
+#reser_type{
+    display: inline;
+    width: 200px;
 }
-#age_accom{
-	float: right;
-	width:50%;
-	position: relative;
-	right: 100px;
+#quarter_sel{
+    display: inline;
+    width: 200px;
 }
-#reser_count{
-	position: relative;
-	top: 30px;
+#custo_button{
+    display: inline;
+    width: 200px;
+}
+.custo_box_2{
+    display: inline-block;
+    width: 100%;
+    height: 80%;
+}
+#accom_chart{
+    display: inline-block;
+    width: 50%;
+    height: 600px;
+    position: relative;
+    bottom: 200px;
+    left: 100px;
+    
+}
+#pop_chart{
+    display: inline-block;
+    width: 50%;
+    height: 600px;
+    
+}
+/* 
+.custo_wrapper{
+    display: grid;
+}
+.custo_box_1{
+}
+#reser_type{
+    display: inline;
+    width: 200px;
+}
+#select_box{
+    display: inline;
+    width: 200px;
+}
+#quarter_sel{
+    display: inline;
+    width: 200px;
+}
+#custo_button{
+    display: inline;
+    width: 200px;
+}
+.custo_box_2{
+    display:inline-block;
+    height: 100%;
+}
+#accom_chart{
+    width: 50%;
+    height: 600px;
+    background-color: red;
+}
+#pop_chart{
+    width: 50%;
+    height: 600px;
+    background-color: black;
+}
+ */
+/* basic css */
+.basic_wrapper{
+    display: grid;
+    width: 90%;
+    padding-left: 4%;
+    padding-bottom: 62px;
+}
+.basic_box_1{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-column-gap: 10px; */
+    margin-left: 8%;
+    padding-bottom: 5%;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+}
+/* .basic_box_2{
+    display: flex;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    
+} */
+#age_member{
+    grid-column-start:1;
+    grid-column-end:3;
+    margin-top: -27px;
+}
+/* top 숙소 */
+.padding_top_30{
+    padding-top: 20px;
+    margin-bottom: 0px;
+}
+.font_weight800{
+    font-weight: 800;
+}
+.font_1{
+    font-size: 20px;
+}
+p{
+    margin-top: 0;
 }
 
-/* basic css */
-.basic_first{
-	position: relative;
-	width: 85%;
-	height: 220px;
-	left: 15%;
+
+
+#have_accom_div {
+    margin-left: -200px;
+    margin-top: -27px;
 }
-.basic_middle{
-	position: relative;
-	width: 85%;
-	height: 250px;
-	left: 15%;
-}
-.basic_last{
-	position: relative;
-	width: 85%;
-	height: 250px;
-	left: 15%;
-}
-#pay_type_div{
-	display: inline-block;
-	width:300px;
-	height: 170px;
-}
-#booked_div{
-	display: inline-block;
-	width:300px;
-	height: 170px;
-}
-#have_accom_div{
-	display: inline-block;
-	width: 500px;
-	height: 170px;
-}
-#age_member{
-	display: inline-block;
-	width: 700px;
-}
-#member_gender_div{
-	display: inline-block;
-	width: 400px;
-}
+
 #top_local_div{
-	display: inline-block;
-	width: 400px;
+    margin-right: 9%;
+    margin-left: 65px;
+    margin-top: 20px;
 }
+
 #top_sales_div{
-	display: inline-block;
-	width: 400px;
+    margin-right: 9%;
+    margin-left: 10px;
+    margin-top: 20px;
 }
-#top_average{
-	display: inline-block;
-	width: 400px;
+#top_member_div{
+	margin-right: 9%;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+
+.table_title {
+    font-size: 13px;
+    text-align: center;
+    font-weight: bold;
+    padding-top: 40px;
 }
