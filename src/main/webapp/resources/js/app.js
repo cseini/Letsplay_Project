@@ -2,12 +2,12 @@
 var app = app || {};
 app =(()=>{
 	var init =x=>{
-		console.log('Step 1'+x);
 		app.router.init(x);
 	};
 	
 	return {init : init};
 })();
+
 
 app.main =(()=>{
 	var init =()=>{
@@ -25,9 +25,9 @@ app.main =(()=>{
 
 app.permision = (()=>{
 	var reservationList = d=>{
-		$.getJSON($.ctx()+'/member/list/'+d.mbr.member_id, d=>{
-			$('#header').empty();
-			$('#content').empty();
+		$('#header').empty();
+		$('#content').empty();
+		$.getJSON($.ctx()+'/member/list/'+$.cookie("loginID"), d=>{
 			$('<div/>').addClass('reserve-main-content').appendTo('#content');
 			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
 				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
@@ -37,7 +37,12 @@ app.permision = (()=>{
 						$.each(d.rlist,(i,j)=>{
 							$('.info').addClass('info_reservelist_'+i).append(
 								$('<div/>').append(
-													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({href:'http://www.yanolja.com/places/24050'}),
+													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({style:'cursor:pointer;'}).click(e=>{
+														$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
+															let se = {'in_day':null,'out_day':null,'accom_seq':j.accom_seq}
+		                                                    heetae.main.init(se);
+														});
+													}),
 													$('<span/>').html(j.room_no)),
 								$('<div/>').addClass('txt-address').html(j.accom_addr),
 								$('<ul/>').addClass('reserveinfo-list')
@@ -66,75 +71,34 @@ app.permision = (()=>{
 								);
 								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
 									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
-									$('<button/>').addClass('btns-cancel').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
+									if(j.res_check==1){
+										$('<button/>').addClass('btns').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'btns'}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
 										.click(e=>{
 											app.service.myModal();
 											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
 											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약취소하기').appendTo('.modal-body')
+											$('<div/>').html('개인정보 수집/이용 약관, 개인정보 제 3자 제공 약관을 확인하였으며 이에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+											$('<div/>').addClass('guide-box').appendTo('.modal-body');
+											$('<table/>').addClass('guide-table').appendTo('.guide-box');
+											$('<colgroup/>').addClass('cancelColgroup').append($('<col/>').attr({style:'width:50%'}),$('<col/>').attr({style:'width:50%'})).appendTo('.guide-table');
+											$('<thead/>').append($('<tr/>').append($('<th/>').html('취소기준일'),$('<th/>').html('취소수수료'))).appendTo('.guide-table');
+											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실 1일전 까지'),$('<th/>').html('없음'))).appendTo('.guide-table');
+											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실일 및 No-Show'),$('<th/>').html('환불불가'))).appendTo('.guide-table');
+											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약 취소하기').appendTo('.modal-body')
 												.click(e=>{
-													alert('모달 클릭');
-														$.ajax({
-															url :$.ctx()+'/member/cancel',
-															method:'post',
-															contentType:'application/json',
-															data:JSON.stringify({
-																member_id:$.cookie("loginID"),
-																nickname:$('#changeNickname').val()
-															}),
-															success:s=>{
-																$('#layerpop').modal('hide')
-																$('#layerpop').on('hidden.bs.modal',()=>{
-																	app.permision.mypage(d);
-																	$('#mypage').html($('#changeNickname').val());
-								                                })
-															},
-															error:(m1,m2,m3)=>{alert(m3);}
-														});
-													});
+													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+$.cookie("loginID"));
+													$('#layerpop').modal('hide');
+													$('#layerpop').on('hidden.bs.modal',()=>{
+														app.permision.reservationList();
+					                                })
+												});
 										});
+									} else {
+										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i)										
+									}
 						}); /*예약 현황 each 끝*/
-						
-						
-						
-						
-						
-					
-			
-			
-			
-			/*$('<div/>').addClass('reservationList').attr({style:'background: #f5f5f5'}).appendTo('#content');
-			$('<table/>').addClass('reservationTable').appendTo('.reservationList');
-			$('<tr/>').addClass('trColumn').append(
-					$('<th/>').html('방번호'),
-					$('<th/>').html('숙소이름'),
-					$('<th/>').html('방번호'),
-					$('<th/>').html('주소'),
-					$('<th/>').html('결제일'),
-					$('<th/>').html('체크인'),
-					$('<th/>').html('체크아웃'),
-					$('<th/>').html('결제가격'),
-					$('<th/>').html('결제타입')
-			).appendTo('.reservationTable');
-			$.each(d.rlist,(i,j)=>{
-				$('<tr/>').addClass('trContent').append(
-						$('<td/>').html(j.res_no),
-						$('<td/>').html(j.accom_name),
-						$('<td/>').html(j.room_no),
-						$('<td/>').html(j.accom_addr),
-						$('<td/>').html(j.pay_date),
-						$('<td/>').html(j.checkin_date),
-						$('<td/>').html(j.checkout_date),
-						$('<td/>').html(j.pay_price),
-						$('<td/>').html(j.pay_type)
-				).appendTo('.reservationTable')
-			}); */
 		})
 	};
-
-	
-	
-	
 	
 	var login = ()=>{
 		let validate ="";
@@ -144,7 +108,7 @@ app.permision = (()=>{
 				$('<div/>').addClass('loginHead').html('로그인하고, 혜택받으세요!').appendTo('.loginBox');
 				$('<div/>').addClass('inputBox').appendTo('.loginBox');
 					$('<input/>').attr({type:'text', id:'member_id', placeholder:'아이디',autofocus:'autofocus'}).addClass('inputData').appendTo('.inputBox');
-					$('<input/>').attr({type:'text', id:'password', placeholder:'비밀번호'}).addClass('inputData').appendTo('.inputBox');
+					$('<input/>').attr({type:'password', id:'password', placeholder:'비밀번호'}).addClass('inputData').appendTo('.inputBox');
 					$('<div/>').attr({id:'loginAlert'}).addClass('validAlert').appendTo('.inputBox');
 					$('<div/>').addClass('hjButton').text('로그인').attr({id:'loginButton'}).appendTo('.inputBox')
 					.click(e=>{
@@ -180,25 +144,10 @@ app.permision = (()=>{
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
 										$.cookie("loginID", d.mbr.member_id);
-											app.service.header();
-											$('.nav_right').empty();
-											$('#content').empty();
-											app.service.content();
-					 							$('<div/>').addClass('menubar').appendTo('.nav_right');
-					 							app.service.nav(d.mbr);
-												$('#mypage').click(e=>{
-													e.preventDefault();
-													mypage(d);
-												})
-												$('#moveToReservationList').click(e=>{
-													e.preventDefault();
-													reservationList(d);
-												});
-												$('#logout').click(e=>{
-													e.preventDefault();
-													$.cookie("loginID","");
-													app.router.home();
-												});	
+										$.cookie("profileimg", d.mbr.profileimg);
+										$.cookie("nickname", d.mbr.nickname);
+												app.router.home()
+					 							app.service.authNav();
 									}
 									$('#validate').html(validate);
 								},
@@ -209,95 +158,81 @@ app.permision = (()=>{
 					}
 		});
 					/*------------카카오톡 기능 시작 ------------*/
-					$('<a/>').attr({id:'kakao-login-btn', style:'margin-left:770px;'}).appendTo('.inputBox');
-					$('<a/>').attr({href:'http://developers.kakao.com/logout'}).appendTo('.inputbox');
-					    // 카카오 로그인 버튼을 생성합니다.
-					    Kakao.Auth.createLoginButton({
-					      container: '#kakao-login-btn',
-					      success: function(authObj) {
-					        Kakao.API.request({
-					            url: '/v1/user/me',
-					            success: function(res) {
-					            	console.log('gender : ' + res.properties['gender'])
-					            	console.log('age_rang : '+ res.properties['age_rang'])
-					            	console.log('birthday : '+ res.properties['birthday'])
-					            	
-					            	$.ajax({
-										url:$.ctx()+'/member/login',
-										method:'post',
-										contentType:'application/json',
-										data:JSON.stringify({member_id:res.id,password: res.uuid}),
-										success:d=>{
-											let validate ="";
-											if(d.id_valid==='WRONG'){
-								                  $.ajax({
-														url:$.ctx()+'/member/join',
-														method:'post',
-														contentType:'application/json',
-														data:JSON.stringify({
-															member_id:res.id,
-															name:res.properties['nickname'],
-															nickname:res.properties['nickname'],
-															password: res.uuid,
-															profileimg :res.properties['profile_image']
-														}),
-														success:d=>{
-															alert('카카오톡으로 가입이 성공하였습니다.');
-															login(); 
+					$('<a/>').attr({id:'custom-login-btn'}).append(
+							$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao.png'})
+					).appendTo('.loginBox').click(e=>{
+						Kakao.Auth.login({
+						      success: function(authObj) {
+						        Kakao.API.request({
+						            url: '/v1/user/me',
+						            success: function(res) {
+						            	$.ajax({
+											url:$.ctx()+'/member/login',
+											method:'post',
+											contentType:'application/json',
+											data:JSON.stringify({member_id:res.id,password:res.uuid}),
+											success:d=>{
+												let validate ="";
+												if(d.id_valid==='WRONG'){
+									                  $.ajax({
+															url:$.ctx()+'/member/join',
+															method:'post',
+															contentType:'application/json',
+															data:JSON.stringify({
+																member_id:res.id,
+																name:res.properties['nickname'],
+																nickname:res.properties['nickname'],
+																password: res.uuid,
+																profileimg :res.properties['profile_image']
+															}),
+															success:d=>{
+																alert('\n 카카오톡으로 가입이 성공하였습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
+																login(); 
+																/*카톡 불러온 사진 서버 저장*/
+												                  $.ajax({
+																		url:$.ctx()+'/image/kakaoProfile/',
+																		method:'post',
+																		contentType:'application/json',
+																		data:JSON.stringify({
+																			member_id:res.id,
+																			profileimg :res.properties['profile_image']
+																		}),
+																		success:d=>{
+																			$.cookie("loginID", res.id)
+																			$.cookie("profileimg", d);
+																			$.cookie("nickname", res.properties['nickname']);
+																		},
+																		error:(m1,m2,m3)=>{alert(m3);}
+																	});
+													            /*카톡 불러온 사진 서버 저장*/
+															},
+															error:(m1,m2,m3)=>{alert(m3);}
+														});
+												}else{
+													$.cookie("loginID", d.mbr.member_id);
+													$.cookie("profileimg", d.mbr.profileimg);
+													$.cookie("nickname", d.mbr.nickname);
+													app.router.home()
+													app.service.authNav();
 															
-															/*카톡 불러온 사진 서버 저장*/
-											                  $.ajax({
-																	url:$.ctx()+'/image/kakaoProfile/',
-																	method:'post',
-																	contentType:'application/json',
-																	data:JSON.stringify({
-																		member_id:res.id,
-																		profileimg :res.properties['profile_image']
-																	}),
-																	success:d=>{},
-																	error:(m1,m2,m3)=>{alert(m3);}
-																});
-												            /*카톡 불러온 사진 서버 저장*/
-														},
-														error:(m1,m2,m3)=>{alert(m3);}
-													});
-											}else{
-												$.cookie("loginID", d.mbr.member_id);
-													app.service.header();
-													$('.nav_right').empty();
-													$('#content').empty();
-													app.service.content();
-							 							$('<div/>').addClass('menubar').appendTo('.nav_right');
-							 							app.service.nav(d.mbr);
-														$('#myinfo').click(e=>{
-															e.preventDefault();
-															mypage(d);
-														})
-													$('#moveToReservationList').click(e=>{
-														e.preventDefault();
-														reservationList(d);
-													});
-													$('#logout').click(e=>{
-														e.preventDefault();
-														$.cookie("loginID","");
-														app.router.home();
-													});	
-														
+												}
+												$('#validate').html(validate);
+											},
+											error:(m1,m2,m3)=>{
+												alert('에러발생'+m3);
 											}
-											$('#validate').html(validate);
-										},
-										error:(m1,m2,m3)=>{
-											alert('에러발생'+m3);
-										}
-								});
-					            }
-		                  })			        
-					      },
-					      fail: function(err) {
-					         alert(JSON.stringify(err));
-					      }
-				    });
-				    /*------------카카오톡 기능 끝 ------------*/   
+									});
+						            }
+			                  })			        
+						      },
+						      fail: function(err) {
+						         alert(JSON.stringify(err));
+						      }
+					    });
+					    /*------------카카오톡 기능 끝 ------------*/   
+
+					});
+					    // 카카오 로그인 버튼을 생성합니다.
 	}
 	var join =()=>{
 		$('#header').empty();
@@ -355,6 +290,7 @@ app.permision = (()=>{
 												zipcode:$('#zipcode').val(),
 											}),
 											success:d=>{
+												alert('성공적으로 가입되었습니다. 로그인하시면 야놀자 서비스를 이용가능합니다.');
 												login();
 											},
 											error:(m1,m2,m3)=>{alert(m3);}
@@ -365,7 +301,9 @@ app.permision = (()=>{
 					}
 				})
 	}
-	var mypage =d=>{
+	var mypage =()=>{
+		app.service.authNav();
+		$('#content').attr({style:'background: #f5f5f5'});
 		$.ajax({
 			url:$.ctx()+'/member/auth',
 			method:'post',
@@ -376,7 +314,6 @@ app.permision = (()=>{
 			success:d=>{
 				$('#header').empty();
 				$('#content').empty();
-				$('#content').attr({style:'background: #f5f5f5'});
 				$('<div/>').addClass('mypageTableDiv').appendTo('#content');
 				$('<div/>').addClass('mypageBottomNav').appendTo('#content');
 					app.service.myBenefit(d);
@@ -391,7 +328,7 @@ app.permision = (()=>{
 									$('<div/>').addClass('nav-tabsHead').html('개인정보 수정').attr({id:'nav-tabsHead1'}).appendTo('#nav-tabsHeadMain1');
 										$('<ul/>').addClass('info_lists').attr({style:'padding-left:130px'}).appendTo('#nav-tabsHead1');
 											$('<li/>').appendTo('.info_lists').attr({id:'modifyNickname'}).html('<b>닉네임</b>');
-												$('<span/>').html(d.mbr.nickname).attr({style:"margin-left: 200px; font-weight normal;"}).appendTo('#modifyNickname')
+												$('<span/>').html(d.mbr.nickname).attr({style:"margin-left: 205px; font-weight normal;"}).appendTo('#modifyNickname')
 												$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyNickname').click(e=>{
 													app.service.myModal();
 													$('<h4/>').html('닉네임 변경하기').appendTo('#modalTitle');
@@ -411,7 +348,8 @@ app.permision = (()=>{
 															success:s=>{
 																$('#layerpop').modal('hide')
 																$('#layerpop').on('hidden.bs.modal',()=>{
-																	app.permision.mypage(d);
+																	app.permision.mypage();
+																	$.cookie("nickname", $('#changeNickname').val());
 																	$('#mypage').html($('#changeNickname').val());
 								                                })
 															},
@@ -441,8 +379,37 @@ app.permision = (()=>{
 														success:d=>{
 															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
-																app.permision.mypage(d);
+																app.permision.mypage();
 							                                })
+														},
+														error:(m1,m2,m3)=>{alert(m3);}
+													});
+												});
+											});
+											
+											$('<li/>').appendTo('.info_lists').attr({id:'modifyComment'}).html('<b>한줄소개</b>');
+											$('<span/>').html(d.mbr.comment).attr({style:"margin-left: 187px; font-weight normal;"}).appendTo('#modifyComment')
+											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyComment').click(e=>{
+												app.service.myModal();
+												$('<h4/>').html('한줄소개 변경하기').appendTo('#modalTitle');
+												$('<div/>').html('현재 한줄소개 ').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+												$('<div/>').html(d.mbr.comment).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
+												$('<div/>').html('변경 한줄소개 ').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
+												$('<input/>').attr({type:'text', id:'changeComment', placeholder:'변경하려는 한줄 소개를 입력해주세요.'}).addClass('inputData').appendTo('.modal-body');
+												$('<button/>').addClass('radi_button btn_save').attr({id:'update_comment'}).text('수정완료').appendTo('.modal-body').click(e=>{
+													$.ajax({
+														url :$.ctx()+'/member/update',
+														method:'post',
+														contentType:'application/json',
+														data:JSON.stringify({
+															member_id:$.cookie("loginID"),
+															comment:$('#changeComment').val()
+														}),
+														success:d=>{
+															$('#layerpop').modal('hide')
+															$('#layerpop').on('hidden.bs.modal',()=>{
+																app.permision.mypage();
+															})
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
 													});
@@ -499,7 +466,7 @@ app.permision = (()=>{
 																		success:d=>{
 																			$('#layerpop').modal('hide')
 																			$('#layerpop').on('hidden.bs.modal',()=>{
-																				app.permision.mypage(d);
+																				app.permision.mypage();
 											                                })
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
@@ -515,7 +482,33 @@ app.permision = (()=>{
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
 								$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
-									
+									if(d.mbr.kakao == '1'){
+										$('<a/>').attr({id:'custom-login-btn2'}).append(
+												$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect_not.png',style:'margin-left: 0px; width:30%'})
+										).appendTo('#modifyExternalService');									
+									} else {
+										$('<a/>').attr({id:'custom-login-btn1'}).append(
+												$('<img/>').addClass('custom-login-btn').attr({src:$.ctx()+'/resources/img/icon/kakao_disconnect.png',style:'margin-left: 0px; width:30%'})
+										).appendTo('#modifyExternalService')
+											.click(e=>{
+												$.ajax({
+													url:$.ctx()+'/member/delete',
+													method:'post',
+													contentType:'application/json',
+													data:JSON.stringify({
+														member_id:$.cookie("loginID"),
+														password:d.mbr.password
+													}),
+													success:d=>{
+														$('#deleteAlert').remove();
+														alert('\n탈퇴가 처리되었습니다. \n\n이용해주셔서 감사드립니다. \n');
+														app.router.home();
+														
+													},
+													error:(m1,m2,m3)=>{alert(m3);}
+												});
+											});
+									}
 							
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain3'}).appendTo('#content');							
 								$('<div/>').addClass('nav-tabsHead').html('회원탈퇴').attr({id:'nav-tabsHead3', style:'padding-bottom:50px'}).appendTo('#nav-tabsHeadMain3');	
@@ -569,7 +562,7 @@ app.permision = (()=>{
 							$('<td/>').html(d.mbr.address).appendTo('#tr4');
 							
 						$('<tr/>').attr({id:'tr5'}).appendTo('.mypageTable');
-							$('<td text-align: center;/>').html(d.mbr.nickname).appendTo('#tr5');
+							$('<td/>').html(d.mbr.comment).attr({style:'text-align: center;'}).appendTo('#tr5');
 							$('<td/>').html('○ 휴대폰번호').appendTo('#tr5');
 							$('<td/>').html(d.mbr.phone).appendTo('#tr5');
 							$('<button/>').addClass('btn btn-primary').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'modal1'}).appendTo('#photoChangeBtn').html('사진변경').click(e=>{
@@ -615,9 +608,10 @@ app.permision = (()=>{
 									                success: d=>{
 									                        $('#layerpop').modal('hide')
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
-									                        	app.permision.mypage(d);
-									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.avatar');
-									                        	$('<img>').attr({src:$.img()+'/profile/'+d}).appendTo('.bigAvatar');
+																$.cookie("profileimg", d);
+																app.permision.mypage();
+																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
+																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
 									                },
 									                error : e=>{
@@ -770,8 +764,9 @@ app.permision = (()=>{
 
 app.service = {
 		header :x=>{
+			$('#header').remove();
 			/* header 시작 */
-			$('<header/>').attr({id:'header'}).appendTo('#wrapper');
+			$('<div/>').attr({id:'header'}).appendTo('#wrapper');
 			$('<div/>').addClass('mainheader').appendTo('#header');		
 			/* banner 시작 */
 			$('<div/>').attr({id:'div_banner0',style:'margin-bottom:5%'}).appendTo($('.mainheader'));
@@ -906,6 +901,7 @@ app.service = {
 		},
 		content :x=>{
 			/* content 시작 */
+			$('#content').remove();
 			$('<div/>').attr({id:'content'}).appendTo('#wrapper');
 				$('<div/>').addClass('mainContent').appendTo('#content');
 				/* banner 시작 */
@@ -920,7 +916,6 @@ app.service = {
 					$('<div/>').addClass('carousel-item '+clazz[k-1]).attr({id:'item'+k}).append($("<img/>").attr({src:$.img()+'/banner/mainBanner'+k+'.JPG',style:'width:100%'}),
 					$('<h3/>').addClass('carousel-caption center').append($('<p></p>'))).appendTo($('#carousel-inner1'));
 				}
-				
 				$('<a/>').addClass('carousel-control-prev').attr({href:'#carousel1',role:'button','data-slide':'prev', id:'carousel-control-prev1'}).appendTo($('#carousel1'));
 				$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true'}).appendTo($('#carousel-control-prev1'));
 				$('<span/>').addClass('sr-only').html('이전').appendTo($('#carousel-control-prev1')).appendTo($('#carousel-control-prev1'));
@@ -944,7 +939,126 @@ app.service = {
 					$('<ul/>').addClass('info_lists').attr({id:'info_lists2',style:'padding-left:130px;margin-bottom: unset;padding-top: 15px;padding-bottom: 15px;'}).appendTo('#nav-tabsHead2');	
 						$('<li/>').appendTo('#info_lists2').html(d.mbr.point);
 		},
+		
+		footer : d=>{
+			$('#footer').remove()
+/*			$.getScript($.script()+'/footer.js',()=>{
+				$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
+				$('#mainFooter').append(footerUI());
+			})*/
+			
+			$('<div/>').attr({id:'footer'}).addClass('footer').appendTo('#wrapper');
+			$('<section/>').addClass(['footer-inner', 'column1']).append(
+					$('<h2/>').addClass(['icon-comm','icon-logo-footer']).append($('<span/>').addClass('sc-out').html('Yanolja')),
+					$('<ul/>').addClass('foot-menu').append(
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://yanolja.in/ko/companyinfo/',title:'회사소개로 이동'}).addClass('foot-menu__link').html('회사소개')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://www.yanoljalab.com/ad.php?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=ad_bottom',title:'제휴광고문의로 이동'}).addClass('foot-menu__link').html('제휴광고문의')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://yanolja.in/recruitment/',title:'인재채용으로 이동'}).addClass('foot-menu__link').html('인재채용')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://policy.yanolja.com/?t=service',title:'이용약관으로 이동'}).addClass('foot-menu__link').html('이용약관')),
+							$('<li/>').addClass('foot-menu__item').append(
+									$('<a/>').attr({href:'http://policy.yanolja.com/?t=privacy',title:'개인정보처리방침으로 이동'}).addClass(['foot-menu__link']).html('개인정보처리방침'))
+					),
+					$('<div/>').addClass('familysite').append(
+							$('<div/>').addClass('familysite__select').append(
+									$('<select/>').addClass('sel-block').append(
+											$('<option/>').attr({value:""}).html('패밀리사이트'),
+											$('<option/>').attr({value:"http://www.yanoljalab.com/?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=family"}).html('좋은숙박연구소'),
+											$('<option/>').attr({value:"http://www.bipumstore.com"}).html('비품스토어'),
+											$('<option/>').attr({value:"http://smartfront.yanolja.com"}).html('스마트프런트'),
+											$('<option/>').attr({value:"http://www.yapen.co.kr/"}).html('야놀자 펜션'),
+											$('<option/>').attr({value:"http://www.hotelup.com/"}).html('호텔업'),
+											$('<option/>').attr({value:"http://www.hotelnow.co.kr/ko/"}).html('호텔나우'),
+											$('<option/>').attr({value:"http://www.ynjedu.co.kr"}).html('야놀자평생교육원')
+									)
+							)
+					),
+					$('<div/>').addClass('foot-address').append(
+							$('<address/>').html('(주)야놀자').append(
+									$('<i/>').html('대표이사: 이수진'),
+									$('<i/>').html('주소: 서울 강남구 테헤란로 108길 42'),
+									$('<i/>').html('메일:'),
+									$('<i/>').html('help@yanolja.com'),
+									$('<br/>').html('사업자 등록번호: 220-87-42885'),
+									$('<i/>').html('통신판매업신고: 강남-14211호').attr({style:'margin: -0.5px;'}),
+									$('<i/>').html('관광사업자 등록번호: 제2016-31호'),
+									$('<i/>').html('호스팅 서비스 제공자: (주)야놀자')
+							),
+							$('<p/>').html('(주)야놀자는 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
+					),
+					$('<div/>').addClass('award').append(
+							$('<div/>').addClass(['award__item','item-01']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-01.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2017'),
+									$('<br/>').html('하이서울 브랜드 선정')
+							),
+							$('<div/>').addClass(['award__item','item-02']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-02.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2017 브랜드 스타'),
+									$('<br/>').html('숙박앱 부문 1위')
+							),
+							$('<div/>').addClass(['award__item','item-03']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-03.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2016 모바일 어워드 코리아'),
+									$('<br/>').html('숙박정보 부문 대상')
+							),
+							$('<div/>').addClass(['award__item','item-04']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-04.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2015앱 어워드'),
+									$('<br/>').html('숙박정보 부문 대상')
+							),
+							$('<div/>').addClass(['award__item','item-05']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-05.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('2015 마케팅 대상'),
+									$('<br/>').html('최우수상')
+							),
+							$('<div/>').addClass(['award__item','item-06']).append(
+									$('<span/>').addClass('award__image').append(
+											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-06.png',alt:""})
+									),
+									$('<em/>').addClass('award__title').html('정보보호관리체계인증'),
+									$('<br/>').html('ISMS')
+							)
+					),
+					$('<div/>').addClass('foot-family').append(
+							$('<div/>').addClass('cs-center').append(
+									$('<a/>').attr({href:'http://help.yanolja.com/faq', title:'야놀자 고객센터로 이동'}).append(
+											$('<em/>').html('고객센터'),
+											$('<div/>').html('1644-1346(오전 9시 ~ 익일 새벽 3시)')
+									)
+							),
+							$('<div/>').addClass('snslink').append(
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.facebook.com/yanolja/?fref=ts', target:'_blank'
+										,title:'야놀자 페이스북으로 이동'}).append($('<i/>').addClass(['icon-sns-facebook','icon-comm']).attr({style:'background-position: 0 -202px;'})),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.instagram.com/yanoljainsta/', target:'_blank'
+										,title:'야놀자 인스타그램으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-instargram']).attr({style:'background-position: -25px -202px;'})),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.youtube.com/user/yanoljamedia', target:'_blank'
+										,title:'야놀자 유튜브으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-youtube']).attr({style:'background-position: -50px -202px;'})),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://tv.naver.com/yanolja', target:'_blank'
+										,title:'야놀자 네이버TV로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-comm icon-sns-navertv']).attr({style:'background-position: -300px -202px;'})),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://post.naver.com/my.nhn?memberNo=2768780', target:'_blank'
+										,title:'야놀자 네이버 포스트로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-naverpos'])),
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://blog.naver.com/yanolog', target:'_blank'
+										,title:'야놀자 네이버블로그로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-naverblog']))
+							)
+					)
+			).appendTo('#footer');
+		},
 		myModal : d=>{
+			$('.modal fade').empty();
 			$('#modalTitle').empty();
 			$('.modal-body').empty();
 			$('<div class="modal fade" id="layerpop">'
@@ -963,17 +1077,76 @@ app.service = {
 					+'  </div>'
 					+'</div>').appendTo('#content');
 		},
-		nav : d=>{
+		
+		nav : d =>{
+			$('#nav').remove()
+			$('<div/>').attr({id:'nav'}).appendTo($('#wrapper'));
+				$('<div/>').addClass('mainNav').appendTo($('#nav'));
+					$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
+					$('<div/>').addClass('nav_left').appendTo('.mainNav');
+						$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색').appendTo('.nav_left');
+						$('<a/>').attr({href:'#', id:'board'}).html('캐스트').appendTo('.nav_left');
+					$('<div/>').addClass('nav_right').appendTo('.mainNav');
+						$('<a/>').attr({href:'#', id:'amdin'}).html('관리자').appendTo('.nav_right');
+						$('<a/>').attr({href:'#', id:'add_btn'}).html('회원가입').appendTo('.nav_right');
+						$('<a/>').attr({href:'#', id:'login_btn'}).html('로그인').appendTo('.nav_right');
+
+		      $( document ).ready( function() {
+		          var jbOffset = $('.mainNav').offset();
+		          $( window ).scroll( function() {
+			            if ( $(this).scrollTop() > jbOffset.top ) {
+			              $('.mainNav').addClass('jbFixed');
+			            }
+			            else {
+			              $('.mainNav').removeClass('jbFixed');
+			            }
+			          	});
+		        });
+			
+		},
+		authNav : ()=>{
+				$('.nav_right').empty();
+				$('<div/>').addClass('menubar').appendTo('.nav_right');
 				$('<ul/>').append(
 							$('<li/>').append(
 									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
-											$('<img>').attr({src:$.img()+'/profile/'+d.profileimg}).addClass('avatar'),
-				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html(d.nickname).addClass('ya_cusor')
+											$('<img>').attr({src:$.img()+'/profile/'+$.cookie('profileimg')}).addClass('avatar'),
+				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html($.cookie('nickname')).addClass('ya_cusor')
 									).append($('<ul/>').addClass('mouseOverUl').append(
-										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')),		 															
-	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')),
-			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역'))		 															
+										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')).click(e=>{
+											e.preventDefault();
+											app.permision.mypage();
+										}),		 															
+	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')).click(e=>{
+	 										e.preventDefault();
+	 										$.cookie("loginID","");
+	 										$.cookie("nickname","");
+	 										$.cookie("profileimg","");
+	 										app.router.home();
+	 									}),
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')).click(e=>{
+			 								e.preventDefault();
+			 								app.permision.reservationList();
+			 							}),		 															
+			 							$('<li/>').append($('<a/>').attr({href:'#', id:'mycast'}).html('마이캐스트')).click(e=>{
+			 								e.preventDefault();
+			 								$.getScript($.ctx()+'/resources/js/sein.js',()=>{
+			 									sein.service.mycast();
+			 								})
+			 							})		 															
 									)))).appendTo('.menubar');
+				
+			      $( document ).ready( function() {
+			          var jbOffset = $('.mainNav').offset();
+			          $( window ).scroll( function() {
+				            if ( $(this).scrollTop() > jbOffset.top ) {
+				              $('.mainNav').addClass('jbFixed');
+				            }
+				            else {
+				              $('.mainNav').removeClass('jbFixed');
+				            }
+				          	});
+			        });
 		},
 		makeRandomLetter : d=>{
 		    var text = "";
@@ -982,6 +1155,29 @@ app.service = {
 		        text += possible.charAt(Math.floor(Math.random() * possible.length));
 		    return text;
 		}
+/*		preventF5 : () =>{
+			function LockF5(){
+				 if (event.keyCode == 116) {
+					 alert("새로고침을 할 수 없습니다.");
+					  event.keyCode = 0;
+					  return false;
+				 }
+				}
+			document.onkeydown = noEvent;*/
+				
+/*			function noEvent() { // 새로 고침 방지
+	            if (event.keyCode == 116) {
+	                alert("새로고침을 할 수 없습니다.");
+	                event.keyCode = 2;
+	                e.preventDefault();	  
+	                event.keyCode = 0;
+	                return false;
+	            } else if (event.ctrlKey && (event.keyCode == 78 || event.keyCode == 82)) {
+	                return false;
+	            }
+	        }
+	    document.onkeydown = noEvent; */
+		
 }
 
 
@@ -991,7 +1187,7 @@ app.router = {
 			()=>{
 				$.extend(new Session(x));
 				$.getScript($.ctx()+'/resources/js/util.js')
-					.done(x=>{console.log('실행');})
+					.done(x=>{console.log('----- Lets play 야놀자와 함께합시다. -----');})
 					.fail(x=>{console.log('실패')});
 				app.main.init();
 			}
@@ -1000,37 +1196,13 @@ app.router = {
 	home :d =>{
 		$('#wrapper').empty();
 		$('#nav').empty();
+		$('.mainNav').empty();
 		$('#header').empty();
 		$('#content').empty();
 		$('#footer').empty();
-		$.getScript($.script()+'/footer.js',()=>{
 		/* nav 시작 */
-		$('<nav/>').attr({id:'nav'}).appendTo($('#wrapper'));
-			$('<div/>').addClass('mainNav').appendTo($('#nav'));
-				$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
-				$('<div/>').addClass('nav_left').appendTo('.mainNav');
-					$('<a/>').attr({href:'#', id:'mylocation'}).html('내주변(김태형)').appendTo('.nav_left');
-					$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색(한희태)').appendTo('.nav_left');
-					$('<a/>').attr({href:'#', id:'board'}).html('캐스트(최세인)').appendTo('.nav_left');
-				$('<div/>').addClass('nav_right').appendTo('.mainNav');
-					$('<a/>').attr({href:'#', id:'amdin'}).html('관리자(김상훈)').appendTo('.nav_right');
-					$('<a/>').attr({href:'#', id:'add_btn'}).html('회원가입').appendTo('.nav_right');
-					$('<a/>').attr({href:'#', id:'login_btn'}).html('로그인').appendTo('.nav_right');
-
-	      $( document ).ready( function() {
-	          var jbOffset = $('.mainNav').offset();
-	          $( window ).scroll( function() {
-		            if ( $(this).scrollTop() > jbOffset.top ) {
-		              $('.mainNav').addClass('jbFixed');
-		            }
-		            else {
-		              $('.mainNav').removeClass('jbFixed');
-		            }
-		          	});
-	        });
-
+		app.service.nav();
 		/* nav 끝 */
-					
 		
 		/* header 시작 */
 		app.service.header();			
@@ -1041,27 +1213,22 @@ app.router = {
 		/* content 끝 */
 		
 		/* footer 시작 */
-		$('<footer/>').attr({id:'footer'}).appendTo('#wrapper');
-		$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
-		$('#mainFooter').append(footerUI());
+		app.service.footer();
 		/* footer 끝 */
 					
 		/* 클릭 이벤트 시작 */
-		$('#mylocation').addClass('ya_cusor').click(e=>{
-			e.preventDefault();
-			$.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
-				taehyeong.content1.surroundings();
-			});
-		});
 		$('#hotelSearch').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-				heetae.main.init();
+				let se = {'in_day':null,'out_day':null,'accom_seq':null}
+				heetae.main.init(se);
+				//제거 필요
 			});
 		});
 		$('#amdin').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/sanghoon.js',()=>{
+				$.cookie("loginID","");
 				sanghoon.main.init();
 			});
 		});
@@ -1072,10 +1239,9 @@ app.router = {
 					app.router.home();
 				}else{
 					e.preventDefault();
-					$('#content').empty();
-					$('#header').empty();
 					app.service.header();
 					app.service.content();
+					app.service.footer();
 				}
 			})
 		$('#login_btn').addClass('ya_cusor').click(e=>{
@@ -1094,5 +1260,4 @@ app.router = {
 			});
 		/* 클릭 이벤트 끝 */
 		}
-	)}
 };

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.play.web.brd.Board;
 import com.play.web.cmm.Util2;
 
 @RestController
@@ -30,30 +28,26 @@ public class MemberCtrl {
 	
 	@PostMapping("/join")
 	public void join(@RequestBody Member param) {
-		logger.info("\n--------- MemberController {} !!-----","join()");
 		if(param.getBirthdate()!=null) {
+			param.setProfileimg("default.jpg");
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
-			param.setProfileimg("default.jpg");
+			param.setKakao("1");
 			mbrMap.post(param);
 		} else {
+			param.setKakao("2");  // 카톡 가입일 경우 2번임
 			mbrMap.post(param);
 		}
 	}
 	
 	@PostMapping("/auth")
 	public Map<String,Object> auth(@RequestBody Member pm){
-		logger.info("\n--------- MemberController {} !!-----","auth()");
 		map.clear();
-		logger.info("member_id :" + pm.getMember_id());
-		logger.info("pw : " + pm.getPassword());
 		map.put("mbr", mbrMap.get(pm));
-		logger.info("mbrMap.get(pm)" + mbrMap.get(pm));
 		return map;
 	}
 	@PostMapping("/login")
 	public Map<String,Object> login(@RequestBody Member pm) {
-		logger.info("\n--------- MemberController {} !!-----","login()");
 		Map<String,Object> rm =  new HashMap<>();
 		String pwValid = "WRONG";
 		String idValid ="WRONG";
@@ -63,7 +57,6 @@ public class MemberCtrl {
 				return mbrMap.get(t);
 			};
 			mbr = f.apply(pm);
-			System.out.println(mbr);
 			pwValid = (mbr != null) ?"CORRECT":"WRONG";
 			mbr = (mbr != null)?mbr:new Member();
 		}
@@ -75,18 +68,12 @@ public class MemberCtrl {
 	@PostMapping("/delete")
 	public Map<String,Object> delete(
 			@RequestBody Member pm) {
-		logger.info("\n--------- MemberController {} !!-----","delete()");
 		map.clear();
-		logger.info("Member pm : "+ pm);
-		logger.info("getMember_id() : "+ pm.getMember_id());
-		logger.info("getPassword() : "+ pm.getPassword());
 		String deleteMsg = "비밀번호오류";
-		logger.info("mbrMap.count(pm) : " + mbrMap.count(pm));
 		if(mbrMap.count(pm)!=0) {
 			mbrMap.delete(pm);
 			deleteMsg="탈퇴완료";
 		};
-		logger.info("deleteMsg  " + deleteMsg);
 		map.put("deleteMsg", deleteMsg);
 		map.put("mbr", mbr);
 		return map;
@@ -94,28 +81,23 @@ public class MemberCtrl {
 	
 	@PostMapping("/update")
 	public void modify(@RequestBody Member pm) {
-		logger.info("\n--------- MemberController {} !!-----","modify()");
 		map.clear();
 		mbrMap.update(pm);
 	}
 	
 	@GetMapping("/list/{member_id}")
 	public HashMap<String, Object> rlist(@PathVariable String member_id){
-		logger.info("\n--------- MemberController {} !!-----","list()");
 		map.clear();
 		rlist = mbrMap.rlist(member_id);
-		System.out.println("rlist.size : " + rlist.size());
 		map.put("rlist", rlist);
 		return map;
 	}
 	
-	@GetMapping("/cancel/{member_id}")
-	public String result(@PathVariable String member_id){
-		logger.info("\n--------- MemberController {} !!-----","list()");
+	@GetMapping("/cancel/{pay_no}/{member_id}")
+	public void result(@PathVariable String pay_no, @PathVariable String member_id){
 		map.clear();
-		rlist = mbrMap.rlist(member_id);
-		System.out.println("rlist.size : " + rlist.size());
-		map.put("rlist", rlist);
-		return "";
+		map.put("member_id", member_id);
+		map.put("pay_no", pay_no);
+		mbrMap.cancel(map);
 	}
 }

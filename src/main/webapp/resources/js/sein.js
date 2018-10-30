@@ -1302,6 +1302,8 @@ sein.service ={
 		})
 	},
 	mycast : x=>{
+		$('#header').empty();	
+		$('#content').empty();	
 		$(window).off("scroll");
 		$('#sein_content').empty();	
 		$('<div/>').addClass('contents').attr({style:'padding:60px 0;;min-height:720px'}).append(
@@ -1356,7 +1358,7 @@ sein.service ={
 					)
 				)
 			)		
-		).appendTo($('#sein_content'));
+		).appendTo($('#content'));
 		
 		$('<div/>').addClass('con_inner').append(
 			$('<div/>').addClass('mycast_rap bord_all').append(
