@@ -21,26 +21,25 @@
 </resultMap>
 
  <select id="rlist" resultMap="hjResult">
-	 SELECT R.RES_NO,
+	 SELECT
 	       A.ACCOM_NAME,
 	       O.ROOM_NO,
 	       A.ACCOM_ADDR,
-	       P.PAY_DATE,
+	       R.PAY_DATE,
 	       CONCAT(R.CHECKIN_DATE, ",", DAYNAME(R.CHECKIN_DATE))
 	          AS CHECKIN_DATE,
 	       CONCAT(R.CHECKOUT_DATE, ",", DAYNAME(R.CHECKOUT_DATE))
 	          AS CHECKOUT_DATE,
-	       P.PAY_PRICE,
-	       P.PAY_TYPE,
+	       R.PAY_PRICE,
+	       R.PAY_TYPE,
 	       A.ACCOM_SEQ,
-	       P.PAY_NO,
+	       R.PAY_NO,
 	       R.RES_CHECK
-	FROM payment P
-	     JOIN reservation R ON P.PAY_NO = R.PAY_NO
+	FROM reservation R
 	     JOIN room O ON O.ROOM_SEQ = R.ROOM_SEQ
-	     JOIN accommodation A ON A.ACCOM_SEQ = O.ACCOM_SEQ
+		     JOIN accommodation A ON A.ACCOM_SEQ = O.ACCOM_SEQ
 	WHERE MEMBER_ID LIKE #{member_id}
-	ORDER BY P.PAY_DATE DESC
+	ORDER BY R.PAY_DATE DESC
  </select>
  
   <select id="get" resultType="com.play.web.mbr.Member">
@@ -101,11 +100,9 @@
   </delete>
   
   <update id="cancel">
-  	  UPDATE RESERVATION R
-	  	JOIN PAYMENT P
-	  		ON R.PAY_NO = P.PAY_NO
+  	  UPDATE reservation R
 	  SET  R.RES_CHECK = '2'
-	  WHERE P.MEMBER_ID = #{member_id}
+	  WHERE R.MEMBER_ID = #{member_id}
 	  AND R.PAY_NO = #{pay_no};
   </update>
   

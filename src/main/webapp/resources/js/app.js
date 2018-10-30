@@ -40,7 +40,6 @@ app.permision = (()=>{
 														$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
 															let se = {'in_day':null,'out_day':null,'accom_seq':j.accom_seq}
 		                                                    heetae.main.init(se);
-															/*희태한테 던져줄 값 j.mbr.accom_seq*/
 														});
 													}),
 													$('<span/>').html(j.room_no)),
@@ -982,13 +981,13 @@ app.service = {
 									$('<i/>').html('대표이사: 이수진'),
 									$('<i/>').html('주소: 서울 강남구 테헤란로 108길 42'),
 									$('<i/>').html('메일:'),
-									$('<a/>').attr({href:'mailto:help@yanolja.com'}).html('help@yanolja.com'),
+									$('<i/>').html('help@yanolja.com'),
 									$('<br/>').html('사업자 등록번호: 220-87-42885'),
-									$('<i/>').html('통신판매업신고: 강남-14211호'),
+									$('<i/>').html('통신판매업신고: 강남-14211호').attr({style:'margin: -0.5px;'}),
 									$('<i/>').html('관광사업자 등록번호: 제2016-31호'),
 									$('<i/>').html('호스팅 서비스 제공자: (주)야놀자')
 							),
-							$('<p/>').html('(주)야놀자는 통신판매중개자로서, 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
+							$('<p/>').html('(주)야놀자는 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
 					),
 					$('<div/>').addClass('award').append(
 							$('<div/>').addClass(['award__item','item-01']).append(
@@ -1016,14 +1015,14 @@ app.service = {
 									$('<span/>').addClass('award__image').append(
 											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-04.png',alt:""})
 									),
-									$('<em/>').addClass('award__title').html('2015앱 어워드 코리아'),
+									$('<em/>').addClass('award__title').html('2015앱 어워드'),
 									$('<br/>').html('숙박정보 부문 대상')
 							),
 							$('<div/>').addClass(['award__item','item-05']).append(
 									$('<span/>').addClass('award__image').append(
 											$('<img/>').attr({src:'https://yaimg.yanolja.com/joy/pw/common/img-award-05.png',alt:""})
 									),
-									$('<em/>').addClass('award__title').html('2015 대한민국 마케팅 대상'),
+									$('<em/>').addClass('award__title').html('2015 마케팅 대상'),
 									$('<br/>').html('최우수상')
 							),
 							$('<div/>').addClass(['award__item','item-06']).append(
@@ -1032,9 +1031,6 @@ app.service = {
 									),
 									$('<em/>').addClass('award__title').html('정보보호관리체계인증'),
 									$('<br/>').html('ISMS')
-							),
-							$('<div/>').addClass('award__message').html('[인증범위] 인터넷 정보 제공 서비스 운영(야놀자,바로예약,스마트프런트)').append(
-									$('<br/>').html('[유효기간] 2018.04.26 ~ 2021.04.25')
 							)
 					),
 					$('<div/>').addClass('foot-family').append(
@@ -1046,13 +1042,13 @@ app.service = {
 							),
 							$('<div/>').addClass('snslink').append(
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.facebook.com/yanolja/?fref=ts', target:'_blank'
-										,title:'야놀자 페이스북으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-facebook'])),
+										,title:'야놀자 페이스북으로 이동'}).append($('<i/>').addClass(['icon-sns-facebook','icon-comm']).attr({style:'background-position: 0 -202px;'})),
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.instagram.com/yanoljainsta/', target:'_blank'
-										,title:'야놀자 인스타그램으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-instargram'])),
+										,title:'야놀자 인스타그램으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-instargram']).attr({style:'background-position: -25px -202px;'})),
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.youtube.com/user/yanoljamedia', target:'_blank'
-										,title:'야놀자 유튜브으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-youtube'])),
+										,title:'야놀자 유튜브으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-youtube']).attr({style:'background-position: -50px -202px;'})),
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://tv.naver.com/yanolja', target:'_blank'
-										,title:'야놀자 네이버TV로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-comm icon-sns-navertv'])),
+										,title:'야놀자 네이버TV로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-comm icon-sns-navertv']).attr({style:'background-position: -300px -202px;'})),
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://post.naver.com/my.nhn?memberNo=2768780', target:'_blank'
 										,title:'야놀자 네이버 포스트로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-naverpos'])),
 									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://blog.naver.com/yanolog', target:'_blank'

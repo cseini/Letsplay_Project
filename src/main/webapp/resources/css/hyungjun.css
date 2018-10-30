@@ -684,12 +684,22 @@ nav {
     margin: 0;
     padding: 0;
 }
+.footer a{
+    z-index: 1;
+    position: relative;
+    background-color: #292929;
+    font-size: 13px;
+    color: #aaa;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
 
 .footer-inner {
     position: relative;
     padding: 32px 0 35px;
-     width: 1180px;
-    margin: 0 auto;
+    width: 1180px;
+    margin: auto;
 }
 
 .footer-inner h2 {
@@ -697,12 +707,55 @@ nav {
     width: 100px;
     height: 48px;
     background-position: -55px -62px;
-};
 }
 
 .icon-logo-footer {
     background-position: -55px -62px;
 }
+
+
+.icon-sns-facebook:hover {
+    background-position-y: -227px;
+} 
+.icon-sns-facebook {
+    width: 25px;
+    height: 25px;
+    background-position: 0 -202px;
+}
+
+.icon-sns-instargram{
+    width: 25px;
+    height: 25px;
+    background-position: -25px -202px;
+}
+
+.icon-sns-youtube {
+    width: 25px;
+    height: 25px;
+    background-position: -50px -202px;
+}
+
+.icon-sns-navertv {
+    width: 25px;
+    height: 25px;
+    background-position: -300px -202px;
+}
+
+.icon-naverpost, .icon-naverpost:hover {
+    display: inline-block;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    text-indent: -9999px;
+    vertical-align: middle;
+}
+
+.icon-naverpost {
+    width: 25px;
+    height: 25px;
+    background: url(https://yaimg.yanolja.com/joy/pw/home/naver-post2.png) no-repeat;
+}
+
 .icon-comm {
     display: inline-block;
     overflow: hidden;
@@ -714,6 +767,12 @@ nav {
     font-weight: normal;
     margin: 0;
     padding: 0;
+}
+
+.icon-sns-naverblog {
+    width: 36px;
+    height: 25px;
+    background-position: -300px -152px;
 }
 
 .sc-out {
@@ -798,12 +857,9 @@ nav {
 }
 
 .foot-address i {
-    /* background-color: #aaa; */
-    display: inline-block;
-    vertical-align: middle;
     width: px;
-    height: 12px;
     margin: 0 10px;
+    font-style: normal;
 }
 
 
@@ -814,6 +870,7 @@ nav {
 .award{
 	margin: 0;
     padding: 0;
+    font-size: 10px;
 }
 
 .award:after {
@@ -871,12 +928,12 @@ nav {
     padding: 0;
 }
 .foot-family .cs-center em {
-    font-size: 15px;
+    font-size: 10px;
     display: block;
     margin-bottom: 8px;
 }
 .foot-family .cs-center div {
-    font-size: 13px;
+    font-size: 10px;
 }
 
 .cs-center{
@@ -891,9 +948,12 @@ nav {
 
 .snslink {
     margin-top: 12px;
-     margin: 0;
+    /* margin: 0; */
+    margin-left: -8px;
     padding: 0;
+    display: block;
 }
+
 .snslink a:first-child {
     margin-left: 0;
 }
@@ -901,6 +961,13 @@ nav {
     color: #666666;
     text-decoration: none;
     cursor: pointer;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.address {
+    color: #666666;
+    text-decoration: none;
 }
 
 .address a{
@@ -909,3 +976,7 @@ nav {
     cursor: pointer;
 }
 
+.address i{
+    color: #666666;
+    text-decoration: none;
+}
