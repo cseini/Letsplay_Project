@@ -36,46 +36,32 @@ public class AccomCtrl {
 	public @ResponseBody Map<String,Object> retriveAccom(@PathVariable String accom_seq) {
 		map.clear();
 		map.put("accom_seq", accom_seq);
-		map = (HashMap<String, Object>) mpr.retrieveAcom(map);
+		map = (HashMap<String, Object>) mpr.retrieveAccommodation(map);
 		return map;
 	}
 	@PostMapping("/reservation/")
 	public @ResponseBody Map<String,Object> retriveReservation
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
-		try {
-			int count = 0;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date start = df.parse((String)p.get("start"));
-			Date end = df.parse((String)p.get("end"));
-			Calendar cal = Calendar.getInstance();
-			long diff = end.getTime() - start.getTime();
-			long diffDays = diff/(24 * 60 * 60 * 1000);
-			map.put("checkout_date", p.get("end"));
-			for (Object i : ((List<Object>) p.get("room_seq"))) {
-				cal.setTime(start);
-				map.put("checkin_date", df.format(cal.getTime()));
-				map.put("room_seq", String.valueOf(i));
-				lst.add(true);
-				for(int j=0; j<((int)diffDays)+1; j++) {
-					boolean s = mpr.retrieveReservationStartDate(map);
-					boolean e = mpr.retrieveReservationEndDate(map);
-					
-					if(s && e) {
-						lst.set(count, true);
-					}else {
-						lst.set(count, false);
-						break;
-					}
-					cal.add(Calendar.DATE, 1);
-				}
-				count++;
-			}
-			map.clear();
-			map.put("reservation",lst);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
+		map.clear();
+		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
+		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
+		Util.log.accept("숙소 시퀀스  : "+p.get("accom_seq"));
+		lst = mpr.retrieveReservation(p);
+		Util.log.accept("담긴 lst"+lst.toString());
+		map.put("list", lst);
+		return map;
+	}
+	@PostMapping("/reservation/room/")
+	public @ResponseBody Map<String,Object> retriveReservationRoom
+	(@RequestBody Map<String, Object> p){
+		lst.clear();
+		map.clear();
+		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
+		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
+		Util.log.accept("객실 시퀀스  : "+p.get("room_seq"));
+		map = mpr.retrieveReservationRoom(p);
+		Util.log.accept("담긴 room_map"+map.toString());
 		return map;
 	}
 	@RequestMapping("/room/{accom_seq}/")
@@ -104,17 +90,7 @@ public class AccomCtrl {
 	@PostMapping("/payment/")
 	public void addPayment(@RequestBody Map<String, Object> p) {
 		map.clear();
-		map.put("member_id",p.get("member_id"));
-		map.put("pay_type",p.get("pay_type")); //CARD 고정이지만 번경가능하게 바꿀것
-		map.put("pay_price",p.get("pay_price"));
-		mpr.insertPayment(map);
-		
-		
-		
-		map.put("room_seq",p.get("room_seq"));
-		map.put("checkin_date",p.get("checkin_date"));
-		map.put("checkout_date",p.get("checkout_date"));
-		mpr.insertReservation(map);
-		map.clear();
+		Util.log.accept("페이먼트 들어온 맵"+p.toString());
+		mpr.insertReservation(p);
 	}
 }

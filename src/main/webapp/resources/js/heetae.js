@@ -18,10 +18,10 @@ heetae.main =(x=>{
 	var setContentView =x=>{
 		let img, w ,nav ,header ,content , footer
 		,accom,accom2,input_accom_seq,checkin_day,checkout_day,rs,button_check
-		,save_start,save_end,save_reservation
-		,save_acom_start,save_acom_end;
+		,save_start,save_end,save_acom_start,save_acom_end;
+		var save_checkdate
 		button_check = "accom"
-		save_reservation = new Array()
+		save_checkdate = new Array()
 		img = $.img()
 		w = $('#wrapper');
 		nav = $('#nav')
@@ -271,7 +271,7 @@ heetae.main =(x=>{
 						{
 							save_acom_start = $('#start_date').val()
 							save_acom_end = $('#end_date').val()
-							let t = {'list':s.list,'button_check':button_check}
+							let t = {'accom_seq':input_accom_seq,'list':s.list,'button_check':button_check}
 							heetae.detail.accom_controller(t);
 						}else{
 							$('#tab_button1')
@@ -285,7 +285,7 @@ heetae.main =(x=>{
 							$('.heetae_tab_content')
 							.empty()
 							$.each(s.list,(i,j)=>{
-								let t = ({'list':j,'num':i,'reservation':save_reservation[i]})
+								let t = ({'list':j,'num':i,'checkdate':save_checkdate[i]})
 								heetae.detail.accom(t);
 							})
 						}
@@ -698,32 +698,11 @@ heetae.main =(x=>{
 									$('.heetae_check_bottom_con2')
 									.text((ts)+'박'+(ts+1)+'일')
 								}
-				
-						let t = {'list':s.list,'button_check':button_check}
+								alert(input_accom_seq)
+						let t = {'accom_seq':input_accom_seq
+								,'list':s.list
+								,'button_check':button_check}
 						heetae.detail.accom_controller(t);
-						$.each(s.list,(i,j)=>{
-							ar[i]=j.room_seq
-						})
-						save_reservation = new Array()
-						$.ajax({
-							url:$.ctx()+'/accom/reservation/',
-							method:'post',
-							contentType:'application/json',
-							data:JSON.stringify({start:$('#start_date').val()
-								,end:$('#end_date').val(),room_seq:ar}),
-							success:d=>{
-								$.each(d.reservation,(i,j)=>{
-									save_reservation.push(j)
-								})
-								if(button_check=="accom"){
-									save_acom_start = $('#start_date').val()
-									save_acom_end = $('#end_date').val()
-								}
-							},
-							error:(m1,m2,m3)=>{
-								alert('에러');
-							}	
-						})
 					}
 				})
 				$('#end_date')
@@ -746,44 +725,28 @@ heetae.main =(x=>{
 									$('.heetae_check_bottom_con2')
 									.text((ts)+'박'+(ts+1)+'일')
 								}
-								let t = {'list':s.list,'button_check':button_check}
+								alert(input_accom_seq)
+								let t = {'accom_seq':input_accom_seq
+										,'list':s.list
+										,'button_check':button_check}
 								heetae.detail.accom_controller(t);
-								$.each(s.list,(i,j)=>{
-									ar[i]=j.room_seq
-								})
-								save_reservation = new Array()
-								$.ajax({
-									url:$.ctx()+'/accom/reservation/',
-									method:'post',
-									contentType:'application/json',
-									data:JSON.stringify({start:$('#start_date').val()
-										,end:$('#end_date').val(),room_seq:ar}),
-									success:d=>{
-										$.each(d.reservation,(i,j)=>{
-											save_reservation.push(j)
-										})
-									},
-									error:(m1,m2,m3)=>{
-										alert('에러');
-									}	
-								})
 							}
-				})
-				$.each(s.list,(i,j)=>{
-					ar[i]=j.room_seq
 				})
 				$.ajax({
 					url:$.ctx()+'/accom/reservation/',
 					method:'post',
 					contentType:'application/json',
-					data:JSON.stringify({start:$('#start_date').val()
-						,end:$('#end_date').val(),room_seq:ar}),
+					data:JSON.stringify({
+						checkin_date:$('#start_date').val()
+						,checkout_date:$('#end_date').val()
+						,accom_seq:input_accom_seq}),
 					success:d=>{
-						$.each(d.reservation,(i,j)=>{
-							save_reservation.push(j)
+						$.each(d.list,(i,j)=>{
+							console.log('first checkdate : '+j.checkdate)
+							save_checkdate.push(j.checkdate)
 						})
 						$.each(s.list,(i,j)=>{
-							let t = ({'list':j,'num':i,'reservation':save_reservation[i]})
+							let t = ({'list':j,'num':i,'checkdate':save_checkdate[i]})
 							heetae.detail.accom(t);
 						})
 					},
@@ -1023,7 +986,8 @@ heetae.detail = {
 	    .text('18:00입실')
 	    .appendTo('#'+x.num+'_price_left')
 	    
-	    if(x.reservation){
+	    console.log('체크 데이터'+x.checkdate)
+	    if(x.checkdate=='true'){
 	    	$('<a/>')
 		    .attr({'id':x.num+'_info_reserve_btn','href':'#'})
 		    .text('예약 하기')
@@ -1067,17 +1031,18 @@ heetae.detail = {
 							.text('결제 하기')
 							.appendTo('.modal-body')
 							.click(e=>{
-								let ar = [x.list.room_seq]
 								$.ajax({
-									url:$.ctx()+'/accom/reservation/',
+									url:$.ctx()+'/accom/reservation/room/',
 									method:'post',
 									contentType:'application/json',
-									data:JSON.stringify({start:$('#start_date').val()
-										,end:$('#end_date').val(),room_seq:ar}),
+									data:JSON.stringify({
+										checkin_date:$('#start_date').val()
+										,checkout_date:$('#end_date').val()
+										,room_seq:x.list.room_seq}),
 									success:d=>{
+										alert
 										$('#layerpop').on('hidden.bs.modal',()=>{
-											$.each(d.reservation,(i,j)=>{
-												if(j){
+												if(d.checkdate){
 													//변경 해야함2 member_id:$.cookie("loginID")
 													$.ajax({
 														url:$.ctx()+'/accom/payment/',
@@ -1092,24 +1057,22 @@ heetae.detail = {
 															,checkout_date:$('#end_date').val()
 															}),
 														success:d=>{
-															
-															
-															
 															alert('예약완료')
-															/*$.getScript($.ctx()+'/resources/js/app.js',e=>{
+															/*let se = {'in_day':null
+																,'out_day':null
+																,'accom_seq':x.list.accom_seq}
+															heetae.main.init(se);*/
+															$.getScript($.ctx()+'/resources/js/app.js',e=>{
 																app.permision.reservationList();
-															})*/
+															})
 														},
 														error:(m1,m2,m3)=>{
-															
+															alert('오류')
 														}
 													})	
-													let se = {'in_day':$('#start_date').val(),'out_day':$('#end_date').val(),'accom_seq':x.list.accom_seq}
-													heetae.main.init(se);
 												}else{
 													alert('이미 예약된 자리입니다')
 												}
-											})
 	                                    })
 									},
 									error:(m1,m2,m3)=>{
@@ -1153,17 +1116,12 @@ heetae.detail = {
 				+'</div>').appendTo('#content');
 	},
 	accom_controller : x=>{
-		let ar = []
-		let rd = new Array()
-		$.each(x.list,(i,j)=>{
-			ar[i]=j.room_seq
-		})
 		$.ajax({
 			url:$.ctx()+'/accom/reservation/',
 			method:'post',
 			contentType:'application/json',
-			data:JSON.stringify({start:$('#start_date').val()
-				,end:$('#end_date').val(),room_seq:ar}),
+			data:JSON.stringify({checkin_date:$('#start_date').val()
+				,checkout_date:$('#end_date').val(),accom_seq:x.accom_seq}),
 			success:d=>{
 				let sw = true;
 				$.each(x.list,(i,j)=>{
@@ -1181,18 +1139,15 @@ heetae.detail = {
 							.empty()
 							sw=false
 						}
-						
-						let t = ({'list':j,'num':i,'reservation':d.reservation[i]})
+						let t = ({'list':j,'num':i,'checkdate':d.list[i].checkdate})
 						heetae.detail.accom(t);
 					}
 				})
-				rd = d
 			},
 			error:(m1,m2,m3)=>{
 				alert('에러');
 			}	
 		})
-		return rd
 	},
 	review : x=>{
 		let t = true
@@ -1301,7 +1256,7 @@ heetae.detail = {
 		
 		
 		heetae.detail.rating({'id':x.id+'_review_info_score_em'
-			,'score':x.list.accom_grade
+			,'score':x.list.room_grade
 			,'append':'#'+x.id+'_review_info_score'})
 	},
 }

@@ -32,46 +32,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="res_no" column="res_no"/>
 		<result property="checkin_date" column="checkin_date"/>
 		<result property="checkout_date" column="checkout_date"/>
+		<result property="checkdate" column="check_in_out"/>
 	</resultMap>
-	<select id="retrieveAcomReservation" resultMap="HeeTaeBean">
-		SELECT * FROM acom_reservation
-		WHERE PAY_NO = #{pay_no}
+	<select id="retrieveReservation" resultMap="HeeTaeBean">
+		select room.room_seq, B.checkdate
+		from(
+		SELECT A.room_seq, CASE WHEN A.cnt = 0 THEN 'true'
+		   				   		WHEN A.cnt is null THEN 'true'
+						        ELSE 'false'
+						        END
+						        AS 'checkdate'
+	         FROM(
+	               SELECT reservation.ROOM_SEQ AS room_seq, count(*) AS cnt
+	               FROM reservation
+	                WHERE DATE(reservation.CHECKIN_DATE) 
+	                BETWEEN #{checkin_date} AND #{checkout_date}
+	                AND reservation.ROOM_SEQ in (
+	                    SELECT room.ROOM_SEQ
+	                    FROM room
+	                )
+	                GROUP BY reservation.room_seq
+	                )A
+		 )B
+		RIGHT OUTER JOIN room
+		ON B.ROOM_SEQ = room.ROOM_SEQ
+		JOIN accommodation
+		ON accommodation.ACCOM_SEQ = room.ACCOM_SEQ
+		WHERE accommodation.ACCOM_SEQ = #{accom_seq}
+		GROUP BY room.room_seq
 	</select>
-	<select id="retrieveAcom" resultMap="HeeTaeBean">
+	<select id="retrieveReservationRoom" resultMap="HeeTaeBean">
+		select room.room_seq, B.checkdate
+		from(
+		SELECT A.room_seq, CASE WHEN A.cnt = 0 THEN 'true'
+		   				   		WHEN A.cnt is null THEN 'true'
+						        ELSE 'false'
+						        END
+						        AS 'checkdate'
+	         FROM(
+	               SELECT reservation.ROOM_SEQ AS room_seq, count(*) AS cnt
+	               FROM reservation
+	                WHERE DATE(reservation.CHECKIN_DATE) 
+	                BETWEEN #{checkin_date} AND #{checkout_date}
+	                AND reservation.ROOM_SEQ in (
+	                    SELECT room.ROOM_SEQ
+	                    FROM room
+	                )
+	                GROUP BY reservation.room_seq
+	                )A
+		 )B
+		RIGHT OUTER JOIN room
+		ON B.ROOM_SEQ = room.ROOM_SEQ
+		JOIN accommodation
+		ON accommodation.ACCOM_SEQ = room.ACCOM_SEQ
+		WHERE room.ROOM_SEQ = #{room_seq}
+		GROUP BY room.room_seq
+	</select>
+	<select id="retrieveAccommodation" resultMap="HeeTaeBean">
 		SELECT * FROM accommodation
 		WHERE ACCOM_SEQ = #{accom_seq}
-	</select>
-	<select id="retrieveReservationStartDate" resultType="boolean">
-		SELECT CASE WHEN A.cnt = 0 THEN 'TRUE'
-           ELSE 'FALSE'
-           END
-           AS 'check'
-			FROM(
-			SELECT COUNT(*) AS cnt
-			FROM room
-			WHERE room.room_seq
-			IN(
-			SELECT acom_reservation.room_seq
-			FROM acom_reservation
-			WHERE checkin_date = #{checkin_date}
-			AND room_seq = #{room_seq} 
-			))A
-	</select>
-	<select id="retrieveReservationEndDate" resultType="boolean">
-		SELECT CASE WHEN A.cnt = 0 THEN 'true'
-           ELSE 'false'
-           END
-           AS 'check'
-			FROM(
-			SELECT COUNT(*) AS cnt
-			FROM room
-			WHERE room.ROOM_SEQ
-			in(
-			SELECT acom_reservation.ROOM_SEQ
-			FROM acom_reservation
-			WHERE CHECKOUT_DATE = #{checkout_date}
-			AND ROOM_SEQ = #{room_seq} 
-			))A
 	</select>
 	<select id="listRoom" resultMap="HeeTaeBean">
 		SELECT * FROM room
@@ -84,21 +103,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="insertReview" resultMap="HeeTaeBean">
 		INSERT INTO acom_review(
 		MSG_TITLE, MSG_CONTENT, MSG_PHOTO, BOARD_ID, MEMBER_ID,
-		ROOM_SEQ, ACCOM_GRADE, ACCOM_RECO, PAY_NO)
+		ROOM_SEQ, ROOM_GRADE, ACCOM_RECO, PAY_NO)
 		VALUES( #{msg_title},'#{msg_content}','#{msg_photo}'
 		,'#{msg_date}','#{board_id}','#{member_id}','#{name}'
 		,'#{accom_reco}','#{pay_no}' )
 	</select>
-	<select id="insertPayment" resultMap="HeeTaeBean">
-		INSERT INTO payment
-		(MEMBER_ID,PAY_TYPE,PAY_PRICE) 
-		VALUES
-		(#{member_id},#{pay_type},#{pay_price});
-	</select>
-	<select id="insertResrvation" resultMap="HeeTaeBean">
+	<select id="insertReservation" resultMap="HeeTaeBean">
 		INSERT INTO reservation
-		(PAY_NO,ROOM_SEQ,CHECKIN_DATE,CHECKOUT_DATE) 
+		(MEMBER_ID,PAY_TYPE,PAY_PRICE,ROOM_SEQ,CHECKIN_DATE,CHECKOUT_DATE) 
 		VALUES
-		(#{pay_no},#{room_seq},#{checkin_date},#{checkout_date});
+		(#{member_id},#{pay_type},#{pay_price},#{room_seq},#{checkin_date},#{checkout_date});
 	</select>
 </mapper>
