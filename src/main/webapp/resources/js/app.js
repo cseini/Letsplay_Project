@@ -96,7 +96,6 @@ app.permision = (()=>{
 									} else {
 										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i)										
 									}
-										
 						}); /*예약 현황 each 끝*/
 		})
 	};
