@@ -135,64 +135,62 @@
 	<select id="getSumHotel" resultType="hashmap">
 		SELECT A.monthly AS monthly, A.accom_type AS accomType, SUM(A.pay_price) AS sales
 		FROM(
-			SELECT CASE WHEN payment.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%01')) 
+			SELECT CASE WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 11 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 10 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 9 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 8 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 7 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 6 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 5 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 4 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 3 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%01')) 
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%28'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 2 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 1 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+			                                          (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d %오후 %23:59:59'))
 			                                  THEN (SELECT DATE_FORMAT(CURDATE(), '%Y년%m월'))
 			                                  ELSE 'except'
 			                                  END
-			                                  AS monthly, accommodation.accom_type, payment.pay_price
+			                                  AS monthly, accommodation.accom_type, reservation.pay_price
 			FROM accommodation
 			JOIN room
 			ON accommodation.accom_seq = room.accom_seq
 			JOIN reservation
 			ON room.room_seq = reservation.room_seq
-			JOIN payment
-			ON reservation.pay_no = payment.pay_no
 			)A
 		where A.ACCOM_TYPE = 'HOTEL'
 		GROUP BY A.monthly
@@ -201,64 +199,62 @@
 	<select id="getSumMotel" resultType="hashmap">
 		SELECT A.monthly AS monthly, A.accom_type AS accomType, SUM(A.pay_price) AS sales
 		FROM(
-			SELECT CASE WHEN payment.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%01')) 
+			SELECT CASE WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 11 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 11 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 10 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 10 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 9 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 9 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 8 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 8 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 7 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 7 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 6 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 6 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 5 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 5 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%30'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 4 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 4 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 3 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%01')) 
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 3 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%28'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 2 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 2 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%31'))
-			                                  THEN (SELECT DATE_FORMAT(date_sub(CURDATE(),INTERVAL 1 MONTH), '%Y년%m월'))
-			            WHEN payment.PAY_DATE between (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%01'))
+			                                          (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%31 %오전 %00:00:00'))
+			                                  THEN (SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y년%m월'))
+			            WHEN reservation.PAY_DATE BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%01 %오전 %00:00:00'))
 			                                  AND
-			                                          (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+			                                          (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d %오후 %23:59:59'))
 			                                  THEN (SELECT DATE_FORMAT(CURDATE(), '%Y년%m월'))
 			                                  ELSE 'except'
 			                                  END
-			                                  AS monthly, accommodation.accom_type, payment.pay_price
+			                                  AS monthly, accommodation.accom_type, reservation.pay_price
 			FROM accommodation
 			JOIN room
 			ON accommodation.accom_seq = room.accom_seq
 			JOIN reservation
 			ON room.room_seq = reservation.room_seq
-			JOIN payment
-			ON reservation.pay_no = payment.pay_no
 			)A
 		where A.ACCOM_TYPE = 'MOTEL'
 		GROUP BY A.monthly
@@ -287,7 +283,7 @@
 		                ELSE 18
 		             END
 		                AS byPrice,
-		             COUNT(reservation.res_no)
+		             COUNT(reservation.pay_no)
 		                AS reserCount,
 		             A.room_seq
 		                AS roomSeq
@@ -299,9 +295,9 @@
 		                     (SELECT accommodation.accom_seq
 		                      FROM accommodation
 		                      WHERE accommodation.accom_addr LIKE #{accom_addr})) A
-		              ON reservation.room_seq = A.room_seq
-		      WHERE reservation.res_date BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01'))
-		                                     AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+		            ON reservation.room_seq = A.room_seq
+		      WHERE reservation.pay_date BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01 %오전 %00:00:00'))
+		                                     AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d %오후 %23:59:59'))
 		      GROUP BY A.room_price) B
 		GROUP BY B.byPrice
 	</select>
@@ -329,7 +325,7 @@
 		                ELSE 18
 		             END
 		                AS byPrice,
-		             COUNT(reservation.res_no)
+		             COUNT(reservation.pay_no)
 		                AS reserCount,
 		             A.room_seq
 		                AS roomSeq
@@ -342,7 +338,7 @@
 		                      FROM accommodation
 		                      WHERE accommodation.accom_addr LIKE #{accom_addr})) A
 		              ON reservation.room_seq = A.room_seq
-		      WHERE reservation.res_date BETWEEN #{start}
+		      WHERE reservation.pay_date BETWEEN #{start}
 		                                     AND #{end}
 		      GROUP BY A.room_price) B
 		GROUP BY B.byPrice

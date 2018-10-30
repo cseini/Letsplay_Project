@@ -752,23 +752,23 @@ googleChart.service = {
 
 sanghoon.service = {
 		basic : x=>{
-			$('#content').empty();
-			$('#footer').empty();
-			$('<div/>').addClass('basic_wrapper').appendTo($('#content'));
-			$('<div/>').addClass('basic_box_1').appendTo($('.basic_wrapper'));
-			$('<div/>').attr({id:'pay_type_div'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'booked_div'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'have_accom_div'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'age_member'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'member_gender_div'}).appendTo($('.basic_box_1'));
-			//$('<div/>').addClass('basic_box_2').appendTo($('.basic_wrapper'));
-			$('<div/>').attr({id:'top_local_div'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'top_sales_div'}).appendTo($('.basic_box_1'));
-			$('<div/>').attr({id:'top_member_div'}).appendTo($('.basic_box_1'));
-			
-			googleChart.service.basicInfo();
-			
-		},
+            $('#content').empty();
+            $('#footer').empty();
+            $('<div/>').addClass('basic_wrapper').appendTo($('#content'));
+            $('<div/>').addClass('basic_box_1').appendTo($('.basic_wrapper'));
+            $('<div/>').attr({id:'member_gender_div'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'pay_type_div'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'booked_div'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'age_member'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'have_accom_div'}).appendTo($('.basic_box_1'));
+            //$('<div/>').addClass('basic_box_2').appendTo($('.basic_wrapper'));
+            $('<div/>').attr({id:'top_local_div'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'top_sales_div'}).appendTo($('.basic_box_1'));
+            $('<div/>').attr({id:'top_member_div'}).appendTo($('.basic_box_1'));
+            
+            googleChart.service.basicInfo();
+            
+        },
 		sales : x=>{
 			console.log('sales 버튼 클릭');
 			$('#content').empty();
@@ -813,14 +813,14 @@ sanghoon.service = {
 				var year = new Date().getFullYear();
 				switch(accom_info.start = accom_info.start.substring(0, accom_info.start.length-1)){
 				case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
-					accom_info.start = year+"-0"+accom_info.start+"-01";
-					accom_info.end = accom_info.start.substring(0, accom_info.start.length-2)+"31";
+					accom_info.start = year+"-0"+accom_info.start+"-01 오전 00:00:00";
+					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
 					alert(accom_info.local+" "+ accom_info.start + " " + accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				case '10': case '11': case '12':
-					accom_info.start = year+'-'+accom_info.start+"-01";
-					accom_info.end = accom_info.start.substring(0, accom_info.start.length-2)+'31';
+					accom_info.start = year+'-'+accom_info.start+"-01 오전 00:00:00";
+					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
 					alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
