@@ -345,7 +345,7 @@
 	</select>
 	
 	<select id="getLocalHo" resultType="hashmap">
-		SELECT COUNT(reservation.res_no) hoResrCount
+		SELECT sum(reservation.pay_price) hoSales
 		FROM reservation
 		WHERE reservation.room_seq
 		IN (
@@ -356,13 +356,13 @@
 		        SELECT accom_seq
 		        FROM accommodation
 		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='HOTEL'))
-		AND reservation.res_date 
-		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01')) 
-		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+		AND reservation.pay_date 
+		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01 %오전 %00:00:00'))
+		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d %오후 %23:59:59'))
 	</select>
 	
 	<select id="getLocalMo" resultType="hashmap">
-		SELECT count(reservation.res_no) moResrCount
+		SELECT sum(reservation.pay_price) hoSales
 		FROM reservation
 		WHERE reservation.room_seq
 		IN (
@@ -373,9 +373,43 @@
 		        SELECT accom_seq
 		        FROM accommodation
 		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='MOTEL'))
-		AND reservation.res_date 
-		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01')) 
-		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d'))
+		AND reservation.pay_date 
+		BETWEEN (SELECT DATE_FORMAT(CURDATE(), '%2016-%01-%01 %오전 %00:00:00'))
+		AND (SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d %오후 %23:59:59'))
+	</select>
+	
+	<select id="getLocalHoPart" resultType="hashmap">
+		SELECT sum(reservation.pay_price) hoSales
+		FROM reservation
+		WHERE reservation.room_seq
+		IN (
+		    SELECT room.room_seq
+		    FROM room
+		    WHERE room.accom_seq
+		    IN (
+		        SELECT accom_seq
+		        FROM accommodation
+		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='HOTEL'))
+		AND reservation.pay_date 
+		BETWEEN #{start}
+		AND #{end}
+	</select>
+	
+	<select id="getLocalMoPart" resultType="hashmap">
+		SELECT sum(reservation.pay_price) hoSales
+		FROM reservation
+		WHERE reservation.room_seq
+		IN (
+		    SELECT room.room_seq
+		    FROM room
+		    WHERE room.accom_seq
+		    IN (
+		        SELECT accom_seq
+		        FROM accommodation
+		        WHERE accom_addr LIKE #{accom_addr} AND accom_type ='MOTEL'))
+		AND reservation.pay_date 
+		BETWEEN #{start}
+		AND #{end}
 	</select>
 	
 	<select id="getPosition" resultType="hashmap">
@@ -427,26 +461,21 @@
 		            ELSE '카카오 가입자'
 		            END
 		            AS byAge, COUNT(pay_no) AS payCount
-		FROM member
-		JOIN payment
-		ON member.member_id = payment.member_id
-		WHERE payment.pay_date 
+		FROM reservation
+		JOIN member
+		ON reservation.member_id = member.member_id
+		WHERE pay_date
 		BETWEEN #{start}
 		AND #{end}
-		AND payment.pay_no
+		AND room_seq
 		IN(
-		  SELECT reservation.pay_no
-		  FROM reservation
-		  WHERE reservation.room_seq
+		  SELECT room.room_seq
+		  FROM room
+		  WHERE room.accom_seq
 		  IN(
-		    SELECT room.room_seq
-		    FROM room
-		    WHERE room.accom_seq
-		    IN(
-		      SELECT accom_seq
-		      FROM accommodation
-		      WHERE accom_type = #{type}
-		      )
+		    SELECT accom_seq
+		    FROM accommodation
+		    WHERE accom_type = #{type}
 		    )
 		  )
 		GROUP BY byAge
@@ -503,10 +532,10 @@
 		                WHEN member.address LIKE '충청북도%' THEN '충청북도'
 		                ELSE '비공개'
 		                END
-		                AS byAddr, member.member_id, payment.pay_no
+		                AS byAddr, member.member_id, reservation.pay_no
 		    FROM member
-		    JOIN payment
-		    ON member.member_id = payment.member_id
+		    JOIN reservation
+		    ON member.member_id = reservation.member_id
 		    )C
 		    GROUP BY C.byAddr
 		    )D

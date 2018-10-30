@@ -124,6 +124,8 @@ public class AdminCtrl {
 		accom_addr += "%";
 		smap.put("accom_addr", accom_addr);
 		map.put("accomPrice", admMap.getByPriceAll(smap));
+		//map.put("hoPrice", admMap.getLocalHo(smap));
+		//map.put("moPrice", admMap.getLocalMo(smap));
 		//System.out.println(map.get("accomPrice"));
 		map.put("accomPosition", admMap.getPosition(smap));
 		//System.out.println(map.get("accomPosition"));
@@ -140,6 +142,8 @@ public class AdminCtrl {
 		smap.put("start", start);
 		smap.put("end", end);
 		map.put("accomPrice", admMap.getByPricePart(smap));
+		//map.put("hoPrice", admMap.getLocalHoPart(smap));
+		//map.put("moPrice", admMap.getLocalMoPart(smap));
 		map.put("accomPosition", admMap.getPosition(smap));
 		return map;
 	}
