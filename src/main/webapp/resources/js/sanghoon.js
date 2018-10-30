@@ -246,10 +246,10 @@ googleChart.service = {
 		  });
 	  },
 	  accomInfo : x =>{
-		  alert("local " + x.local + "start " + x.start + "end " + x.end);
+		  //alert("local " + x.local + "start " + x.start + "end " + x.end);
 		  switch(x.start){
 		  case 'all':
-			  alert("전체");
+			  //alert("전체");
 			 /* var local = x.local;*/
 			  $.getJSON($.ctx()+'/admin/accom/'+x.local, d=>{
 				  google.charts.load('current', {'packages':['corechart']});
@@ -509,7 +509,7 @@ googleChart.service = {
 		  */
 	  },	// accomInfo 완료
 	  custoInfo : x=>{
-		  alert(x);
+		  //alert(x);
 		  console.log(x);
 		  var info = {};
 		  var year = new Date().getFullYear();
@@ -814,25 +814,25 @@ sanghoon.service = {
 					'end' : ''
 				};
 				//alert(im.start);
-				alert(accom_info.start.substring(0, accom_info.start.length-1));
+				//alert(accom_info.start.substring(0, accom_info.start.length-1));
 				var year = new Date().getFullYear();
 				switch(accom_info.start = accom_info.start.substring(0, accom_info.start.length-1)){
 				case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
 					accom_info.start = year+"-0"+accom_info.start+"-01 오전 00:00:00";
 					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
-					alert(accom_info.local+" "+ accom_info.start + " " + accom_info.end);
+					//alert(accom_info.local+" "+ accom_info.start + " " + accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				case '10': case '11': case '12':
 					accom_info.start = year+'-'+accom_info.start+"-01 오전 00:00:00";
 					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
-					alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
+					//alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				default:
 					accom_info.start = 'all';
 					accom_info.end = 'all';
-					alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
+					//alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				}
