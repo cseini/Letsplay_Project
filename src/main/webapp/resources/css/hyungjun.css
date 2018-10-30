@@ -677,7 +677,7 @@ nav {
 .footer {
     z-index: 1;
     position: relative;
-	color: #292929;
+    background-color: #292929;
     font-size: 13px;
     color: #aaa;
     display: block;
