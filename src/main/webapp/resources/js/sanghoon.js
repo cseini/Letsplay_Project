@@ -209,7 +209,7 @@ googleChart.service = {
 		    	  var data = new google.visualization.DataTable();
 		    	  data.addColumn('string', '회원 ID');
 		    	  data.addColumn('number', '결제액');
-		    	  $.each(d.topSales, (i,j)=>{
+		    	  $.each(d.topMember, (i,j)=>{
 		    		 data.addRow([
 		    			 j.memberID,
 		    			 {v:(j.sumPay * 1), f:j.sumPay+'원'}
