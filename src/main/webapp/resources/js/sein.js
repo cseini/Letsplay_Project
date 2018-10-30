@@ -7,12 +7,12 @@ sein.board ={
 		$.cookie.json=true;
 		$('#header').empty();
 		$('#content').empty();
-		$('<div/>').attr({id:'sein_content',style:'background-color: #BDBDBD'}).appendTo($('#content'));
+		$('<div/>').attr({id:'sein_content',style:'background-color: #f5f5f5'}).appendTo($('#content'));
 
-		/*mycast*/
+		/*mycast
 		$('<button/>').addClass('btn btn-primary').html('mycast').appendTo($('#sein_content')).click(e=>{
    			sein.service.mycast();	
-		})
+		})*/
 		
 		/*검색창*/
 		$('<div/>').addClass('search_rap').append(
@@ -90,7 +90,7 @@ sein.board ={
 								)
 							)
 						).appendTo($('.grid'));
-					if(!d.page.nextBlock){
+					if(!d.page.existNext){
 						$('#bt_more').empty();
 					}
 				})
@@ -1216,7 +1216,7 @@ sein.service ={
 								)
 							)
 						).appendTo($('.grid'));
-					if(!d.page.nextBlock){
+					if(!d.page.existNext){
 						$('#bt_more').empty();
 					}
 				})
@@ -1588,7 +1588,7 @@ sein.service ={
 								)
 							)
 						).appendTo($('.grid'));
-					if(!d.page.nextBlock){
+					if(!d.page.existNext){
 						$('#bt_more').empty();
 					}
 				})
