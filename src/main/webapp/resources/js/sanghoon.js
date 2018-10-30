@@ -203,6 +203,21 @@ googleChart.service = {
 		    	  var table = new google.visualization.Table(document.getElementById('top_sales_div'));
 		    	  table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
 		      }; //매출 top 5
+		      google.charts.load('current', {'packages':['table']});
+		      google.charts.setOnLoadCallback(drawTopMember);
+		      function drawTopMember(){
+		    	  var data = new google.visualization.DataTable();
+		    	  data.addColumn('string', '회원 ID');
+		    	  data.addColumn('number', '결제액');
+		    	  $.each(d.topSales, (i,j)=>{
+		    		 data.addRow([
+		    			 j.memberID,
+		    			 {v:(j.sumPay * 1), f:j.sumPay+'원'}
+		    		 ]); 
+		    	  });
+		    	  var table = new google.visualization.Table(document.getElementById('top_member_div'));
+		    	  table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+		      }; //매출 top 5
 		  });
 	  },
 	  salesInfo : () => {
@@ -749,6 +764,7 @@ sanghoon.service = {
 			//$('<div/>').addClass('basic_box_2').appendTo($('.basic_wrapper'));
 			$('<div/>').attr({id:'top_local_div'}).appendTo($('.basic_box_1'));
 			$('<div/>').attr({id:'top_sales_div'}).appendTo($('.basic_box_1'));
+			$('<div/>').attr({id:'top_member_div'}).appendTo($('.basic_box_1'));
 			
 			googleChart.service.basicInfo();
 			

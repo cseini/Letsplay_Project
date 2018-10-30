@@ -93,6 +93,7 @@ public class AdminCtrl {
 		map.put("topLoc", admMap.getTopLocal());
 		//System.out.println(admMap.getTopSales());
 		map.put("topSales", admMap.getTopSales());
+		map.put("topMember", admMap.getTopMember());
 		return map;
 	}
 	@GetMapping("/admin/sales")
