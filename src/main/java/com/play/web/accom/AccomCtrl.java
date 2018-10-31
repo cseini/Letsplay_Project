@@ -27,7 +27,6 @@ import com.play.web.cmm.Util2;
 @RequestMapping("/accom")
 public class AccomCtrl {
 	static final Logger logger = LoggerFactory.getLogger(AccomCtrl.class);
-	@Autowired HeeTaeBean hht;
 	@Autowired AccomMapper mpr;
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
@@ -36,54 +35,41 @@ public class AccomCtrl {
 	@RequestMapping("/detail/{accom_seq}/")
 	public @ResponseBody Map<String,Object> retriveAccom(@PathVariable String accom_seq) {
 		map.clear();
-		hht.setAccom_seq(accom_seq);
-		map = (HashMap<String, Object>) mpr.retrieveAcom(hht);
+		map.put("accom_seq", accom_seq);
+		map = (HashMap<String, Object>) mpr.retrieveAccommodation(map);
 		return map;
 	}
 	@PostMapping("/reservation/")
 	public @ResponseBody Map<String,Object> retriveReservation
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
-		try {
-			int count = 0;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			Date start = df.parse((String)p.get("start"));
-			Date end = df.parse((String)p.get("end"));
-			Calendar cal = Calendar.getInstance();
-			long diff = end.getTime() - start.getTime();
-			long diffDays = diff/(24 * 60 * 60 * 1000);
-			hht.setCheckout_date((String)p.get("end"));
-			for (Object i : ((List<Object>) p.get("room_seq"))) {
-				cal.setTime(start);
-				hht.setCheckin_date(df.format(cal.getTime()));
-				hht.setRoom_seq(String.valueOf(i));
-				lst.add(true);
-				for(int j=0; j<((int)diffDays)+1; j++) {
-					boolean s = mpr.retrieveReservationStartDate(hht);
-					boolean e = mpr.retrieveReservationEndDate(hht);
-					
-					if(s && e) {
-						lst.set(count, true);
-					}else {
-						lst.set(count, false);
-						break;
-					}
-					cal.add(Calendar.DATE, 1);
-				}
-				count++;
-			}
-			map.put("reservation",lst);
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
+		map.clear();
+		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
+		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
+		Util.log.accept("숙소 시퀀스  : "+p.get("accom_seq"));
+		lst = mpr.retrieveReservation(p);
+		Util.log.accept("담긴 lst"+lst.toString());
+		map.put("list", lst);
+		return map;
+	}
+	@PostMapping("/reservation/room/")
+	public @ResponseBody Map<String,Object> retriveReservationRoom
+	(@RequestBody Map<String, Object> p){
+		lst.clear();
+		map.clear();
+		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
+		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
+		Util.log.accept("객실 시퀀스  : "+p.get("room_seq"));
+		map = mpr.retrieveReservationRoom(p);
+		Util.log.accept("담긴 room_map"+map.toString());
 		return map;
 	}
 	@RequestMapping("/room/{accom_seq}/")
 	public @ResponseBody Map<String,Object> listRoom(@PathVariable String accom_seq) {
 		map.clear();
 		lst.clear();
-		hht.setAccom_seq(accom_seq);
-		lst = mpr.listRoom(hht);
+		map.put("accom_seq", accom_seq);
+		lst = mpr.listRoom(map);
 		map.put("list", lst);
 		return map;
 	}
@@ -91,8 +77,8 @@ public class AccomCtrl {
 	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq){
 		map.clear();
 		lst.clear();
-		hht.setAccom_seq(accom_seq);
-		lst = mpr.listReview(hht);
+		map.put("accom_seq", accom_seq);
+		lst = mpr.listReview(map);
 		map.put("list", lst);
 		return map;
 	}
@@ -100,5 +86,11 @@ public class AccomCtrl {
 	public @ResponseBody Map<String,Object> addReview(@RequestBody Map<String,String> p){
 		
 		return map;
+	}
+	@PostMapping("/payment/")
+	public void addPayment(@RequestBody Map<String, Object> p) {
+		map.clear();
+		Util.log.accept("페이먼트 들어온 맵"+p.toString());
+		mpr.insertReservation(p);
 	}
 }

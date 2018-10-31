@@ -8,6 +8,7 @@ app =(()=>{
 	return {init : init};
 })();
 
+
 app.main =(()=>{
 	var init =()=>{
 		onCreate();
@@ -95,7 +96,6 @@ app.permision = (()=>{
 									} else {
 										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i)										
 									}
-										
 						}); /*예약 현황 each 끝*/
 		})
 	};
@@ -164,8 +164,33 @@ app.permision = (()=>{
 						Kakao.Auth.login({
 						      success: function(authObj) {
 						        Kakao.API.request({
-						            url: '/v1/user/me',
+						            url: '/v2/user/me',
 						            success: function(res) {
+/*						                console.log('res : ' + JSON.stringify(res));
+						                console.log('authObj : ' + JSON.stringify(authObj));
+						                console.log('email : ' + JSON.stringify(res.kaccount_email));
+						                console.log('id : ' + JSON.stringify(res.id));
+						                console.log('image : ' + JSON.stringify(res.properties.profile_image));
+						                console.log('access_token : ' + JSON.stringify(authObj.access_token));
+						                console.log('nickname : ' + JSON.stringify(res.properties.nickname));
+						                console.log('kakao account : '+ JSON.stringify(res.properties.kakao_account));
+						                console.log('age_range : ' + JSON.stringify(res.has_age_range));
+						                console.log('gender : '+ JSON.stringify(res.has_gender));
+						                console.log('has_birthday : ' + JSON.stringify(res.has_birthday));
+						                console.log(JSON.stringify(res.kakao_account['age_range']));
+						                console.log(JSON.stringify(res.kakao_account['birthday']));
+						                console.log('1 stringify 없이 : ' + res.kakao_account['gender']);
+						                console.log('2 stringify 있음 : '+JSON.stringify(res.kakao_account['gender']));
+						                console.log('res.kakao_account.gender : '+res.kakao_account.gender);*/
+						                let gender;
+						                if(res.kakao_account['gender']=='male'){
+						                	gender = '남'
+						                } else if (res.kakao_account['gender']=='female') {
+						                	gender = '여'
+						                } else {
+						                	gender = ''
+						                }
+						                
 						            	$.ajax({
 											url:$.ctx()+'/member/login',
 											method:'post',
@@ -180,10 +205,12 @@ app.permision = (()=>{
 															contentType:'application/json',
 															data:JSON.stringify({
 																member_id:res.id,
+																password:'yanolja1234',
 																name:res.properties['nickname'],
 																nickname:res.properties['nickname'],
-																password: res.uuid,
-																profileimg :res.properties['profile_image']
+																profileimg :res.properties['profile_image'],
+																gender : gender,
+																kakao: '2'
 															}),
 															success:d=>{
 																alert('\n 카카오톡으로 가입이 성공하였습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
@@ -288,6 +315,8 @@ app.permision = (()=>{
 												phone:$('#phone').val(),
 												address:$('#address').val(),
 												zipcode:$('#zipcode').val(),
+												profileimg:'default.jpg',
+												kakao: '1'
 											}),
 											success:d=>{
 												alert('성공적으로 가입되었습니다. 로그인하시면 야놀자 서비스를 이용가능합니다.');
@@ -965,29 +994,27 @@ app.service = {
 					$('<div/>').addClass('familysite').append(
 							$('<div/>').addClass('familysite__select').append(
 									$('<select/>').addClass('sel-block').append(
-											$('<option/>').attr({value:""}).html('패밀리사이트'),
-											$('<option/>').attr({value:"http://www.yanoljalab.com/?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=family"}).html('좋은숙박연구소'),
-											$('<option/>').attr({value:"http://www.bipumstore.com"}).html('비품스토어'),
-											$('<option/>').attr({value:"http://smartfront.yanolja.com"}).html('스마트프런트'),
-											$('<option/>').attr({value:"http://www.yapen.co.kr/"}).html('야놀자 펜션'),
-											$('<option/>').attr({value:"http://www.hotelup.com/"}).html('호텔업'),
-											$('<option/>').attr({value:"http://www.hotelnow.co.kr/ko/"}).html('호텔나우'),
-											$('<option/>').attr({value:"http://www.ynjedu.co.kr"}).html('야놀자평생교육원')
+											$('<option/>').attr({value:""}).html('야놀자 프로젝트 멤버'),
+											$('<option/>').attr({value:"https://github.com/cseini"}).html('최세인'),
+											$('<option/>').attr({value:"https://github.com/kingofahn"}).html('안형준'),
+											$('<option/>').attr({value:"https://github.com/walker1232"}).html('김상훈'),
+											$('<option/>').attr({value:"https://github.com/TaeHyeong111"}).html('김태형'),
+											$('<option/>').attr({value:"https://github.com/dkqk5154"}).html('한희태')
 									)
 							)
 					),
 					$('<div/>').addClass('foot-address').append(
-							$('<address/>').html('(주)야놀자').append(
-									$('<i/>').html('대표이사: 이수진'),
-									$('<i/>').html('주소: 서울 강남구 테헤란로 108길 42'),
+							$('<address/>').html('(주)비트캠프').append(
+									$('<i/>').html('강사 : 박정관'),
+									$('<i/>').html('주소: 서울 마포구 백범로 23 구프라자 3층'),
 									$('<i/>').html('메일:'),
-									$('<i/>').html('help@yanolja.com'),
-									$('<br/>').html('사업자 등록번호: 220-87-42885'),
-									$('<i/>').html('통신판매업신고: 강남-14211호').attr({style:'margin: -0.5px;'}),
-									$('<i/>').html('관광사업자 등록번호: 제2016-31호'),
-									$('<i/>').html('호스팅 서비스 제공자: (주)야놀자')
+									$('<i/>').html('pakjkwan@gmail.com'),
+									$('<br/>').html('사업자 등록번호: 220-01-12345'),
+									$('<i/>').html('통신판매업신고: 신촌-10001호').attr({style:'margin: -0.5px;'}),
+									$('<i/>').html('관광사업자 등록번호: 제2018-11/26호'),
+									$('<i/>').html('호스팅 서비스 제공자: 비트캠프 야놀자 프로젝트팀')
 							),
-							$('<p/>').html('(주)야놀자는 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
+							$('<p/>').html('(주) 비트캠프 야놀자팀은 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
 					),
 					$('<div/>').addClass('award').append(
 							$('<div/>').addClass(['award__item','item-01']).append(
@@ -1155,6 +1182,7 @@ app.service = {
 		        text += possible.charAt(Math.floor(Math.random() * possible.length));
 		    return text;
 		}
+}
 /*		preventF5 : () =>{
 			function LockF5(){
 				 if (event.keyCode == 116) {
@@ -1178,7 +1206,7 @@ app.service = {
 	        }
 	    document.onkeydown = noEvent; */
 		
-}
+
 
 
 app.router = {
@@ -1220,7 +1248,9 @@ app.router = {
 		$('#hotelSearch').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-				heetae.main.init();
+				let se = {'in_day':null,'out_day':null,'accom_seq':null}
+				heetae.main.init(se);
+				//제거 필요
 			});
 		});
 		$('#amdin').addClass('ya_cusor').click(e=>{
