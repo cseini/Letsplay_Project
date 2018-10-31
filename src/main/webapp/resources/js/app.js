@@ -319,7 +319,7 @@ app.permision = (()=>{
 												kakao: '1'
 											}),
 											success:d=>{
-												alert('성공적으로 가입되었습니다. 로그인하시면 야놀자 서비스를 이용가능합니다.');
+												alert('\n 성공적으로 가입되었습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
 												login();
 											},
 											error:(m1,m2,m3)=>{alert(m3);}
@@ -1215,7 +1215,31 @@ app.router = {
 			()=>{
 				$.extend(new Session(x));
 				$.getScript($.ctx()+'/resources/js/util.js')
-					.done(x=>{console.log('----- Lets play 야놀자와 함께합시다. -----');})
+					.done(x=>{
+						if( typeof console === 'object' ) {
+							console.log(
+									"%c                                                ", 
+									`background: url("http://image.sportsseoul.com/2016/04/06/news/2016040601000286800018951.jpg") no-repeat; 
+									width: 250px; 
+									height: 250px; 
+									line-height: 220px; 
+									color: #0f0; 
+									font-size: 1.0rem; 
+							`);
+						    console.log(
+						        '\n' +
+						        'LETS PLAY 비트캠프 프로젝트 홈페이지에 방문을 환영합니다.\n\n\n' +
+					        	'           ("`-’-/").___..--’’"`-._\n' +
+					            '            `6_ 6  )   `-.  (     ).`-.__.‘)\n' +
+						        '            (_Y_.)’  ._   )  `._ `. ``-..-’\n' +
+			                    '           _..`--’_..-_/  /--’_.’ ,’\n' +
+						        '          (il),-’‘  (li),’  ((!.-‘\n\n\n' +
+			                    '다섯명의 비트캠프 수강생이 작업한 프로젝트 작품으로\n'+
+			                    '숙박예약사이트 야놀자와 동일하게 구현하였습니다.'
+						    );
+						    
+						}
+					})
 					.fail(x=>{console.log('실패')});
 				app.main.init();
 			}
