@@ -2,10 +2,7 @@ package com.play.web.mbr;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Repository;
-
-import com.play.web.brd.Board;
 
 @Repository
 public interface MemberMapper {

@@ -1,15 +1,15 @@
 "use strict";
-var app = app || {};
-app =(()=>{
+var hyungjun = hyungjun || {};
+hyungjun =(()=>{
 	var init =x=>{
-		app.router.init(x);
+		hyungjun.router.init(x);
 	};
 	
 	return {init : init};
 })();
 
 
-app.main =(()=>{
+hyungjun.main =(()=>{
 	var init =()=>{
 		onCreate();
 		Kakao.init('ab11f68d3c4372117993ec440aec4768');
@@ -18,12 +18,12 @@ app.main =(()=>{
 		setContentView();
 	};
 	var setContentView =()=>{
-		app.router.home();
+		hyungjun.router.home();
 	};
 	return {init:init};
 })();
 
-app.permision = (()=>{
+hyungjun.permision = (()=>{
 	var reservationList = d=>{
 		$('#header').empty();
 		$('#content').empty();
@@ -50,7 +50,7 @@ app.permision = (()=>{
 											$('<li/>').addClass('reserveinfo-item')
 												.append(
 														$('<span/>').html('예약번호'),
-														$('<b/>').html(j.res_no).attr({style:'padding-left: 30px'})),
+														$('<b/>').html(j.pay_no).attr({style:'padding-left: 30px'})),
 											$('<li/>').addClass('reserveinfo-item')
 												.append(
 														$('<span/>').html('입실'),
@@ -71,10 +71,11 @@ app.permision = (()=>{
 								);
 								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
 									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
-									if(j.res_check==1){
+									var diff = hyungjun.service.dayDiffCalc(j.checkin_date)
+									if(diff<0 && j.res_check==1){
 										$('<button/>').addClass('btns').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'btns'}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
 										.click(e=>{
-											app.service.myModal();
+											hyungjun.service.myModal();
 											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
 											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
 											$('<div/>').html('개인정보 수집/이용 약관, 개인정보 제 3자 제공 약관을 확인하였으며 이에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
@@ -89,12 +90,14 @@ app.permision = (()=>{
 													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+$.cookie("loginID"));
 													$('#layerpop').modal('hide');
 													$('#layerpop').on('hidden.bs.modal',()=>{
-														app.permision.reservationList();
+														hyungjun.permision.reservationList();
 					                                })
 												});
 										});
+									} else if(diff >= 0 && j.res_check==1){
+										$('<button/>').addClass('btns-deny').text('사용 완료').appendTo('#reserveCancelBtn_'+i);		
 									} else {
-										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i)										
+										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i);
 									}
 						}); /*예약 현황 each 끝*/
 		})
@@ -146,8 +149,8 @@ app.permision = (()=>{
 										$.cookie("loginID", d.mbr.member_id);
 										$.cookie("profileimg", d.mbr.profileimg);
 										$.cookie("nickname", d.mbr.nickname);
-												app.router.home()
-					 							app.service.authNav();
+												hyungjun.router.home()
+					 							hyungjun.service.authNav();
 									}
 									$('#validate').html(validate);
 								},
@@ -239,8 +242,8 @@ app.permision = (()=>{
 													$.cookie("loginID", d.mbr.member_id);
 													$.cookie("profileimg", d.mbr.profileimg);
 													$.cookie("nickname", d.mbr.nickname);
-													app.router.home()
-													app.service.authNav();
+													hyungjun.router.home()
+													hyungjun.service.authNav();
 															
 												}
 												$('#validate').html(validate);
@@ -331,7 +334,7 @@ app.permision = (()=>{
 				})
 	}
 	var mypage =()=>{
-		app.service.authNav();
+		hyungjun.service.authNav();
 		$('#content').attr({style:'background: #f5f5f5'});
 		$.ajax({
 			url:$.ctx()+'/member/auth',
@@ -345,9 +348,9 @@ app.permision = (()=>{
 				$('#content').empty();
 				$('<div/>').addClass('mypageTableDiv').appendTo('#content');
 				$('<div/>').addClass('mypageBottomNav').appendTo('#content');
-					app.service.myBenefit(d);
+					hyungjun.service.myBenefit(d);
 							$('<a/>').addClass('nav-link active').attr({href:'#',id:'myBenefit'}).html('나의혜택').appendTo('#nav-item1').click(e=>{
-								app.service.myBenefit(d);
+								hyungjun.service.myBenefit(d);
 							});
 						$('<li/>').addClass('nav-item').attr({id:'nav-item2'}).appendTo('#nav-tabs');
 							$('<a/>').addClass('nav-link active').attr({href:'#',id:'modifyDelete'}).html('개인정보수정/탈퇴').appendTo('#nav-item2').click(e=>{
@@ -359,7 +362,7 @@ app.permision = (()=>{
 											$('<li/>').appendTo('.info_lists').attr({id:'modifyNickname'}).html('<b>닉네임</b>');
 												$('<span/>').html(d.mbr.nickname).attr({style:"margin-left: 205px; font-weight normal;"}).appendTo('#modifyNickname')
 												$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyNickname').click(e=>{
-													app.service.myModal();
+													hyungjun.service.myModal();
 													$('<h4/>').html('닉네임 변경하기').appendTo('#modalTitle');
 													$('<div/>').html('현재 닉네임').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
 													$('<div/>').html(d.mbr.nickname).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
@@ -377,7 +380,7 @@ app.permision = (()=>{
 															success:s=>{
 																$('#layerpop').modal('hide')
 																$('#layerpop').on('hidden.bs.modal',()=>{
-																	app.permision.mypage();
+																	hyungjun.permision.mypage();
 																	$.cookie("nickname", $('#changeNickname').val());
 																	$('#mypage').html($('#changeNickname').val());
 								                                })
@@ -390,7 +393,7 @@ app.permision = (()=>{
 										$('<li/>').appendTo('.info_lists').attr({id:'modifyPhone'}).html('<b>휴대폰번호</b>');
 											$('<span/>').html(d.mbr.phone).attr({style:"margin-left: 170px; font-weight normal;"}).appendTo('#modifyPhone')
 											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPhone').click(e=>{
-												app.service.myModal();
+												hyungjun.service.myModal();
 												$('<h4/>').html('휴대폰 번호 변경하기').appendTo('#modalTitle');
 												$('<div/>').html('현재 휴대폰번호').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
 												$('<div/>').html(d.mbr.phone).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
@@ -408,7 +411,7 @@ app.permision = (()=>{
 														success:d=>{
 															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
-																app.permision.mypage();
+																hyungjun.permision.mypage();
 							                                })
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
@@ -419,7 +422,7 @@ app.permision = (()=>{
 											$('<li/>').appendTo('.info_lists').attr({id:'modifyComment'}).html('<b>한줄소개</b>');
 											$('<span/>').html(d.mbr.comment).attr({style:"margin-left: 187px; font-weight normal;"}).appendTo('#modifyComment')
 											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyComment').click(e=>{
-												app.service.myModal();
+												hyungjun.service.myModal();
 												$('<h4/>').html('한줄소개 변경하기').appendTo('#modalTitle');
 												$('<div/>').html('현재 한줄소개 ').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
 												$('<div/>').html(d.mbr.comment).attr({style:'padding-bottom:15px'}).appendTo('.modal-body');
@@ -437,7 +440,7 @@ app.permision = (()=>{
 														success:d=>{
 															$('#layerpop').modal('hide')
 															$('#layerpop').on('hidden.bs.modal',()=>{
-																app.permision.mypage();
+																hyungjun.permision.mypage();
 															})
 														},
 														error:(m1,m2,m3)=>{alert(m3);}
@@ -447,7 +450,7 @@ app.permision = (()=>{
 											
 										$('<li/>').appendTo('.info_lists').attr({id:'modifyPassword'}).html('<b>비밀번호</b>');
 											$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('변경').appendTo('#modifyPassword').click(e=>{
-												app.service.myModal();
+												hyungjun.service.myModal();
 												$('<h4/>').html('비밀번호 변경하기').appendTo('#modalTitle');
 												$('<input/>').attr({type:'password', id:'currentPassword', placeholder:'현재 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
 												$('<input/>').attr({type:'password', id:'changePassword1', placeholder:'변경하려는 비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
@@ -495,7 +498,7 @@ app.permision = (()=>{
 																		success:d=>{
 																			$('#layerpop').modal('hide')
 																			$('#layerpop').on('hidden.bs.modal',()=>{
-																				app.permision.mypage();
+																				hyungjun.permision.mypage();
 											                                })
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
@@ -531,7 +534,7 @@ app.permision = (()=>{
 													success:d=>{
 														$('#deleteAlert').remove();
 														alert('\n탈퇴가 처리되었습니다. \n\n이용해주셔서 감사드립니다. \n');
-														app.router.home();
+														hyungjun.router.home();
 														
 													},
 													error:(m1,m2,m3)=>{alert(m3);}
@@ -544,7 +547,7 @@ app.permision = (()=>{
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'memberWithdrawal'}).appendTo('#nav-tabsHead3');
 										$('<div/>').html('탈퇴를 하시려면 안내 및 동의를 받아야합니다. 정말 탈퇴하시겠습니까?').appendTo('#memberWithdrawal');
 										$('<button/>').addClass('btn btn-light').attr({'data-target':"#layerpop",'data-toggle':"modal"}).text('탈퇴하기').appendTo('#memberWithdrawal').click(e=>{
-											app.service.myModal();
+											hyungjun.service.myModal();
 											$('<h4/>').html('회원 탈퇴하기').appendTo('#modalTitle');
 											$('<div/>').html('탈퇴진행을 위해 비밀번호를 한 번 더 입력해주세요.').attr({style:'padding-bottom:15px;font-weight: bold'}).appendTo('.modal-body');
 											$('<input/>').attr({type:'text', id:'withdrawlPassword', placeholder:'비밀번호를 입력하세요.'}).addClass('inputData').appendTo('.modal-body');
@@ -596,7 +599,7 @@ app.permision = (()=>{
 							$('<td/>').html(d.mbr.phone).appendTo('#tr5');
 							$('<button/>').addClass('btn btn-primary').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'modal1'}).appendTo('#photoChangeBtn').html('사진변경').click(e=>{
 								e.preventDefault();
-								app.service.myModal();
+								hyungjun.service.myModal();
 								$('.modal-footer').remove();
 									$('<h4/>').html('사진 변경하기').appendTo('#modalTitle');
 										$('<div/>').addClass('fileDrop').appendTo('.modal-body');
@@ -638,7 +641,7 @@ app.permision = (()=>{
 									                        $('#layerpop').modal('hide')
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
 																$.cookie("profileimg", d);
-																app.permision.mypage();
+																hyungjun.permision.mypage();
 																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
 																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
@@ -791,7 +794,7 @@ app.permision = (()=>{
 	return {login : login, join : join, mypage:mypage, reservationList:reservationList}
 })();
 
-app.service = {
+hyungjun.service = {
 		header :x=>{
 			$('#header').remove();
 			/* header 시작 */
@@ -1012,9 +1015,9 @@ app.service = {
 									$('<br/>').html('사업자 등록번호: 220-01-12345'),
 									$('<i/>').html('통신판매업신고: 신촌-10001호').attr({style:'margin: -0.5px;'}),
 									$('<i/>').html('관광사업자 등록번호: 제2018-11/26호'),
-									$('<i/>').html('호스팅 서비스 제공자: 비트캠프 야놀자 프로젝트팀')
+									$('<i/>').html('호스팅 서비스 제공자: 비트캠프 LETS PLAY 프로젝트팀')
 							),
-							$('<p/>').html('(주) 비트캠프 야놀자팀은 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
+							$('<p/>').html('(주) 비트캠프 LETS PLAY팀은 통신판매의 당사자가 아니라는 사실을 고지하며  상품의 예약, 이용 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.')
 					),
 					$('<div/>').addClass('award').append(
 							$('<div/>').addClass(['award__item','item-01']).append(
@@ -1142,18 +1145,18 @@ app.service = {
 									).append($('<ul/>').addClass('mouseOverUl').append(
 										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')).click(e=>{
 											e.preventDefault();
-											app.permision.mypage();
+											hyungjun.permision.mypage();
 										}),		 															
 	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')).click(e=>{
 	 										e.preventDefault();
 	 										$.cookie("loginID","");
 	 										$.cookie("nickname","");
 	 										$.cookie("profileimg","");
-	 										app.router.home();
+	 										hyungjun.router.home();
 	 									}),
 			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')).click(e=>{
 			 								e.preventDefault();
-			 								app.permision.reservationList();
+			 								hyungjun.permision.reservationList();
 			 							}),		 															
 			 							$('<li/>').append($('<a/>').attr({href:'#', id:'mycast'}).html('마이캐스트')).click(e=>{
 			 								e.preventDefault();
@@ -1181,6 +1184,21 @@ app.service = {
 		    for( var i=0; i < d; i++ )
 		        text += possible.charAt(Math.floor(Math.random() * possible.length));
 		    return text;
+		},
+		
+		dayDiffCalc : d=>{
+			var oldToday = new Date();
+			var currentYear = oldToday.getFullYear();
+		    var currentMonth = oldToday.getMonth();
+		    var currentDay = oldToday.getDate();
+		    var newToday = new Date(currentYear, currentMonth, currentDay);
+		    var strDate1 = d;
+		    var arr1 = strDate1.split('-');
+		    var checkinDate = new Date(arr1[0], arr1[1], arr1[2].split(',')[0]);
+		    checkinDate.setMonth(checkinDate.getMonth()-1);
+		    console.log('checkinDate :  ' + checkinDate);
+		    var diff = (newToday.getTime()-checkinDate.getTime())/(1000*60*60*24);
+			return diff;
 		}
 }
 /*		preventF5 : () =>{
@@ -1209,7 +1227,7 @@ app.service = {
 
 
 
-app.router = {
+hyungjun.router = {
 	init :x=>{
 		$.getScript(x+'/resources/js/router.js',
 			()=>{
@@ -1241,7 +1259,7 @@ app.router = {
 						}
 					})
 					.fail(x=>{console.log('실패')});
-				app.main.init();
+				hyungjun.main.init();
 			}
 		);
 	},
@@ -1253,19 +1271,19 @@ app.router = {
 		$('#content').empty();
 		$('#footer').empty();
 		/* nav 시작 */
-		app.service.nav();
+		hyungjun.service.nav();
 		/* nav 끝 */
 		
 		/* header 시작 */
-		app.service.header();			
+		hyungjun.service.header();			
 		/* header 끝 */
 		
 		/* content 시작 */
-		app.service.content();
+		hyungjun.service.content();
 		/* content 끝 */
 		
 		/* footer 시작 */
-		app.service.footer();
+		hyungjun.service.footer();
 		/* footer 끝 */
 					
 		/* 클릭 이벤트 시작 */
@@ -1288,17 +1306,17 @@ app.router = {
 			e.preventDefault();
 			let session = $.cookie("loginID");
 				if(!session){
-					app.router.home();
+					hyungjun.router.home();
 				}else{
 					e.preventDefault();
-					app.service.header();
-					app.service.content();
-					app.service.footer();
+					hyungjun.service.header();
+					hyungjun.service.content();
+					hyungjun.service.footer();
 				}
 			})
 		$('#login_btn').addClass('ya_cusor').click(e=>{
 					e.preventDefault();
-					app.permision.login();	
+					hyungjun.permision.login();	
 			});
 		$('#board').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
@@ -1308,7 +1326,7 @@ app.router = {
 			});
 		$('#add_btn').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
-			app.permision.join();
+			hyungjun.permision.join();
 			});
 		/* 클릭 이벤트 끝 */
 		}

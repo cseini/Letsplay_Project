@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
 
 @RestController
@@ -30,12 +28,14 @@ public class MemberCtrl {
 	
 	@PostMapping("/join")
 	public void join(@RequestBody Member param) {
-		Util.log.accept("젠더 : "+param.getGender());
 		if(param.getBirthdate()!=null) {
+			param.setProfileimg("default.jpg");
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
+			param.setKakao("1");
 			mbrMap.post(param);
 		} else {
+			param.setKakao("2");  // 카톡 가입일 경우 2번임
 			mbrMap.post(param);
 		}
 	}

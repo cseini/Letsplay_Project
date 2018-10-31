@@ -30,7 +30,7 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" /> -->
 	<script src="${context}/resources/js/gijgo.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
-	<script src="${context}/resources/js/app.js"></script>
+	<script src="${context}/resources/js/hyungjun.js"></script>
 </head>
 	
 <body>
@@ -39,7 +39,7 @@
 
 </div>
 <script>
-	app.init('${context}'); 
+	hyungjun.init('${context}'); 
 </script>
 </body>
 </html>
