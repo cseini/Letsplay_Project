@@ -320,7 +320,7 @@ sein.service ={
 				.appendTo($('.detail_user')).click(e=>{
 					sein.service.caster(d);
 				});
-				if($.cookie("loginID")===x.member_id){
+				if(sessionStorage.getItem('login')===x.member_id){
 					$('<div/>').attr({style:'float:right'}).append(
 						$('<a/>').addClass('btn btn-danger').attr({'data-target':"#layerpop",'data-toggle':"modal",href:'#',style:'margin-right:10px'}).html('수정')
 						.click(e=>{
@@ -553,7 +553,7 @@ sein.service ={
 						url:$.ctx()+'/cast/reWrite/',
 						method:'post',
 						contentType:'application/json',
-						data:JSON.stringify({msg_content:$('#commentText').val(),board_id:x.board_id,msg_seq:x.msg_seq,board_depth:1,member_id:$.cookie("loginID")}),
+						data:JSON.stringify({msg_content:$('#commentText').val(),board_id:x.board_id,msg_seq:x.msg_seq,board_depth:1,member_id:sessionStorage.getItem('login')}),
 						success:d=>{
 							$('#inner_bg_reply').remove();						
 							sein.service.reply(x);
@@ -650,7 +650,7 @@ sein.service ={
 						$('<div/>').attr({id:'re_inner_write'}).addClass('inner').append(	
 							$('<a/>').addClass('link2').attr({style:'color:red;'}).html('대댓글')
 							.click(e=>{
-								if($.cookie("loginID")==""){
+								if(sessionStorage.getItem('login')==""){
 									if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
 										hyungjoon.permision.login();	
 									};
@@ -683,7 +683,7 @@ sein.service ={
 				$('<div/>').attr({id:'reply_empty'+x.msg_seq}).appendTo($('#re_comment'+x.msg_seq))
 			)
 			.appendTo($('#re_comment'+x.msg_seq));
-			if(x.member_id!==$.cookie("loginID")){
+			if(x.member_id!==sessionStorage.getItem('login')){
 				$('.bar').remove();
 			}
 		},
@@ -844,7 +844,7 @@ sein.service ={
     					url:$.ctx()+'/cast/write/',
     					method:'post',
     					contentType:'application/json',
-    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
+    					data:JSON.stringify({member_id:sessionStorage.getItem('login'),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
     					success:d=>{
     						 $('#layerpop').on('hidden.bs.modal',()=>{
 	            				sein.board.cast();
@@ -1006,7 +1006,7 @@ sein.service ={
    					url:$.ctx()+'/cast/modify/',
    					method:'post',
    					contentType:'application/json',
-   					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
+   					data:JSON.stringify({msg_seq:x.msg_seq,member_id:sessionStorage.getItem('login'),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
    					success:d=>{
    						 $('#layerpop').on('hidden.bs.modal',()=>{
 	            				sein.board.cast();
@@ -1366,11 +1366,6 @@ sein.service ={
 			$('<div/>').addClass('bt_rap')
 		).appendTo($('.contents'))
 		
-		/*if(JSON.parse(sessionStorage.getItem('recent'))){
-			$.each(JSON.parse(sessionStorage.getItem('recent')).reverse(),(i,j)=>{
-				sein.service.recent({index:i,page:j});
-			})
-		}*/
 		if(JSON.parse(sessionStorage.getItem('recent'))){
 			sein.service.recent(JSON.parse(sessionStorage.getItem('recent')));
 		}
