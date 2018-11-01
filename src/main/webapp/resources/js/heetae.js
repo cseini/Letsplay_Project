@@ -428,7 +428,6 @@ heetae.main =(x=>{
 						.click(e=>{
 							e.preventDefault()
 							heetae.detail.modal_util();
-							//드롭박스 필요
 							$('.modal-footer').remove();
 								$('<h4/>').html('사진 변경하기').appendTo('#modalTitle');
 									$('<div/>').addClass('fileDrop').appendTo('.modal-body');
@@ -471,8 +470,6 @@ heetae.main =(x=>{
 								                        $('#layerpop').on('hidden.bs.modal',()=>{
 															sessionStorage.setItem("profileimg",d);
 															hyungjun.permision.mypage();
-															/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
-															append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 						                                })
 								                },
 								                error : e=>{
@@ -520,6 +517,10 @@ heetae.main =(x=>{
 						            e.stopPropagation();
 						            e.preventDefault();
 						            // 드롭다운 영역 css
+						            console.log('index : '+fileIndex)
+						            if(fileIndex==1){
+						            	fileIndex=0
+						            }
 						            dropZone.css('background-color','#E3F2FC');
 						        });
 						        dropZone.on('drop',function(e){
@@ -549,6 +550,10 @@ heetae.main =(x=>{
 						            // 직접 파일 등록시
 						            files = $('#multipaartFileList_' + fileIndex)[0].files;
 						        }
+						        
+						        /*if(files.length<2){
+						        	
+						        }*/
 						        
 						        // 다중파일 등록
 						        if(files != null){
@@ -614,27 +619,6 @@ heetae.main =(x=>{
 						    }
 							
 					/* file upload 끝 */
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							//드롭박스 필요
-							
-							
-							
-							
-							
-							
-							
 						})
 						$('<textarea/>')
 						.attr({'id':'heetae_card_textarea','cols':"43",'rows':'3','maxlength':"137"})
