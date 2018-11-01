@@ -18,6 +18,8 @@
 	<result property="pay_no" column="PAY_NO"/>
 	<result property="accom_seq" column="ACCOM_SEQ"/>
 	<result property="res_check" column="RES_CHECK"/>
+	<result property="longitude" column="LONGITUDE"/>
+	<result property="latitude" column="LATITUDE"/>
 </resultMap>
 
  <select id="rlist" resultMap="hjResult">
@@ -34,7 +36,9 @@
 	       R.PAY_TYPE,
 	       A.ACCOM_SEQ,
 	       R.PAY_NO,
-	       R.RES_CHECK
+	       R.RES_CHECK,
+	       A.LONGITUDE,
+	       A.LATITUDE
 	FROM reservation R
 	     JOIN room O ON O.ROOM_SEQ = R.ROOM_SEQ
 		     JOIN accommodation A ON A.ACCOM_SEQ = O.ACCOM_SEQ
