@@ -331,7 +331,7 @@ heetae.main =(x=>{
 						
 						let chk = false;
 						
-						if(sessionStorage.getItem("loginID")!=null){
+						if(sessionStorage.getItem("login")!=null){
 							$('<div/>')
 							.addClass('heetae_tab_review_write')
 							.appendTo('.heetae_tab_content')
@@ -377,13 +377,13 @@ heetae.main =(x=>{
 						.appendTo('.heetae_review_select_contorller')
 						
 						//여기부터 시작
-						if(sessionStorage.getItem("loginID")!=null){
+						if(sessionStorage.getItem("login")!=null){
 							$.ajax({
 								url:$.ctx()+'/accom/review/accom/',
 								method:'post',
 								contentType:'application/json',
 								data:JSON.stringify({
-									member_id:sessionStorage.getItem("loginID")
+									member_id:sessionStorage.getItem("login")
 									,accom_seq:input_accom_seq}),
 								success:d=>{
 									$.each(d.list,(i,j)=>{
@@ -1131,7 +1131,7 @@ heetae.detail = {
 		    .addClass('heetae_tab_info_reserve_btn')
 		    .appendTo('#'+x.num+'_room_info')
 		    
-		    	if(sessionStorage.getItem("loginID")==null){
+		    	if(sessionStorage.getItem("login")==null){
 		    		$('#'+x.num+'_info_reserve_btn')
 		    		.click(e=>{
 		    			alert('비회원은 예약할 수 없습니다')
@@ -1308,7 +1308,7 @@ heetae.detail = {
 														method:'post',
 														contentType:'application/json',
 														data:JSON.stringify({
-															member_id:sessionStorage.getItem("loginID")
+															member_id:sessionStorage.getItem("login")
 															,room_seq:x.list.room_seq
 															,pay_price:x.list.room_price
 															,pay_type:pay_types
@@ -1332,7 +1332,7 @@ heetae.detail = {
 												}else{
 													alert('이미 예약된 자리입니다')
 												}
-	                                    })
+	                                    }) 
 									},
 									error:(m1,m2,m3)=>{
 										alert('에러');
