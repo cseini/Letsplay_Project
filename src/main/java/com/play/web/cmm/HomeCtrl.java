@@ -18,7 +18,7 @@ public class HomeCtrl {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model, HttpServletRequest request) {
 		model.addAttribute("context", Util.ctx.apply(request));
-		return "main";
+		return "intro";
 	}
 	@RequestMapping(value="/move/{prefix}/{dir}/{page}")
 	public String move(

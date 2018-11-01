@@ -588,13 +588,13 @@ a.nav-link.js-scroll-trigger {
 }
 
 li.nav-item {
-    font-weight: 800; 공용
-    letter-spacing: .05rem; 공용
-    text-transform: uppercase; 공용
-    text-decoration: none; 공용
+    font-weight: 800; 
+    letter-spacing: .05rem; 
+    text-transform: uppercase; 
+    text-decoration: none; 
     color: rgba(255,255,255,.5);
 }
 
-li.nav-item:hover {
+li.nav-item:hover  {
 	  color: rgba(255,255,255,.75);
 }
