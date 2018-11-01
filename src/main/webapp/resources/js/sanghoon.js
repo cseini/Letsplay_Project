@@ -646,7 +646,7 @@ googleChart.service = {
 									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
 										  marker = new daum.maps.Marker({points : position.latlng});
 										  marker.setMap(map);
-										  bounds.extend(position.latlng);
+										  bounds.extend(addr.latlng);
 										  map.setBounds(bounds);	// 지도 재배치
 								});
 								$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+y}).appendTo($('#premium_selecter_writer'+y))
