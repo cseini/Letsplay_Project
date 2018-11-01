@@ -27,6 +27,7 @@ hyungjun.permision = (()=>{
 	var reservationList = d=>{
 		$('#header').empty();
 		$('#content').empty();
+		var top_map = {};
 		$.getJSON($.ctx()+'/member/list/'+sessionStorage.getItem("login"), d=>{
 			$('<div/>').addClass('reserve-main-content').appendTo('#content');
 			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
@@ -103,63 +104,6 @@ hyungjun.permision = (()=>{
 									} else {
 										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i);
 									}
-									
-									
-									/*-----------지도 시작 ----------*/
-									$('<div/>').attr({id:'accom_map_hj'}).appendTo('.reserve-content');
-									var mapContainer = document.getElementById('accom_map_hj'),	// 지도를 표시할 div
-									  mapOption = {
-										  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
-										  level: 9
-									  };
-									  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
-									  var addr = {};
-									  	  addr = {
-											  'title' : j.accomName,
-											  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
-										  };
-									  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
-									  var imageSize = new daum.maps.Size(34, 60);
-									  
-									  var position
-										  // 마커 이미지를 생성
-										  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-										  var marker = new daum.maps.Marker({
-											  map: map,	// 마커를 표시할 지도
-											  position: addr.latlng,	// 마커를 표시할 위치
-											  image: markerImage	// 마커 이미지
-										  });
-										  var content = '<div class="customoverlay">' +
-										    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
-										    '    <span class="title">'+j.accomName+'</span>' +
-										    '  </a>' +
-										    '</div>';
-										  position = addr[i].latlng;
-										  var customOverlay = new daum.maps.CustomOverlay({
-										        position: position,
-										        content: content,
-										        yAnchor: 2.7
-										    });
-										  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
-										  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-									  function makeOverListener(map, marker, customOverlay) {
-									        return function() {
-									        	customOverlay.setMap(map);
-									        };
-									    }
-									  // 인포윈도우를 닫는 클로저를 만드는 함수
-									  function makeOutListener(customOverlay) {
-									        return function() {
-									        	customOverlay.setMap(null);
-									        };
-									    }
-									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
-										  marker = new daum.maps.Marker({points : position.latlng});
-										  marker.setMap(map);
-										  bounds.extend(points.latlng);
-										  map.setBounds(bounds);	// 지도 재배치
-										  /*-----------지도 끝 ----------*/
-									
 									
 									
 						}); /*예약 현황 each 끝*/

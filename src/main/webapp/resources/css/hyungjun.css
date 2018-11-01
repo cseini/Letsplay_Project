@@ -41,22 +41,11 @@
 	min-height: 552px;
 	max-width: 980px;
 	margin: 0 auto;
-	margin-left: 110px;
 	padding: 60px 0;
 }
 
 .reserve-content {
 	margin-top: 60px;
-    display: inline-block;
-}
-
-.article-title {
-    position: fixed;
-    background: white;
-    margin-top: -60px;
-    padding-top: 34px;
-    padding-left: 450px;
-    width: 100%;
 }
 
 .article-title h2 {
@@ -188,7 +177,6 @@
 }
 
 .btns-deny {
-	margin-right: 25px;
     margin-top: -200px;
     width: 160px;
     margin-left: 10px;
@@ -205,12 +193,10 @@
 
 .btn-primary-btn-btn-reserve {
 	float: right;
-	margin-right: 25px;
 }
 
 .btn-primary-btn-btn-cancel {
 	float: right;
-	margin-right: 25px;
 }
 
 .hj_check_middle div input {
@@ -1009,20 +995,3 @@ nav {
     color: #666666;
     text-decoration: none;
 }
-
-
-#accom_map_hj {
-    float: right;
-    width: 554px;
-    height: 547px;
-    background: red;
-    position: fixed;
-    margin-left: 53%;
-    floart: right;
-}
-
-.history-cont {
-    float: left;
-    width: 800px;
-}
-
