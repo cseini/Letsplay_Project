@@ -581,6 +581,7 @@ googleChart.service = {
 				  }
 
 				  $.each(list, (i,j)=>{
+					  console.log('순위 : '+j.accomName+' __' +j.accomPhoto1)
 					  $('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+y}).appendTo($('.accom_list'));
 						$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+y}).appendTo($('#premium_selecter'+y))
 							$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+y,src:j.accomPhoto1}).appendTo($('#premium_selecter_li'+y))
