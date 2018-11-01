@@ -29,5 +29,6 @@ public interface AdminMapper {
 	public List<HashMap<String,Object>> getCustoAccom(HashMap<String,Object>map);
 	public List<HashMap<String,Object>> getTopRes();
 	public List<HashMap<String,Object>> getCustoPop();
+	public List<HashMap<String,Object>> getTop();
 }
 

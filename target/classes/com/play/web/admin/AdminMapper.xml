@@ -564,6 +564,22 @@
 		ORDER BY sales DESC
 	</select>
 	
+	<select id="getTop" resultType="hashmap">
+		SELECT C.accom_seq AS accomSeq, C.accom_name AS accomName, C.accom_addr AS accomAddr, C.accom_type AS accomType, C.accom_photo1 AS accomPhoto1, C.accom_introduce AS accomIntroduce, C.longitude AS longitude, C.latitude AS latitude, C.room_price AS roomPrice, D.pay_no AS payNo, D.member_id AS memberId, D.pay_price AS payPrice, sum(D.pay_price) sumPay
+		FROM(
+		    SELECT A.accom_seq, A.accom_name, A.accom_addr, A.accom_type, A.accom_photo1, A.accom_introduce, A.longitude, A.latitude, B.room_seq, B.room_price
+		    FROM(
+		        SELECT accom_seq, accom_name, accom_addr, accom_type, accom_photo1, accom_introduce, longitude, latitude
+		        FROM accommodation
+		        )A
+		    JOIN room B
+		    ON A.accom_seq = B.accom_seq
+		    ) C
+		JOIN reservation D
+		ON C.room_seq = D.room_seq
+		GROUP BY C.accom_seq
+		ORDER BY sumPay desc
+	</select>
 	<!-- 
 	<select id="getAgeUse" resultType="hashmap">
 		SELECT ROUND( ( payCount/ totalCount * 100 ) ) AS percent

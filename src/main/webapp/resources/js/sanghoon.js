@@ -422,94 +422,8 @@ googleChart.service = {
 		  break;
 		  }
 		  
-		  
-		/*  
-		 // alert(x);	기존 accomInfo()
-		  $.getJSON($.ctx()+'/admin/accom/'+x, d=>{
-			  google.charts.load('current', {'packages':['corechart']});
-		      google.charts.setOnLoadCallback(drawPrice);
-		      function drawPrice(){
-		    	  var data = new google.visualization.DataTable();
-		    	  data.addColumn('string', 'price');
-		    	  data.addColumn('number', 'count');
-		    	  $.each(d.accomPrice, (i,j)=>{
-		    		  data.addRow([
-		    			  j.byPrice,
-		    			  (j.reserCount * 1)
-		    		  ]);
-		    	  });
-		    	  var options = {
-		    	          title: '가격대별 예약수',
-		    	          hAxis: {title: 'price', minValue: 0, maxValue: 15},
-		    	          vAxis: {title: 'count', minValue: 0, maxValue: 15},
-		    	          legend: 'none'
-		    	        };
-		    	  var chart = new google.visualization.ScatterChart(document.getElementById('price_reservation'));
-		    	  chart.draw(data, options);
-		      }// 가격대별 예약수 차트
-		      var mapContainer = document.getElementById('location'),	// 지도를 표시할 div
-			  mapOption = {
-				  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
-				  level: 9
-			  };
-			  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
-			  //var bounds = new daum.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
-			  var positions = [];
-			  $.each(d.accomPosition, (i,j)=>{
-				  positions.push({
-					  'title' : j.accomName,
-					  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
-				  });
-			  });
-			  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
-			  var imageSize = new daum.maps.Size(34, 60);
-			  
-			  var position
-			  for(var i = 0; i < positions.length; i++){
-				  // 마커 이미지를 생성
-				  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-				  var marker = new daum.maps.Marker({
-					  map: map,	// 마커를 표시할 지도
-					  position: positions[i].latlng,	// 마커를 표시할 위치
-					  image: markerImage	// 마커 이미지
-				  });
-				  var content = '<div class="customoverlay">' +
-				    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
-				    '    <span class="title">'+d.accomPosition[i].accomName+'</span>' +
-				    '  </a>' +
-				    '</div>';
-				  position = positions[i].latlng;
-				  var customOverlay = new daum.maps.CustomOverlay({
-				        position: position,
-				        content: content,
-				        yAnchor: 2.7
-				    });
-				  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
-				  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-			  }
-			  function makeOverListener(map, marker, customOverlay) {
-			        return function() {
-			        	customOverlay.setMap(map);
-			        };
-			    }
-			  // 인포윈도우를 닫는 클로저를 만드는 함수
-			  function makeOutListener(customOverlay) {
-			        return function() {
-			        	customOverlay.setMap(null);
-			        };
-			    }
-			  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
-			  for(var k = 0; k < positions.length; k++){
-				  marker = new daum.maps.Marker({points : positions[k].latlng});
-				  marker.setMap(map);
-				  bounds.extend(positions[k].latlng);
-			  }
-				  map.setBounds(bounds);	// 지도 재배치
-		  });
-		  */
 	  },	// accomInfo 완료
 	  custoInfo : x=>{
-		  //alert(x);
 		  console.log(x);
 		  var info = {};
 		  var year = new Date().getFullYear();
@@ -584,88 +498,6 @@ googleChart.service = {
 				  break;
 			  }
 		  }
-		  //googleChart.service.custoChart(info);
-		/*
-		  $.getJSON($.ctx()+'/admin/custo/'+info.type+'/'+info.start+'/'+info.end, d=>{
-			  var custoAccom = [];
-			  for(var i = 1; i < d.custoAccom.length; i++){
-				  custoAccom.push(d.custoAccom[i].payCount);
-			  }
-			  var arrMo = [];
-			  for(var i = 1; i < d.custoMo.length; i++){
-				  arrMo.push(d.custoMo[i].payCount);
-			  }
-			  var options = {
-						'legend':{
-							names: [
-								'20대',
-								'30대',
-								'40대',
-								'50대',
-								'60대 이상'
-								'Operable',
-								'Navigation',
-								'Error Prevent'
-							],
-							hrefs: [
-								'http://nuli.navercorp.com//sharing/a11y#k1',
-								'http://nuli.navercorp.com//sharing/a11y#k2',
-								'http://nuli.navercorp.com//sharing/a11y#k3',
-								'http://nuli.navercorp.com//sharing/a11y#k4',
-								'http://nuli.navercorp.com//sharing/a11y#k5'
-								'http://nuli.navercorp.com//sharing/a11y#k6',
-								'http://nuli.navercorp.com//sharing/a11y#k7',
-								'http://nuli.navercorp.com//sharing/a11y#k8'
-							]
-						},
-						'dataset': {
-							title: 'Accommodation',
-							values: [custoAccom],
-							bgColor: '#f9f9f9',
-							fgColor: '#30a1ce',
-						},
-						'chartDiv': 'accom_chart',
-						'chartType': 'radar',
-						'chartSize': { width: 500, height: 300 }
-					};
-			  Nwagon.chart(options);
-			  console.log('1');
-			  console.log(options.dataset.values);
-			 
-			  
-			  google.charts.load('current', {'packages':['corechart']});
-		      google.charts.setOnLoadCallback(drawCustoPop);
-		      
-		      function drawCustoPop(){
-		    	  var data = new google.visualization.DataTable();
-		    	  data.addColumn('string', 'local');
-		    	  data.addColumn('number', 'reservationCnt');
-		    	  data.addColumn('number', 'populationRate');
-		    	  data.addColumn('number', 'populationCnt');
-		    	 
-		    	  
-		    	  $.each(d.custoPop, (i,j)=>{
-		    		 data.addRow([
-		    			 j.byAddr,
-		    			 (j.payCnt * 1),
-		    			 (j.popRate * 1),
-		    			 (j.population * 1)
-		    		 ]); 
-		    	  });
-		    	  
-		    	  var options = {
-		    		        title: ' 지역별 고객 ',
-		    		        hAxis: {title: 'Population'},
-		    		        vAxis: {title: 'Population rate'},
-		    		        bubble: {textStyle: {fontSize: 11}}
-		    		      };
-		    	  var chart = new google.visualization.BubbleChart(document.getElementById('pop_chart'));
-		          chart.draw(data, options);
-		      }// 버블차트
-		      
-		  });
-		 */
-		 
 	  },//custoInfo()
 	  custoChart : x=>{
 		  $.getJSON($.ctx()+'/admin/custo/'+x.type+'/'+x.start+'/'+x.end, d=>{
@@ -673,10 +505,6 @@ googleChart.service = {
 			  for(var i = 1; i < d.custoAccom.length; i++){
 				  custoAccom.push(d.custoAccom[i].payCount);
 			  }
-			  /*var arrMo = [];
-			  for(var i = 1; i < d.custoMo.length; i++){
-				  arrMo.push(d.custoMo[i].payCount);
-			  }*/
 			  var options = {
 						'legend':{
 							names: [
@@ -685,9 +513,6 @@ googleChart.service = {
 								'40대',
 								'50대',
 								'60대 이상'
-								/*'Operable',
-								'Navigation',
-								'Error Prevent'*/
 							],
 							hrefs: [
 								'http://nuli.navercorp.com//sharing/a11y#k1',
@@ -695,9 +520,6 @@ googleChart.service = {
 								'http://nuli.navercorp.com//sharing/a11y#k3',
 								'http://nuli.navercorp.com//sharing/a11y#k4',
 								'http://nuli.navercorp.com//sharing/a11y#k5'
-								/*'http://nuli.navercorp.com//sharing/a11y#k6',
-								'http://nuli.navercorp.com//sharing/a11y#k7',
-								'http://nuli.navercorp.com//sharing/a11y#k8'*/
 							]
 						},
 						'dataset': {
@@ -746,6 +568,126 @@ googleChart.service = {
 		      }// 버블차트
 		      
 		  });
+	  },
+	  
+	  topChart : x=>{
+		  var y = 0;
+		  var k = 0;
+		  var list = [];
+		  $.getJSON($.ctx()+'/admin/top', d=>{
+			  console.log(d.top[0].accomName)
+			  $.each(d.top, (i,j)=>{
+				 console.log(j.accomName); 
+			  });
+			  list_accom()
+			  function list_accom(){
+				  for(let i = 0; i < 10; i++){
+					  list[i] = d.top[k];
+					  k++;
+					  console.log("k   "+k);
+					  console.log("y   "+y);
+					  console.log(list[i])
+				  }
+				  
+				  $.each(list, (i,j)=>{
+					  $('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+y}).appendTo($('.accom_list'));
+						$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+y}).appendTo($('#premium_selecter'+y))
+							$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+y,src:j.accomPhoto1}).appendTo($('#premium_selecter_li'+y))
+							$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+y}).appendTo($('#premium_selecter_li'+y));
+								$('<h3/>').addClass('list_title').attr({id:'list_title'+y}).html(j.accomName).appendTo($('#premium_selecter_writer'+y))
+								.click(e=>{
+									alert(j.accomName+' '+j.longitude+' '+j.latitude);
+									var mapContainer = document.getElementById('accom_map'),	// 지도를 표시할 div
+									  mapOption = {
+										  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
+										  level: 9
+									  };
+									  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
+									  var addr = {};
+									  	  addr = {
+											  'title' : j.accomName,
+											  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+										  };
+									  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+									  var imageSize = new daum.maps.Size(34, 60);
+									  
+									  var position
+										  // 마커 이미지를 생성
+										  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+										  var marker = new daum.maps.Marker({
+											  map: map,	// 마커를 표시할 지도
+											  position: addr[i].latlng,	// 마커를 표시할 위치
+											  image: markerImage	// 마커 이미지
+										  });
+										  var content = '<div class="customoverlay">' +
+										    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+										    '    <span class="title">'+j.accomName+'</span>' +
+										    '  </a>' +
+										    '</div>';
+										  position = addr[i].latlng;
+										  var customOverlay = new daum.maps.CustomOverlay({
+										        position: position,
+										        content: content,
+										        yAnchor: 2.7
+										    });
+										  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+										  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+									  function makeOverListener(map, marker, customOverlay) {
+									        return function() {
+									        	customOverlay.setMap(map);
+									        };
+									    }
+									  // 인포윈도우를 닫는 클로저를 만드는 함수
+									  function makeOutListener(customOverlay) {
+									        return function() {
+									        	customOverlay.setMap(null);
+									        };
+									    }
+									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
+										  marker = new daum.maps.Marker({points : position.latlng});
+										  marker.setMap(map);
+										  bounds.extend(positions[k].latlng);
+										  map.setBounds(bounds);	// 지도 재배치
+								});
+								$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+y}).appendTo($('#premium_selecter_writer'+y))
+									$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+y));
+									$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+y));
+									$('<h4/>').addClass('p_span p_padding30').html(addComma(j.roomPrice)).appendTo($('#premium_selecter_explanation_'+y));
+									$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+y));
+									y++;
+				  });
+			  }
+			  
+			  /*무한스크롤 로직*/
+			    $(window).scroll(function() {
+			        if (d.top.length>k && $(window).scrollTop() == $(document).height() - $(window).height()) {
+			          list_accom();
+			          //googleChart.service.topChart(x);
+			        }else if(!$('#premium_selecter0').length>0){
+			        	$(window).unbind('scroll');
+			        }
+			    });
+			  /*1,000단위의 콤마를 찍어주는 로직(숙소 가격 사용)*/
+			    function addComma(num) {
+					  var regexp = /\B(?=(\d{3})+(?!\d))/g;
+					  return num.toString().replace(regexp, ',');
+					}
+			  /*$('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+i}).appendTo($('.accom_list'));
+				$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+i}).appendTo($('#premium_selecter'+i))
+					$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+i,src:'//yaimg.yanolja.com/v5/2017/11/16/17/640/5a0d5025becc08.90955197.jpg'}).appendTo($('#premium_selecter_li'+i))
+					$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+i}).appendTo($('#premium_selecter_li'+i));
+						$('<h3/>').attr({id:'list_title'+i}).html('H호텔').appendTo($('#premium_selecter_writer'+i));
+						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation'+i}).appendTo($('#premium_selecter_writer'+i))
+							$('<h6/>').addClass('p_span').html('대실').appendTo($('#premium_selecter_explanation'+i));
+							$('<h6/>').addClass('p_span p_padding5').html('최대 4시간').appendTo($('#premium_selecter_explanation'+i));
+							$('<h4/>').addClass('p_span p_padding20').html(50000).appendTo($('#premium_selecter_explanation'+i));
+							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation'+i));
+						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+i}).appendTo($('#premium_selecter_writer'+i))
+							$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+i));
+							$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+i));
+							$('<h4/>').addClass('p_span p_padding30').html(50000+40000).appendTo($('#premium_selecter_explanation_'+i));
+							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+i));*/
+		  });
 	  }
 	
 };
@@ -761,7 +703,6 @@ sanghoon.service = {
             $('<div/>').attr({id:'booked_div'}).appendTo($('.basic_box_1'));
             $('<div/>').attr({id:'age_member'}).appendTo($('.basic_box_1'));
             $('<div/>').attr({id:'have_accom_div'}).appendTo($('.basic_box_1'));
-            //$('<div/>').addClass('basic_box_2').appendTo($('.basic_wrapper'));
             $('<div/>').attr({id:'top_local_div_title'}).html('TOP5 지역 예약현황').addClass('table_title').appendTo($('.basic_box_1'));
             $('<div/>').attr({id:'top_sales_div_title'}).html('TOP5 숙소 매출액').addClass('table_title').appendTo($('.basic_box_1'));
             $('<div/>').attr({id:'top_member_div_title'}).html('TOP5 회원별 결제액').addClass('table_title').appendTo($('.basic_box_1'));
@@ -813,104 +754,27 @@ sanghoon.service = {
 					'start' : $('#date').val(),
 					'end' : ''
 				};
-				//alert(im.start);
-				//alert(accom_info.start.substring(0, accom_info.start.length-1));
 				var year = new Date().getFullYear();
 				switch(accom_info.start = accom_info.start.substring(0, accom_info.start.length-1)){
 				case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
 					accom_info.start = year+"-0"+accom_info.start+"-01 오전 00:00:00";
 					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
-					//alert(accom_info.local+" "+ accom_info.start + " " + accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				case '10': case '11': case '12':
 					accom_info.start = year+'-'+accom_info.start+"-01 오전 00:00:00";
 					accom_info.end = accom_info.start.substring(0, accom_info.start.length-14)+'31 오후 23:59:59';
-					//alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				default:
 					accom_info.start = 'all';
 					accom_info.end = 'all';
-					//alert(accom_info.local+" "+ accom_info.start+" "+ accom_info.end);
 					googleChart.service.accomInfo(accom_info);
 				break;
 				}
-				
-				/*
-				var la = [];
-				la.push({
-					'local' : $('#local_sel').val(),
-					'start' : $('#date').val(),
-					'end' : ''
-				});
-				*/
-				
 			});
-			$('<div/>').attr({id:'location'}).appendTo($('.accom_box'));
-			/*
-			console.log('accom 버튼 클릭');
-			$('#content').empty();
-			$('<div/>').attr({id:'page-wrapper'}).appendTo('#content');
-				$('<div/>').addClass('left_wrapper').appendTo('#page-wrapper');
-							
-					$('<div/>').attr({id:'local_box'}).appendTo('.left_wrapper')
-					
-					$('<select/>').attr({id:'local_sel'}).appendTo('#local_box');
-					var imsi2 = [];
-					$.each(['서울','경기','인천','강원','제주','대전','충북','충남','세종','부산','울산','경남','대구','경북','광주','전남','전주','전북'],(i,j)=>{
-						$('<option/>').attr({value:j}).html(j).appendTo('#local_sel');
-						console.log(j);
-						});
-					$('#local_sel').change(function(){
-						var imsi = $(this).val(); 
-						imsi2 = $(this).val();
-						alert("var2"+imsi2);
-						//alert(imsi);
-						console.log("클릭이벤트안"+imsi2);
-						googleChart.service.accomInfo(imsi2);
-						});
-					console.log("클릭이벤트 밖"+imsi2);
-					$('<div/>').attr({id:'price_reservation'}).appendTo('.left_wrapper');
-						//$('<img/>').attr({src:$.img()+'/admin_test/price_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#price_reservation');
-					$('<div/>').attr({id:'accom_reservation'}).appendTo('.left_wrapper');
-							$('<img/>').attr({src:$.img()+'/admin_test/accom_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#accom_reservation');
-				$('<div/>').addClass('right_wrapper').appendTo('#page-wrapper');
-					$('<div/>').attr({id:'location'}).appendTo('.right_wrapper');
-					*/
-					/*var mapContainer = document.getElementById('location'), // 지도를 표시할 div를 만들어놓음 
-				    mapOption = {
-				        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-				        level: 10 // 지도의 확대 레벨
-				    };
-					// 지도를 생성합니다    
-					var map = new daum.maps.Map(mapContainer, mapOption); 
-					// 주소-좌표 변환 객체를 생성합니다
-					var geocoder = new daum.maps.services.Geocoder();
-					// 주소로 좌표를 검색합니다
-					geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
-						// 정상적으로 검색이 완료됐으면 
-						if (status === daum.maps.services.Status.OK) {
-							var coords = new daum.maps.LatLng(result[0].y, result[0].x);
-							// 결과값으로 받은 위치를 마커로 표시합니다
-							var marker = new daum.maps.Marker({
-								map: map,
-								position: coords
-							});
-							// 인포윈도우로 장소에 대한 설명을 표시합니다
-							var infowindow = new daum.maps.InfoWindow({
-								content: '<div style="width:150px;text-align:center;padding:6px 0;">제주호텔</div>'
-							});
-							infowindow.open(map, marker);
-							// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-							map.setCenter(coords);
-						} 
-					});*/
-							//$('<img/>').attr({src:$.img()+'/admin_test/location.PNG', style:'width:500px; display:block; margin-left: auto; margin-right: auto'}).appendTo('#location');
-			
+			$('<div/>').attr({id:'location'}).appendTo($('.accom_box'));		
 			$('<div/>').attr({id:'price_reservation'}).appendTo($('.accom_box'));
-			/*$('<div/>').attr({id:'accom_reservation'}).appendTo($('.accom_box'));
-			$('<img/>').attr({src:$.img()+'/admin_test/accom_reservation.PNG', style:'width:500px; display:block; margin-left:auto; margin-right:auto'}).appendTo('#accom_reservation');*/
 					googleChart.service.accomInfo(accom_info);
 		},
 		custo : x=>{
@@ -949,37 +813,68 @@ sanghoon.service = {
 			
 		},
 		top_accom : x=>{
+			/*
+			var top = {};
+			top = {
+				'type' : 'all',
+				'gender' : 'all',
+				'local' : 'all'
+			}
+			
 			$.getJSON($.ctx()+'/admin/top', d=>{
 				
 			});
+			*/
 /*			$('#content').empty();
 			$('<div/>').addClass('top_wrapper').attr({id:'top_wrapper'}).appendTo($('#content'));
 			$('<div/>').addClass('top_box').attr({id:'top_box'}).appendTo($('#top_box'));
 			$('<p/>').addClass('font_1 font_weight800 padding_top_30').html('TOP 숙소').appendTo($('#top_box'));*/
 			$('#content').empty();
 			
-			var i = 1;
+			//var i = 1;
+			var top_info = {
+					'type': '전체',
+					'gender': '전체',
+					'local': '전체'
+			};
+			//var top_info ='전체전체전체';
 			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
 			$('<div/>').html('TOP10 숙소 현황').addClass('top10title').appendTo('#page-wrapper');
+			/*
+			$('<div/>').addClass('select_top').appendTo('#page-wrapper');				
+				$('<select/>').addClass('btn btn-light').attr({id:'top_type'}).appendTo($('.select_top'));
+					$.each(['전체', 'MOTEL', 'HOTEL'], (i,j)=>{
+						$('<option/>').attr({value:j}).html(j).appendTo($('#top_type'));
+					});
+				$('<select/>').addClass('btn btn-light').attr({id:'top_gender'}).appendTo($('.select_top'));
+					$.each(['전체', '남', '여'], (i,j)=>{
+						$('<option/>').attr({value:j}).html(j).appendTo($('#top_gender'));
+					});
+				$('<select/>').addClass('btn btn-light').attr({id:'top_local'}).appendTo($('.select_top'));
+					$.each(['전체', '서울', '강원', '경기', '경상남도', '경상북도', '광주', '대구', '대전', '부산', '세종', '울산', '인천', '전라남도', '전라북도', '제주', '충청남도', '충청북도'], (i,j)=>{
+						$('<option/>').attr({value:j}).html(j).appendTo($('#top_local'));
+					});
+					
+				$('<button/>').addClass('btn btn-light').attr({id:'top_button', type:'button'}).html('검색').appendTo($('.select_top'))
+				.click(e=>{
+					$('.accom_list').empty();
+					top_info = {
+						'type': $('#top_type').val(),
+						'gender': $('#top_gender').val(),
+						'local': $('#top_local').val()
+					}
+					
+					
+					//top_info = $('#top_type').val() + $('#top_gender').val() + $('#top_local');
+					googleChart.service.topChart(top_info);
+				});
+				*/
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
-			$('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+i}).appendTo($('.accom_list'));
-				$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+i}).appendTo($('#premium_selecter'+i))
-					$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+i,src:'//yaimg.yanolja.com/v5/2017/11/16/17/640/5a0d5025becc08.90955197.jpg'}).appendTo($('#premium_selecter_li'+i))
-					$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+i}).appendTo($('#premium_selecter_li'+i));
-						$('<h3/>').attr({id:'list_title'+i}).html('H호텔').appendTo($('#premium_selecter_writer'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('대실').appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('최대 4시간').appendTo($('#premium_selecter_explanation'+i));
-							$('<h4/>').addClass('p_span p_padding20').html(50000).appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h4/>').addClass('p_span p_padding30').html(50000+40000).appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+i));
-		},
+			$('<div/>').addClass('accom_map').appendTo('#page-wrapper');
+			googleChart.service.topChart();
+		}/*,
 		top_list : x=>{
 			
-		}
+		}*/
 		
 }
