@@ -30,7 +30,7 @@
 	<script src="${context}/resources/js/dropzone.js"></script>
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/dropzone.css">
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
-	<script src="${context}/resources/js/app.js"></script>
+	<script src="${context}/resources/js/hyungjun.js"></script>
 </head>
 	
 <body>
@@ -39,7 +39,7 @@
 
 </div>
 <script>
-	app.init('${context}'); 
+	hyungjun.init('${context}'); 
 </script>
 </body>
 </html>

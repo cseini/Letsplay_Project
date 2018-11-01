@@ -17,7 +17,7 @@ public class AdminCtrl {
 	@Autowired AdminMapper admMap;
 	@Autowired Map<String, Object> map;
 	@Autowired HashMap<String,Object> smap;
-	
+/*	
 	@RequestMapping("/count")
 	public Map<String, Object> byAgeList(){
 		map.clear();
@@ -41,12 +41,12 @@ public class AdminCtrl {
 	public Map<String, Object> byBookQuarter(){
 		map.clear();
 		List<HashMap<String, Object>> byQuarter = admMap.getQuarter();
-		/*System.out.println(byQuarter);
+		System.out.println(byQuarter);
 		System.out.println(byQuarter.get(0).get("bookCount"));
 		System.out.println(byQuarter.get(1).get("bookCount"));
 		System.out.println(byQuarter.get(2).get("bookCount"));
 		System.out.println(byQuarter.get(3).get("bookCount"));
-		System.out.println(byQuarter.get(4).get("bookCount"));*/
+		System.out.println(byQuarter.get(4).get("bookCount"));
 		map.put("booked", byQuarter);
 		return map;
 	}
@@ -72,16 +72,17 @@ public class AdminCtrl {
 	public Map<String, Object> byTopLocal(){
 		map.clear();
 		List<HashMap<String, Object>> byLocal = admMap.getTopLocal();
-		/*System.out.println(byLocal.get(0).get("byAccom"));
+		System.out.println(byLocal.get(0).get("byAccom"));
 		System.out.println(byLocal.get(0).get("accomCount"));
 		System.out.println(byLocal.get(0).get("rank"));
 		System.out.println(byLocal.get(1).get("byAccom"));
 		System.out.println(byLocal.get(1).get("accomCount"));
-		System.out.println(byLocal.get(1).get("rank"));*/
+		System.out.println(byLocal.get(1).get("rank"));
 		map.put("topLocal", byLocal);
 		return map;
 		
 	}
+	*/
 	@GetMapping("/admin/basic")
 	public Map<String,Object> basic(){
 		map.clear();
@@ -162,10 +163,36 @@ public class AdminCtrl {
 		map.put("custoPop", admMap.getCustoPop());
 		return map;
 	}
+/*	
+	@GetMapping("/admin/top/{type}/{gender}/{local}")
+	public Map<String,Object> top(@PathVariable String type, @PathVariable String gender, @PathVariable String local){
+		map.clear();
+		smap.clear();
+		//System.out.println(type+"      "+gender+"          "+local);
+		if(type.equals("전체")) {
+			type = "%";
+		}
+		if(gender.equals("전체")) {
+			gender = "%";
+		}
+		if(local.equals("전체")) {
+			local = "%";
+		}
+		type += "%";
+		gender += "%";
+		local += "%";
+		System.out.println(type +"  "+ gender + "    "+local);
+		smap.put("type", type);
+		smap.put("gender", gender);
+		smap.put("local", local);
+		map.put("top", admMap.getTop(smap));
+		return map;
+	}
+	*/
 	@GetMapping("/admin/top")
 	public Map<String,Object> top(){
 		map.clear();
-		map.put("top", admMap.getTopRes());
+		map.put("top", admMap.getTop());
 		return map;
 	}
 }

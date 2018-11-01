@@ -211,7 +211,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     /* grid-column-gap: 10px; */
-    margin-left: 8%;
+    margin-left: 4%;
     padding-bottom: 5%;
     border: 1px solid #e5e5e5;
     cursor: pointer;
@@ -268,13 +268,32 @@ p{
 }
 
 .accom_list {
-    display: inline-block;
+    float: left;
+    width: 60%;
+    margin-left: -150px;
 }
-
-.top10title{
-	margin-top: 15px;
-	text-align: center;
+/*top 숙소*/
+#top_type{
+	display: inline;
+	width: 200px;
+}
+#top_gender{
+	display: inline;
+	width: 200px;
+}
+#top_local{
+	display: inline;
+	width: 200px;
+}
+.top10title {
+    text-align: center;
     font-size: 35px;
+    position: fixed;
+    background: white;
+    z-index: 2;
+    width: 100%;
+    margin-top: -5px;
+    padding-bottom: 5px;
 }
 
 .premium_selecter_sh_li{
@@ -297,4 +316,14 @@ p{
 } 
 #booked_div{
 	border: 1px solid #e5e5e5;
+}
+
+#accom_map {
+    margin-top: 20px;
+    position: fixed;
+    margin-left: 50%;
+    width: 700px;
+    height: 553px;
+    margin-top: 75px;
+    margin-left: -500;
 }
