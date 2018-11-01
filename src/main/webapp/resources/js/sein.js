@@ -26,7 +26,7 @@ sein.board ={
 		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));		
 		/*글쓰기 버튼*/
-		if($.cookie('loginID')){
+		if(sessionStorage.getItem('login')){
 			$('<div/>').addClass('bt_rap').append(
 				$('<span/>').addClass('bt_write').append(
 					$('<button>').attr({'data-target':"#layerpop",'data-toggle':"modal"}).addClass('b_all').html('글쓰기'))
@@ -216,10 +216,10 @@ sein.service ={
 					$('<li/>').addClass('btnlike').append(
 							$('<a/>').attr({href:"#none"}).append(
 									$('<span/>').addClass('bl_like'))).click(e=>{
-										if($.cookie('loginID')){
+										if(sessionStorage.getItem('login')){
 											if($('.btnlike').hasClass('on')){
 												if(confirm('좋아요 취소 하시겠습니까?')){
-													$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
+													$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 													like_count=like_count-1;
 													$('.like_count').html(like_count);
 													$('.btnlike').removeClass('on');
@@ -227,7 +227,7 @@ sein.service ={
 											}else{
 												if(confirm('좋아요 하시겠습니까?')){
 													like_count=like_count+1;
-													$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
+													$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 													$('.like_count').html(like_count);
 													$('.btnlike').addClass('on');
 												}	
@@ -248,12 +248,12 @@ sein.service ={
 									$('<span/>').addClass('bl_bookmark'))).click(e=>{
 										if($('.btnBookmark').hasClass('on')){
 											if(confirm('북마크 취소 하시겠습니까?')){
-												$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
+												$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 												$('.btnBookmark').removeClass('on');
 											}											
 										}else{
 											if(confirm('북마크 하시겠습니까?')){
-												$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
+												$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 												$('.btnBookmark').addClass('on');
 											}	
 										}
@@ -293,7 +293,7 @@ sein.service ={
 					url:$.ctx()+'/cast/check/',
 					method:'post',
 					contentType:'application/json',
-					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie('loginID')}),
+					data:JSON.stringify({msg_seq:x.msg_seq,member_id:sessionStorage.getItem('login')}),
 					success:d=>{
 						if(d.like_check===1){
 							$('.btnlike').addClass('on')
@@ -387,10 +387,10 @@ sein.service ={
 						$('<span>').addClass('bt_txt').html('좋아요'),
 						$('<b/>').addClass('like_count').html(d.like_count)
 					).click(e=>{
-						if($.cookie('loginID')){
+						if(sessionStorage.getItem('login')){
 							if($('.btnlike').hasClass('on')){
 								if(confirm('좋아요 취소 하시겠습니까?')){
-									$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
+									$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 									like_count=like_count-1;
 									$('.like_count').html(like_count);
 									$('.btnlike').removeClass('on');
@@ -398,7 +398,7 @@ sein.service ={
 							}else{
 								if(confirm('좋아요 하시겠습니까?')){
 									like_count=like_count+1;
-									$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
+									$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 									$('.like_count').html(like_count);
 									$('.btnlike').addClass('on');
 								}	
@@ -416,12 +416,12 @@ sein.service ={
 					).click(e=>{
 						if($('.btnBookmark').hasClass('on')){
 							if(confirm('북마크 취소 하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));								
+								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+sessionStorage.getItem('login'));								
 								$('.btnBookmark').removeClass('on');
 							}											
 						}else{
 							if(confirm('북마크 하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
+								$.getJSON($.ctx()+'/cast/saveBookmark/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 								$('.btnBookmark').addClass('on');
 							}	
 						}
@@ -467,15 +467,15 @@ sein.service ={
 				$('<div/>').addClass('bt_read').append(
 					$('<button/>').addClass('jsonSubscribedStatus').append($('<span/>').addClass('bt_reading'))
 				).appendTo($('.user_cast')).click(e=>{
-					if($.cookie('loginID')){
+					if(sessionStorage.getItem('login')){
 						if($('.bt_read').hasClass('on')){
 							if(confirm('구독을 해지 하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+d.member_id+'/')
+								$.getJSON($.ctx()+'/cast/subDes/'+sessionStorage.getItem('login')+'/'+d.member_id+'/')
 								$('.bt_read').removeClass('on');
 							}											
 						}else{
 							if(confirm(d.nickname+'님의 글을 구독하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+d.member_id+'/')
+								$.getJSON($.ctx()+'/cast/subInc/'+sessionStorage.getItem('login')+'/'+d.member_id+'/')
 								$('.bt_read').addClass('on');
 							}								
 						}
@@ -485,18 +485,18 @@ sein.service ={
 						};
 					}
 				});
-				if($.cookie('loginID')==d.member_id){
+				if(sessionStorage.getItem('login')==d.member_id){
 					$('.bt_read').remove();
 				}
 				sein.service.reply(d);
 				/*구독중체크*/
-				$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id+'/',d=>{
+				$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 					if(d=='1'){
 						$('.bt_read').addClass('on');
 					}
 				})
 				/*구독수체크*/
-				$.getJSON($.ctx()+'/cast/subcount/'+$.cookie('loginID')+'/',d=>{
+				$.getJSON($.ctx()+'/cast/subcount/'+sessionStorage.getItem('login')+'/',d=>{
 					$('#sub_count').html(d);
 				})
 			})
@@ -548,7 +548,7 @@ sein.service ={
 			.append($('<button/>').attr({type:'submit'}).addClass('btn_saveComment').append($('<b/>').attr({title:'commentWrite'}).html('댓글쓰기')))
 			.appendTo($('.re_write'))
 			.click(e=>{
-				if($.cookie('loginID')){
+				if(sessionStorage.getItem('login')){
 					$.ajax({
 						url:$.ctx()+'/cast/reWrite/',
 						method:'post',
@@ -597,7 +597,7 @@ sein.service ={
 						url:$.ctx()+'/cast/reWrite/',
 						method:'post',
 						contentType:'application/json',
-						data:JSON.stringify({member_id:$.cookie('loginID'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
+						data:JSON.stringify({member_id:sessionStorage.getItem('login'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
 						success:d=>{
 							$('#re_write_add').remove();
 							$('#inner_bg_reply').remove();
@@ -1100,7 +1100,7 @@ sein.service ={
 		$('#sein_content').empty();
 		var sub_count;
 		/*구독중체크*/
-		$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id+'/',d=>{
+		$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 			if(d===1){
 				$('.bt_read').addClass('on');
 			}
@@ -1139,15 +1139,15 @@ sein.service ={
 				).click(e=>{
 					if($('.bt_read').hasClass('on')){
 						if(confirm('구독을 해지 하시겠습니까?')){
-							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							$.getJSON($.ctx()+'/cast/subDes/'+sessionStorage.getItem('login')+'/'+x.member_id+'/')
 							$('.bt_read').removeClass('on');
 							sub_count=sub_count-1;
 							$('#sub_count').html(sub_count);
 						}			
 					}else{
 						if(confirm(x.nickname+'님의 글을 구독하시겠습니까?')){
-							if($.cookie('loginID')){
-								$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							if(sessionStorage.getItem('login')){
+								$.getJSON($.ctx()+'/cast/subInc/'+sessionStorage.getItem('login')+'/'+x.member_id+'/')
 								$('.bt_read').addClass('on');
 								sub_count=sub_count+1;
 								$('#sub_count').html(sub_count);
@@ -1164,7 +1164,7 @@ sein.service ={
 			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').attr({id:'sub_count'}))
 		).appendTo($('.caster_rap'));
 		
-		if(x.member_id==$.cookie('loginID')){
+		if(x.member_id==sessionStorage.getItem('login')){
 			$('.bt_read').remove();
 		}
 		
@@ -1334,7 +1334,7 @@ sein.service ={
 								),
 								$('<div/>').addClass('bt_rap')
 							).appendTo($('.contents'))
-							$.getJSON($.ctx()+'/mysub/'+$.cookie('loginID')+'/',d=>{
+							$.getJSON($.ctx()+'/mysub/'+sessionStorage.getItem('login')+'/',d=>{
 								$.each(d.list,(i,j)=>{
 									sein.service.mysub(j);	
 								})
@@ -1349,7 +1349,7 @@ sein.service ={
 									),
 									$('<div/>').addClass('bt_rap')
 								).appendTo($('.contents'))
-								$.getJSON($.ctx()+'/myBookmark/'+$.cookie('loginID')+'/',d=>{
+								$.getJSON($.ctx()+'/myBookmark/'+sessionStorage.getItem('login')+'/',d=>{
 								$.each(d.list,(i,j)=>{
 									sein.service.mybookmark(j);	
 								})
@@ -1459,7 +1459,7 @@ sein.service ={
 						$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
 							if(confirm('삭제 하시겠습니까?')){
 								$('#bookmark'+x.msg_seq).remove();
-								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+$.cookie('loginID'));
+								$.getJSON($.ctx()+'/cast/deleteBookmark/'+x.msg_seq+'/'+sessionStorage.getItem('login'));
 							}
 						})
 					)
@@ -1492,7 +1492,7 @@ sein.service ={
 					),
 					$('<b/>').attr({style:'width:100px;height:30px'}).addClass('bg_del').html('구독취소').click(e=>{
 						if(confirm('구독을 해지 하시겠습니까?')){
-							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
+							$.getJSON($.ctx()+'/cast/subDes/'+sessionStorage.getItem('login')+'/'+x.member_id+'/')
 							$('.bt_read').removeClass('on');
 							$('#mybook_'+x.member_id).remove();
 						}
