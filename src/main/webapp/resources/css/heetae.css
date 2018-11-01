@@ -1,11 +1,28 @@
 @charset "UTF-8";
 
+
 li {
 	list-style: none;
 }
 
 em{
 	font-style: normal;
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.box.has-advanced-upload {
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
 }
 
 .heetae_hide_ico{
@@ -504,9 +521,10 @@ em{
 }
 
 .heetae_fileupload_inputbox_input{
-    font-size: 14px;
-    color: #666666;
-    margin-left: 10px;
+    margin-left: 125px;
+    top: 550px;
+    position: absolute;
+    
 }
 
 .heetae_textarea_support_rating{
@@ -663,6 +681,39 @@ em{
 .heetae_tab_info_reserve_btn:hover{
 	text-decoration: none;
 	color: #fff;  
+}
+
+.heetae_select_paytype_box{
+	margin-bottom: 12px;
+}
+
+.heetae_paybox .heetae_paybox_con1,.heetae_paybox_con2{
+	display: block;
+	height: 50px;
+	font-size: 17px;
+}
+
+.heetae_paybox_con3{
+	display: block;
+	height: 50px;
+}
+
+.heetae_paybox_con3-1{
+	float: right;
+    font-size: 20px;
+    margin-right: 5px;
+    font-weight: 1000;
+}
+
+.heetae_paybox_con3-2{
+	float: right;
+    font-size: 30px;
+    font-weight: 1000;
+    color: #dc3545;
+    margin-bottom: 0px;
+    position: relative;
+    bottom: 9px;
+    left: 3px;
 }
 
 .heetae_info_modal_btn{

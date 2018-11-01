@@ -707,7 +707,9 @@ sein.service ={
 			).appendTo('#modalContent');
 			 var objDragAndDrop = $(".dragAndDropDiv");
              
-			  $(document).on("dragenter",".dragAndDropDiv",function(e){
+			 
+			
+			$(document).on("dragenter",".dragAndDropDiv",function(e){
                 e.stopPropagation();
                 e.preventDefault();
                 $(this).attr('style','border:2px solid #0B85A1;font-size:12px');
@@ -923,7 +925,7 @@ sein.service ={
                 rowCount++;
                 var row="odd";
                 if(rowCount %2 ==0) row ="even";
-                this.statusbar = $("<div class='statusbar "+row+"'></div>");
+                this.statusbar = $("<div class='statusbar "+row+"'></div>").appendTo('.modal-body');
                 this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
                 this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
                 this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);

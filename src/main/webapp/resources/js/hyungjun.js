@@ -249,6 +249,7 @@ hyungjun.permision = (()=>{
 														});
 												}else{
 													sessionStorage.setItem("login", d.mbr.member_id);
+													alert(sessionStorage.getItem("login"));
 													sessionStorage.setItem("profileimg", d.mbr.profileimg);
 													sessionStorage.setItem("nickname", d.mbr.nickname);
 													hyungjun.router.home()
