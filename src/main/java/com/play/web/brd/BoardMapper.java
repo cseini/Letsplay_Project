@@ -40,5 +40,6 @@ public interface BoardMapper {
 	public List<SeinResult> rankLike();
 	public List<SeinResult> search(HashMap<String, Object> smap);
 	public int searchCount(String search);
+	public List<SeinResult> nearAccom(String region);
 	
 }

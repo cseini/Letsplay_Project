@@ -32,4 +32,8 @@ public class SeinResult {
 	private Integer like_check, bookmark_check;
 	private String sub_mem_id, saved_unique;
 	
+	/*accommodation*/
+		private String accom_seq, accom_name, accom_addr, 
+		accom_phone, accom_business_no, accom_type, accom_date, accom_grade;
+		private double longitude, latitude;
 }

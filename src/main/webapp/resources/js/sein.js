@@ -8,11 +8,6 @@ sein.board ={
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #f5f5f5'}).appendTo($('#content'));
-
-		/*mycast
-		$('<button/>').addClass('btn btn-primary').html('mycast').appendTo($('#sein_content')).click(e=>{
-   			sein.service.mycast();	
-		})*/
 		
 		/*검색창*/
 		$('<div/>').addClass('search_rap').append(
@@ -28,20 +23,21 @@ sein.board ={
 		
 		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
-
+		
+		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));		
 		/*글쓰기 버튼*/
 		if($.cookie('loginID')){
-		$('<div/>').addClass('bt_rap').append(
-			$('<span/>').addClass('bt_write').append(
-				$('<button>').attr({'data-target':"#layerpop",'data-toggle':"modal"}).addClass('b_all').html('글쓰기'))
-		).click(e=>{
-			sein.service.modal('캐스트 작성하기');
-			sein.service.write();
-		})
-		.appendTo($('#cardlist_rap'));
+			$('<div/>').addClass('bt_rap').append(
+				$('<span/>').addClass('bt_write').append(
+					$('<button>').attr({'data-target':"#layerpop",'data-toggle':"modal"}).addClass('b_all').html('글쓰기'))
+			).click(e=>{
+				sein.service.modal('캐스트 작성하기');
+				sein.service.write();
+			})
+			.appendTo($('#cardlist_rap'));
 		}
 		/*컨텐츠 리스트 전체*/
-		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
+		
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
 		$.ajax({
 			url:$.ctx()+'/cast/',
@@ -107,78 +103,78 @@ sein.board ={
 					$('<button>').addClass('b_all').html('더보기')))
 			.appendTo($('#cardlist_rap'))
 			.click(e=>{
-			let page=1;
-			$(window).off("scroll");
-			$('#bt_more').remove();
-			$(window).scroll(()=>{
-				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
-					$.ajax({
-						url:$.ctx()+'/cast/',
-						method:'post',
-						contentType:'application/json',
-						data:JSON.stringify({board_id:'cast',pageNumber:++page}),
-						success:d=>{
-							$.each(d.list,(i,j)=>{
-								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
-								var $item = $('<div/>').addClass('grid-item card_inner').append(
-										$('<div/>').addClass('card_top').append(
-												$('<a/>').attr({href:'#'}).append(
-													$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
-													.click(e=>{
-														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
-															sein.service.detail(j);	
+				$('#bt_more').remove();
+				let page=1;
+				$(window).scroll(()=>{
+					if($('#cardlist_rap').length>0 && $(document).height() <= $(window).scrollTop()+$(window).height()+1){
+						$.ajax({
+							url:$.ctx()+'/cast/',
+							method:'post',
+							contentType:'application/json',
+							data:JSON.stringify({board_id:'cast',pageNumber:++page}),
+							success:d=>{
+								$.each(d.list,(i,j)=>{
+									var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
+									var $item = $('<div/>').addClass('grid-item card_inner').append(
+											$('<div/>').addClass('card_top').append(
+													$('<a/>').attr({href:'#'}).append(
+														$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
+														.click(e=>{
+															$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+																sein.service.detail(j);	
+															})
 														})
-													})
-												)
-											),
-											$('<div/>').addClass('card_bottom').append(
-												$('<div/>').addClass('user_pic').append(
-													$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg,style:'cursor:pointer'}).click(e=>{
-														sein.service.caster(j);
-													})				
+													)
 												),
-												$('<div/>').addClass('user_info').append(
-													$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
-													.click(e=>{
-														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
-															sein.service.detail(j);	
+												$('<div/>').addClass('card_bottom').append(
+													$('<div/>').addClass('user_pic').append(
+														$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg,style:'cursor:pointer'}).click(e=>{
+															sein.service.caster(j);
+														})				
+													),
+													$('<div/>').addClass('user_info').append(
+														$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
+														.click(e=>{
+															$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+																sein.service.detail(j);	
+															})
+														}),
+														$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
+														.click(e=>{
+															sein.service.caster(j);
 														})
-													}),
-													$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
-													.click(e=>{
-														sein.service.caster(j);
-													})
-												),
-												$('<div/>').addClass('user_cont').append(
-													$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))	.click(e=>{
-														$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
-															sein.service.detail(j);	
-														})
-													})		
-												),
-												$('<div/>').addClass('count').append(
-													$('<span/>').addClass('ico_like'),
-													$('<b/>').html(j.like_count),
-													$('<span/>').addClass('ico_read'),
-													$('<b/>').html(j.msg_count)
+													),
+													$('<div/>').addClass('user_cont').append(
+														$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))	.click(e=>{
+															$.getJSON($.ctx()+'/cast/read/'+j.msg_seq,d=>{
+																sein.service.detail(j);	
+															})
+														})		
+													),
+													$('<div/>').addClass('count').append(
+														$('<span/>').addClass('ico_like'),
+														$('<b/>').html(j.like_count),
+														$('<span/>').addClass('ico_read'),
+														$('<b/>').html(j.msg_count)
+													)
 												)
 											)
-										)
-								$grid.append($item).isotope('appended',$item).isotope('layout');
-							})
-							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
-							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(d.page.pageNumber>=d.page.pageCount){
-								$(window).off("scroll");
+									$grid.append($item).isotope('appended',$item).isotope('layout');
+								})
+								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
+								$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+							},
+							error:(m1,m2,m3)=>{
+								alert(m3);
 							}
-						},
-						error:(m1,m2,m3)=>{
-							alert(m3);
-						}
-					})
-				}
+						})
+					} else if(!$('#cardlist_rap').length>0){
+						$(window).unbind('scroll');
+					}
+				})
 			})
-		})
+			
+		
 			
 	}
 }
@@ -194,8 +190,8 @@ sein.service ={
 				$.each(d.list,(i,j)=>{
 					$('<li/>').attr({'data-target':'#carousel', 'data-slide-to':i}).addClass(clazz[i]).appendTo($('.carousel-indicators'));	
 					$('<div/>').attr({style:'cursor:pointer'}).addClass('carousel-item '+clazz[i]).append(
-						$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'width:1300px;height:500px'}),
-						$('<h3/>').addClass('carousel-caption center').append(
+						$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'width:1300px;height:380px'}),
+						$('<h1/>').addClass('carousel-caption center').attr({style:'margin-bottom:117px'}).append(
 							$('<p>'+j.msg_title+'</p>')
 						)
 					).appendTo($('.carousel-inner')).click(e=>{
@@ -205,11 +201,11 @@ sein.service ={
 			})
 			
 			$('<a/>').addClass('carousel-control-prev').attr({href:'#carousel',role:'button','data-slide':'prev'}).appendTo($('#carousel'));
-			$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true'}).appendTo($('.carousel-control-prev'));
+			$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true',style:'width:50px;height:50px'}).appendTo($('.carousel-control-prev'));
 			$('<span/>').addClass('sr-only').html('이전').appendTo($('.carousel-control-prev')).appendTo($('.carousel-control-prev'));
 
 			$('<a/>').addClass('carousel-control-next').attr({href:'#carousel',role:'button','data-slide':'next'}).appendTo($('#carousel'));
-			$('<span/>').addClass('carousel-control-next-icon').attr({'aria-hidden':'true'}).appendTo($('.carousel-control-next'));
+			$('<span/>').addClass('carousel-control-next-icon').attr({'aria-hidden':'true',style:'width:50px;height:50px'}).appendTo($('.carousel-control-next'));
 			$('<span/>').addClass('sr-only').html('다음').appendTo($('.carousel-control-next')).appendTo($('.carousel-control-next'));
 			$('.carousel').carousel({
 				interval: 2000
@@ -222,20 +218,26 @@ sein.service ={
 					$('<li/>').addClass('btnlike').append(
 							$('<a/>').attr({href:"#none"}).append(
 									$('<span/>').addClass('bl_like'))).click(e=>{
-										if($('.btnlike').hasClass('on')){
-											if(confirm('좋아요 취소 하시겠습니까?')){
-												$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
-												like_count=like_count-1;
-												$('.like_count').html(like_count);
-												$('.btnlike').removeClass('on');
-											}											
+										if($.cookie('loginID')){
+											if($('.btnlike').hasClass('on')){
+												if(confirm('좋아요 취소 하시겠습니까?')){
+													$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
+													like_count=like_count-1;
+													$('.like_count').html(like_count);
+													$('.btnlike').removeClass('on');
+												}											
+											}else{
+												if(confirm('좋아요 하시겠습니까?')){
+													like_count=like_count+1;
+													$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
+													$('.like_count').html(like_count);
+													$('.btnlike').addClass('on');
+												}	
+											}
 										}else{
-											if(confirm('좋아요 하시겠습니까?')){
-												like_count=like_count+1;
-												$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
-												$('.like_count').html(like_count);
-												$('.btnlike').addClass('on');
-											}	
+											if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+												hyungjoon.permision.login();	
+											};
 										}
 									}),
 					$('<li/>').attr({id:'btnCommnet'}).append(
@@ -272,13 +274,13 @@ sein.service ={
 			).appendTo($('#side_menu'));
 		},
 		detail : x=>{
-			$(window).off("scroll");
 			let recent = new Array();
-			$.each($.cookie('recent'),(i,j)=>{
-				recent.unshift(j);
+			if(JSON.parse(sessionStorage.getItem('recent')))
+			$.each(JSON.parse(sessionStorage.getItem('recent')),(i,j)=>{
+				recent.push(j);
 			})
-			recent.unshift(x);
-			$.cookie('recent',recent);
+			recent.push({msg_seq:x.msg_seq,msg_photo:x.msg_photo,profileimg:x.profileimg,msg_title:x.msg_title,nickname:x.nickname,tag:x.tag,like_count:x.like_count,msg_count:x.msg_count});
+			sessionStorage.setItem('recent',JSON.stringify(recent));
 			
 			$('#wrapper').scroll(()=>{e.preventDefault()});
 			$('#sein_content').empty();
@@ -303,16 +305,6 @@ sein.service ={
 						}
 					},
 					error:(m1,m2,m3)=>{alert(m3)}
-				})
-				/*구독중체크*/
-				$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id,d=>{
-					if(d===1){
-						$('.bt_read').addClass('on')						
-					}
-				})
-				/*구독수체크*/
-				$.getJSON($.ctx()+'/cast/subcount/'+$.cookie('loginID')+'/',d=>{
-					$('#sub_count').html(d);
 				})
 				
 				sein.service.side_menu(d);
@@ -345,20 +337,13 @@ sein.service ={
 						})
 					).appendTo($('.detail_user'))
 				}
-				let dates = new Date(x.msg_date)
-		        let dt = dates.getFullYear()+
-		        "-" +(dates.getMonth()+1)
-		        + "-" + dates.getDate()+" "
-		        + dates.getHours()+ ":"
-		        + dates.getMinutes()+":"
-		        + dates.getSeconds();
 		        
 				$('<div/>').addClass('detail_title').append(
 					$('<h3/>').addClass('sc_out'),
 					$('<p/>').html(d.msg_title)		
 				).append(
 					$('<div/>').addClass('count').append(
-						$('<span/>').addClass('date').html(dt),
+						$('<span/>').addClass('date').html(sein.service.date_format(x.msg_date)),
 						$('<span/>').addClass('ico_like'),
 						$('<b/>').addClass('like_count').html(d.like_count),
 						$('<span/>').addClass('ico_read'),
@@ -368,31 +353,31 @@ sein.service ={
 				
 				$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
 					$('<a/>').attr({href:'#'}).addClass('reply').append(
-						$('<span/>').html('댓글'),$('<b/>').text(d.list.length))
-						.appendTo($('.detail_title')).click(e=>{
-							var offset = $('.bt_rap').offset();
-							$('html').animate({scrollTop : offset.top},400)							
-						});	
+						$('<span/>').html('댓글'),$('<b/>').addClass('replycount').text(d.list.length)
+					).appendTo($('.detail_title')).click(e=>{
+						var offset = $('.bt_rap').offset();
+						$('html').animate({scrollTop : offset.top},400)							
+					});	
 				})
+				
 				
 				$('<div/>').addClass('detail_area').appendTo($('.inner_bg'));
 				$('<p/>').html('&nbsp').appendTo($('.detail_area'));
+
 				/*--------content시작-------*/
-				
 				$('<h3>'+d.msg_content+'</h3>').appendTo($('.detail_area'));
 				$('<div/>').attr({id:'imgAdd',style:'text-align:center',align:'center'}).append(
 						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo})
 				)
 				.appendTo($('.detail_area'));
 				if(d.msg_photo1!==undefined){
-					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1}).appendTo($('#imgAdd'));
+					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1,style:'margin-top:10px;'}).appendTo($('#imgAdd'));
 				}
 				
 				/*해당 주소 지도*/
 				if(!d.msg_addr==''||!d.msg_addr==undefined){
 					sein.service.map({detail:d,appendTo:'.inner_bg'});
 				}
-					
 					
 				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
@@ -404,20 +389,26 @@ sein.service ={
 						$('<span>').addClass('bt_txt').html('좋아요'),
 						$('<b/>').addClass('like_count').html(d.like_count)
 					).click(e=>{
-						if($('.btnlike').hasClass('on')){
-							if(confirm('좋아요 취소 하시겠습니까?')){
-								$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
-								like_count=like_count-1;
-								$('.like_count').html(like_count);
-								$('.btnlike').removeClass('on');
-							}											
+						if($.cookie('loginID')){
+							if($('.btnlike').hasClass('on')){
+								if(confirm('좋아요 취소 하시겠습니까?')){
+									$.getJSON($.ctx()+'/cast/likeDes/'+x.msg_seq+'/'+$.cookie('loginID'));
+									like_count=like_count-1;
+									$('.like_count').html(like_count);
+									$('.btnlike').removeClass('on');
+								}											
+							}else{
+								if(confirm('좋아요 하시겠습니까?')){
+									like_count=like_count+1;
+									$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
+									$('.like_count').html(like_count);
+									$('.btnlike').addClass('on');
+								}	
+							}
 						}else{
-							if(confirm('좋아요 하시겠습니까?')){
-								like_count=like_count+1;
-								$.getJSON($.ctx()+'/cast/likeInc/'+x.msg_seq+'/'+$.cookie('loginID'));
-								$('.like_count').html(like_count);
-								$('.btnlike').addClass('on');
-							}	
+							if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+								hyungjoon.permision.login();	
+							};
 						}
 					}),
 					$('<li/>').append(
@@ -478,23 +469,40 @@ sein.service ={
 				$('<div/>').addClass('bt_read').append(
 					$('<button/>').addClass('jsonSubscribedStatus').append($('<span/>').addClass('bt_reading'))
 				).appendTo($('.user_cast')).click(e=>{
-					if($('.bt_read').hasClass('on')){
-						if(confirm('구독을 해지 하시겠습니까?')){
-							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+d.member_id+'/')
-							$('.bt_read').removeClass('on');
-						}											
+					if($.cookie('loginID')){
+						if($('.bt_read').hasClass('on')){
+							if(confirm('구독을 해지 하시겠습니까?')){
+								$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+d.member_id+'/')
+								$('.bt_read').removeClass('on');
+							}											
+						}else{
+							if(confirm(d.nickname+'님의 글을 구독하시겠습니까?')){
+								$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+d.member_id+'/')
+								$('.bt_read').addClass('on');
+							}								
+						}
 					}else{
-						if(confirm(d.nickname+'님의 글을 구독하시겠습니까?')){
-							$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+d.member_id+'/')
-							$('.bt_read').addClass('on');
-						}	
+						if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+							hyungjoon.permision.login();	
+						};
 					}
 				});
 				if($.cookie('loginID')==d.member_id){
 					$('.bt_read').remove();
 				}
 				sein.service.reply(d);
+				/*구독중체크*/
+				$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id+'/',d=>{
+					if(d=='1'){
+						$('.bt_read').addClass('on');
+					}
+				})
+				/*구독수체크*/
+				$.getJSON($.ctx()+'/cast/subcount/'+$.cookie('loginID')+'/',d=>{
+					$('#sub_count').html(d);
+				})
 			})
+			
 			$('<div/>').attr({style:'padding-top:30px'}).addClass('bottomContent contents bg_type').appendTo('#sein_content').append(
 				$('<div/>').addClass('con_inner').append(
 					$('<div/>').addClass('cast_area').append(
@@ -505,7 +513,7 @@ sein.service ={
 					)
 				)	
 			);
-			$.each($.cookie('recent'),(i,j)=>{
+			$.each(JSON.parse(sessionStorage.getItem('recent')).reverse(),(i,j)=>{
 				if(i<4){
 					$('<li/>').append(
 						$('<a/>').attr({href:'#'}).append(
@@ -525,27 +533,24 @@ sein.service ={
 					).appendTo('.recentUl');
 				}
 			})
-			
 		},
 		reply : x=>{
 			$('<div/>').attr({id:'inner_bg_reply'}).addClass('inner_bg').appendTo($('.con_detail'));
 			$('<div/>').addClass('reply_area').appendTo($('#inner_bg_reply'));
-			var reply_count;
 			$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
 				$('<div/>').addClass('re_txt')
-				.append($('<span/>').html('댓글'),$('<b>').html(d.list.length))
+				.append($('<span/>').html('댓글'),$('<b>').addClass('replycount').html(d.list.length))
 				.appendTo($('.reply_area'));	
 			})
 			$('<div/>').addClass('re_inner').appendTo($('#inner_bg_reply'));
 			$('<div/>').addClass('edit_rap').appendTo($('.re_inner'));
-			
 			$('<div/>').addClass('re_write').attr({style:'height:98px'}).appendTo($('.edit_rap'));
 			$('<textarea/>').attr({id:'commentText',rows:'4',cols:'50',placeholder:'댓글을 입력해주세요.'}).appendTo($('.re_write'));
 			$('<div/>').addClass('bt_rap')
 			.append($('<button/>').attr({type:'submit'}).addClass('btn_saveComment').append($('<b/>').attr({title:'commentWrite'}).html('댓글쓰기')))
 			.appendTo($('.re_write'))
 			.click(e=>{
-				if($.cookie('loginID')!==''){
+				if($.cookie('loginID')){
 					$.ajax({
 						url:$.ctx()+'/cast/reWrite/',
 						method:'post',
@@ -554,12 +559,13 @@ sein.service ={
 						success:d=>{
 							$('#inner_bg_reply').remove();						
 							sein.service.reply(x);
+							$('.replycount').first().text($('.replycount').last().text()*1+1)
 						},
 						error:(m1,m2,m3)=>{alert(m3)}
 					})
 				}else{
 					if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-						app.permision.login();	
+						hyungjoon.permision.login();	
 					};
 				}
 			});
@@ -570,9 +576,11 @@ sein.service ={
 		},
 		re_list : x=>{
 			$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
+				console.log('댓글 개수 : '+d.list.length);
 				$.each(d.list,(i,j)=>{
 					sein.service.re_read(j);	
 					$.getJSON($.ctx()+'/cast/rereply/'+x.board_id+'/'+j.msg_seq,d1=>{
+						console.log('대댓글 개수 : '+d1.list.length);
 						$.each(d1.list,(i,j)=>{
 							sein.service.rereply(j);	
 						})
@@ -594,8 +602,8 @@ sein.service ={
 						data:JSON.stringify({member_id:$.cookie('loginID'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
 						success:d=>{
 							$('#re_write_add').remove();
-							sein.service.detail({msg_seq:x.msg_ref,member_id:$.cookie('loginID')});
-								$('html').animate({scrollTop : $('footer').offset().top+1000},400)
+							$('#inner_bg_reply').remove();
+							sein.service.reply({board_id:'cast',msg_seq:x.msg_ref});
 						},
 						error:(m1,m2,m3)=>{alert(m3);}
 					})
@@ -625,13 +633,6 @@ sein.service ={
 			).appendTo($('#reply_empty'+x.msg_seq));
 		},
 		re_read : x=>{
-			let dates = new Date(x.msg_date)
-	        let dt = dates.getFullYear()+
-	        "-" +(dates.getMonth()+1)
-	        + "-" + dates.getDate()+" "
-	        + dates.getHours()+ ":"
-	        + dates.getMinutes()+":"
-	        + dates.getSeconds();
 			$('<div/>').attr({id:'re_comment'+x.msg_seq}).addClass('re_comment').appendTo($('.re_box'));
 			$('<div/>').addClass('inner').append(
 				$('<div/>').addClass('user_pic').append(
@@ -640,8 +641,8 @@ sein.service ={
 					)
 				),
 				$('<div/>').addClass('user_text').append(
-					$('<strong/>').html(x.member_id), /*추후 멤버테이블 조인걸어 이름으로 수정*/
-					$('<span/>').addClass('date').html(' '+dt)
+					$('<strong/>').html(x.nickname),
+					$('<span/>').addClass('date').html(' '+sein.service.date_format(x.msg_date))
 				),
 				$('<div/>').addClass('re_cont').append(
 					$('<p/>').attr({id:'p_re_read'+x.msg_seq}).html(x.msg_content)
@@ -653,7 +654,7 @@ sein.service ={
 							.click(e=>{
 								if($.cookie("loginID")==""){
 									if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-										app.permision.login();	
+										hyungjoon.permision.login();	
 									};
 								}else{
 									sein.service.rere_write(x);
@@ -670,11 +671,13 @@ sein.service ={
 								.click(e=>{
 									if(confirm('삭제하시겠습니까?')==true){
 									$.getJSON($.ctx()+'/cast/reDelete/'+x.board_id+'/'+x.msg_seq);
+										$('.replycount').text($('.replycount').last().text()-1)
 										var offset = $('#re_comment'+x.msg_seq).offset();
-										$('html').animate({scrollTop : offset.top},400)				
+										$('html').animate({scrollTop : offset.top-300},400)				
 										$('#re_comment'+x.msg_seq).remove();
 									}
 								})		
+								
 							)
 						)
 					)
@@ -708,9 +711,9 @@ sein.service ={
 			 var objDragAndDrop = $(".dragAndDropDiv");
              
 			  $(document).on("dragenter",".dragAndDropDiv",function(e){
-                e.stopPropagation();
-                e.preventDefault();
-                $(this).attr('style','border:2px solid #0B85A1;font-size:12px');
+	            e.stopPropagation();
+	            e.preventDefault();
+	            $(this).attr('style','border:2px solid #0B85A1;font-size:12px');
             });
             $(document).on("dragover",".dragAndDropDiv",function(e){
                 e.stopPropagation();
@@ -749,7 +752,6 @@ sein.service ={
                      var status = new createStatusbar(obj); //Using this we can set progress.
                      status.setFileNameSize(files[i].name,files[i].size);
                      sendFileToServer(fd,status);
-               
                 }
              }
              
@@ -844,7 +846,7 @@ sein.service ={
     					url:$.ctx()+'/cast/write/',
     					method:'post',
     					contentType:'application/json',
-    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr')}),
+    					data:JSON.stringify({member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
     					success:d=>{
     						 $('#layerpop').on('hidden.bs.modal',()=>{
 	            				sein.board.cast();
@@ -874,7 +876,7 @@ sein.service ={
             $(document).on("dragenter",".dragAndDropDiv",function(e){
                 e.stopPropagation();
                 e.preventDefault();
-                $(this).attr('style','border:2px solid #0B85A1');
+                $(this).attr('style','border:2px solid #0B85A1;font-size:12px');
             });
             $(document).on("dragover",".dragAndDropDiv",function(e){
                 e.stopPropagation();
@@ -882,7 +884,7 @@ sein.service ={
             });
             $(document).on("drop",".dragAndDropDiv",function(e){
                  
-                $(this).attr('style','border:2px dotted #0B85A1');
+                $(this).attr('style','border:2px dotted #0B85A1;font-size:12px');
                 e.preventDefault();
                 var files = e.originalEvent.dataTransfer.files;
              
@@ -896,7 +898,7 @@ sein.service ={
             $(document).on('dragover', function (e){
               e.stopPropagation();
               e.preventDefault();
-              objDragAndDrop.attr('style','border:2px dotted #0B85A1');
+              objDragAndDrop.attr('style','border:2px dotted #0B85A1;font-size:12px');
             });
             $(document).on('drop', function (e){
                 e.stopPropagation();
@@ -1006,7 +1008,7 @@ sein.service ={
    					url:$.ctx()+'/cast/modify/',
    					method:'post',
    					contentType:'application/json',
-   					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1]}),
+   					data:JSON.stringify({msg_seq:x.msg_seq,member_id:$.cookie("loginID"),board_id:'cast',msg_title:$('#msg_title').val(),msg_content:$('#msg_content').val(),tag:$('#tag').val(),msg_photo:savedName[0],msg_photo1:savedName[1],msg_addr:$('#msg_addr').val()}),
    					success:d=>{
    						 $('#layerpop').on('hidden.bs.modal',()=>{
 	            				sein.board.cast();
@@ -1035,14 +1037,7 @@ sein.service ={
 				+'  </div>'
 				+'</div>').appendTo('#content');
 		},
-		rereply:x=>{
-			let dates = new Date(x.msg_date)
-	        let dt = dates.getFullYear()+
-	        "-" +(dates.getMonth()+1)
-	        + "-" + dates.getDate()+" "
-	        + dates.getHours()+ ":"
-	        + dates.getMinutes()+":"
-	        + dates.getSeconds();
+		rereply : x=>{
 		$('<div/>').addClass('recomment re').attr({id:'rereply'+x.msg_seq,style:'margin-left:30px'}).append(
 			$('<div/>').addClass('inner').append(
 				$('<div/>').addClass('user_pic').attr({style:'position:relative;left: -40px;top:35px'}).append(
@@ -1051,8 +1046,8 @@ sein.service ={
 					)
 				),
 				$('<div/>').addClass('user_text').append(
-					$('<strong/>').html(x.member_id), /*추후 멤버테이블 조인걸어 이름으로 수정*/
-					$('<span/>').addClass('date').html(' '+dt)
+					$('<strong/>').html(x.nickname),
+					$('<span/>').addClass('date').html(' '+sein.service.date_format(x.msg_seq))
 				),
 				$('<div/>').addClass('re_cont').append(
 					$('<p/>').attr({id:'p_rere_read'+x.msg_seq}).text(x.msg_content)
@@ -1071,7 +1066,7 @@ sein.service ={
 								$.getJSON($.ctx()+'/cast/reDelete/'+x.board_id+'/'+x.msg_seq);
 								$('#rereply'+x.msg_seq).remove();
 								var offset = $('#re_comment'+x.msg_ref).offset();
-								$('html').animate({scrollTop : offset.top},400)				
+								$('html').animate({scrollTop : offset.top-300},400)				
 								}
 							})
 						)
@@ -1104,12 +1099,12 @@ sein.service ={
 		).appendTo($('#reply_empty'+x.msg_seq));
 	},
 	caster : x=>{
-		$(window).off("scroll");
 		$('#sein_content').empty();
 		var sub_count;
-		$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id,d=>{
+		/*구독중체크*/
+		$.getJSON($.ctx()+'/cast/subcheck/'+$.cookie('loginID')+'/'+x.member_id+'/',d=>{
 			if(d===1){
-				$('.bt_read').addClass('on')						
+				$('.bt_read').addClass('on');
 			}
 		})
 
@@ -1153,10 +1148,16 @@ sein.service ={
 						}			
 					}else{
 						if(confirm(x.nickname+'님의 글을 구독하시겠습니까?')){
-							$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+x.member_id+'/')
-							$('.bt_read').addClass('on');
-							sub_count=sub_count+1;
-							$('#sub_count').html(sub_count);
+							if($.cookie('loginID')){
+								$.getJSON($.ctx()+'/cast/subInc/'+$.cookie('loginID')+'/'+x.member_id+'/')
+								$('.bt_read').addClass('on');
+								sub_count=sub_count+1;
+								$('#sub_count').html(sub_count);
+							}else{
+								if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+									hyungjoon.permision.login();	
+								};
+							}							
 						}	
 					}
 				})
@@ -1165,6 +1166,9 @@ sein.service ={
 			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').attr({id:'sub_count'}))
 		).appendTo($('.caster_rap'));
 		
+		if(x.member_id==$.cookie('loginID')){
+			$('.bt_read').remove();
+		}
 		
 		$('<div/>').addClass('contents').appendTo($('#sein_content'));
 		
@@ -1235,7 +1239,7 @@ sein.service ={
 				let castPage =1;
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
-				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
+				if($('#cardlist_rap').length>0 && $(document).height() <= $(window).scrollTop()+$(window).height()+1){
 					$.ajax({
 						url:$.ctx()+'/cast/',
 						method:'post',
@@ -1289,14 +1293,13 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(d.page.pageNumber>=d.page.pageCount){
-								$(window).off("scroll");
-							}
 						},
 						error:(m1,m2,m3)=>{
 							alert(m3);
 						}
 					})
+				}else if(!$('#cardlist_rap').length>0){
+					$(window).unbind('scroll');
 				}
 			})
 		})
@@ -1304,7 +1307,6 @@ sein.service ={
 	mycast : x=>{
 		$('#header').empty();	
 		$('#content').empty();	
-		$(window).off("scroll");
 		$('#sein_content').empty();	
 		$('<div/>').addClass('contents').attr({style:'padding:60px 0;;min-height:720px'}).append(
 			$('<div/>').attr({style:'background-color:white;'}).addClass('type ver2').append(
@@ -1320,9 +1322,9 @@ sein.service ={
 								),
 								$('<div/>').addClass('bt_rap')
 							).appendTo($('.contents'))
-							$.each($.cookie('recent'),(i,j)=>{
-								sein.service.recent({index:i,page:j});
-							})
+							if(JSON.parse(sessionStorage.getItem('recent'))){
+								sein.service.recent(JSON.parse(sessionStorage.getItem('recent')));
+							}
 						}),
 						$('<li/>').append(
 							$('<a/>').attr({href:'#'}).html('구독')
@@ -1359,65 +1361,70 @@ sein.service ={
 				)
 			)		
 		).appendTo($('#content'));
-		
 		$('<div/>').addClass('con_inner').append(
 			$('<div/>').addClass('mycast_rap bord_all').append(
 				$('<ul/>').addClass('mycast_list')
 			),
 			$('<div/>').addClass('bt_rap')
 		).appendTo($('.contents'))
-			
-		$.each($.cookie('recent'),(i,j)=>{
-			sein.service.recent({index:i,page:j});
-		})
+		
+		/*if(JSON.parse(sessionStorage.getItem('recent'))){
+			$.each(JSON.parse(sessionStorage.getItem('recent')).reverse(),(i,j)=>{
+				sein.service.recent({index:i,page:j});
+			})
+		}*/
+		if(JSON.parse(sessionStorage.getItem('recent'))){
+			sein.service.recent(JSON.parse(sessionStorage.getItem('recent')));
+		}
 			
 	},
 	recent : x=>{
-		$('<li/>').attr({id:'recent'+x.page.msg_seq}).append(
-			$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
-				$('<img/>').attr({src:$.img()+'/cast/'+x.page.msg_photo,style:'cursor:pointer'}).click(e=>{
-					sein.service.detail(x.page);
-				})
-			),
-			$('<div/>').append(
-				$('<a/>').attr({href:'#',style:'font-size: 18px;color: #444;'}).html(x.page.msg_title).append(
-					$('<div/>').addClass('count').append(
-						$('<span/>').addClass('ico_like'),
-						$('<b/>').html(x.page.like_count),
-						$('<span/>').addClass('ico_read'),
-						$('<b/>').html(x.page.msg_count)
-					)		
-				).click(e=>{
-					sein.service.detail(x.page);
-				}),
-				$('<a/>').attr({href:'#'}).append(
-					$('<div/>').attr({style:'margin-top:30px;'}).append(
-						$('<img/>').attr({src:$.img()+'/profile/'+x.page.profileimg,style:'width:35px'}),
-						$('<b/>').text(x.page.nickname).attr({style:'margin-left:5px;font-size: 12px; color: #ff5f81; font-weight: normal;'}).append(
-							$('<span/>').attr({style:'font-size: 12px; color: #999;'}).text(' '+x.page.comment)
-						)
-					)	
-				).click(e=>{
-					sein.service.caster(x.page);
-				}),
-				$('<div/>').addClass('list_del').append(
-					$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
-						$('<span/>').addClass('ico_del')	
-					),
-					$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
-						if(confirm('삭제 하시겠습니까?')){
-							$('#recent'+x.page.msg_seq).remove();
-							let recent = new Array();
-							$.each($.cookie('recent').reverse(),(i,j)=>{
-								recent.unshift(j);
-							})
-							recent.splice(x.index,1);
-							$.cookie('recent',recent);
-						}
+		let recent = new Array();
+		$.each(x,(i,j)=>{
+			recent.push(j)
+			$('<li/>').attr({id:'recent'+j.msg_seq}).append(
+				$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
+					$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'cursor:pointer'}).click(e=>{
+						sein.service.detail(j);
 					})
+				),
+				$('<div/>').append(
+					$('<a/>').attr({href:'#',style:'font-size: 18px;color: #444;'}).html(j.msg_title).append(
+						$('<div/>').addClass('count').append(
+							$('<span/>').addClass('ico_like'),
+							$('<b/>').html(j.like_count),
+							$('<span/>').addClass('ico_read'),
+							$('<b/>').html(j.msg_count)
+						)		
+					).click(e=>{
+						sein.service.detail(j);
+					}),
+					$('<a/>').attr({href:'#'}).append(
+						$('<div/>').attr({style:'margin-top:30px;'}).append(
+							$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg,style:'width:35px'}),
+							$('<b/>').text(j.nickname).attr({style:'margin-left:5px;font-size: 12px; color: #ff5f81; font-weight: normal;'}).append(
+								$('<span/>').attr({style:'font-size: 12px; color: #999;'}).text(' '+j.comment)
+							)
+						)	
+					).click(e=>{
+						sein.service.caster(j);
+					}),
+					$('<div/>').addClass('list_del').append(
+						$('<a/>').attr({title:'삭제하기',style:'margin-top:10px'}).append(
+							$('<span/>').addClass('ico_del')	
+						),
+						$('<b/>').addClass('bg_del').attr({style:'width:80px;height:50px;margin-top:10px'}).html('삭제').click(e=>{
+							if(confirm('삭제 하시겠습니까?')){
+								$('#recent'+j.msg_seq).remove();
+								recent.splice(i,1);
+								sessionStorage.setItem('recent', JSON.stringify(recent));
+							}
+						})
+					)
 				)
-			)
-		).appendTo('.mycast_list')
+			).appendTo('.mycast_list')
+		})
+		
 	},
 	mybookmark : x=>{
 		$('<li/>').attr({id:'bookmark'+x.msg_seq}).append(
@@ -1489,7 +1496,7 @@ sein.service ={
 						if(confirm('구독을 해지 하시겠습니까?')){
 							$.getJSON($.ctx()+'/cast/subDes/'+$.cookie('loginID')+'/'+x.member_id+'/')
 							$('.bt_read').removeClass('on');
-							$('#mybook_'+x.member_id).remove()
+							$('#mybook_'+x.member_id).remove();
 						}
 					})
 				)
@@ -1497,49 +1504,103 @@ sein.service ={
 		).appendTo('.mycast_list2')
 	},
 	map :x=>{
-		$('<div/>').attr({id:'map'}).append('<br>').appendTo($(x.appendTo));
+		$('<div/>').append('<br>').append(
+		$('<h3/>').attr({style:'text-align:center'}).html('해당지역에 등록된 숙소')
+		).appendTo($(x.appendTo));
+		$('<div/>').attr({id:'map'}).appendTo($(x.appendTo));
 		$('<div/>').attr({id:'location',style:'width:100%;height:400px'}).appendTo($($(x.appendTo)));
-		var mapContainer = document.getElementById('location'), // 지도를 표시할 div 
+		let mapContainer = document.getElementById('location'),
 	    mapOption = {
-	        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-	        level: 2 // 지도의 확대 레벨
+	        center: new daum.maps.LatLng(33.450701, 126.570667),
+	        level: 2
 	    };  
-	
-		// 지도를 생성합니다    
-		var map = new daum.maps.Map(mapContainer, mapOption); 
-	
-		// 주소-좌표 변환 객체를 생성합니다
-		var geocoder = new daum.maps.services.Geocoder();
-	
-		// 주소로 좌표를 검색합니다
+		let map = new daum.maps.Map(mapContainer, mapOption); 
+		let geocoder = new daum.maps.services.Geocoder();
+		let bounds = new daum.maps.LatLngBounds();
 		geocoder.addressSearch(x.detail.msg_addr, function(result, status) {
-		    // 정상적으로 검색이 완료됐으면 
 		     if (status === daum.maps.services.Status.OK) {
-	
-		        var coords = new daum.maps.LatLng(result[0].y, result[0].x);
-	
-		        // 결과값으로 받은 위치를 마커로 표시합니다
-		        var marker = new daum.maps.Marker({
+		        let coords = new daum.maps.LatLng(result[0].y, result[0].x);
+		        let imageSrc = $.img()+'/here.png';
+				let imageSize = new daum.maps.Size(34, 60);
+				let markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+		        let marker = new daum.maps.Marker({
 		            map: map,
-		            position: coords
+		            position: coords,
+				    image: markerImage
 		        });
-	
-		        // 인포윈도우로 장소에 대한 설명을 표시합니다
-		        var infowindow = new daum.maps.InfoWindow({
-		            content: '<div id="marker" style="width:150px;text-align:center;padding:6px 0;">Here</div>'
-		        });
-		        infowindow.open(map, marker);
-	
-		        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-		        map.setCenter(coords);
-		        $('#marker').click(e=>{
-		        	
-		        })
+		        let content = '<h5><b>캐스팅 위치</b></h5>';
+		        let customOverlay = new daum.maps.CustomOverlay({
+		        	map: map,
+		        	position: coords,
+			        content: content,
+			        yAnchor: 2.7
+			    });
+	          bounds.extend(coords);
 		    } 
-		});    
+		});
+		 $.getJSON($.ctx()+'/cast/nearAccom/'+x.detail.tag.substring(1)+'/',d=>{
+			 let positions = [];
+			 $.each(d.list, (i,j)=>{
+				 positions.push({
+					  'seq' : j.accom_seq,
+					  'title' : j.accom_name,
+					  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+				  });
+			  });
+			 
+			 let imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+			 let imageSize = new daum.maps.Size(34, 60);
+			 let position;
+			 let accomseq;
+			 $.each(positions,(i,j)=>{
+				// 마커 이미지를 생성
+				  let markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+				  let marker = new daum.maps.Marker({
+					  map: map,	// 마커를 표시할 지도
+					  position: j.latlng,	// 마커를 표시할 위치
+					  image: markerImage,	// 마커 이미지
+					  clickable:true
+				  });
+				  let content = '<div class="customoverlay">' +
+				    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+				    '    <span class="title">'+j.title+'</span>' +
+				    '  </a>' +
+				    '</div>';
+				  position = j.latlng;
+				  let customOverlay = new daum.maps.CustomOverlay({
+				        position: position,
+				        content: content,
+				        yAnchor: 2.7
+				    });
+				  accomseq = j.seq;
+				  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+				  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+				  daum.maps.event.addListener(marker, 'click', function() {
+				  $.getScript($.ctx()+'/resources/js/heetae.js',()=>{
+						let se = {'in_day':null,'out_day':null,'accom_seq':accomseq}
+                     heetae.main.init(se);
+					});
+				});
+			 })
+			  function makeOverListener(map, marker, customOverlay) {
+			        return function() {
+			        	customOverlay.setMap(map);
+			        };
+			    }
+			  // 인포윈도우를 닫는 클로저를 만드는 함수
+			  function makeOutListener(customOverlay) {
+			        return function() {
+			        	customOverlay.setMap(null);
+			        };
+			    }
+			 	// 지도 재설정 범위정보 객체 생성
+			  for(let k = 0; k < positions.length; k++){
+				  bounds.extend(positions[k].latlng);
+			  }
+			  map.setBounds(bounds);	// 지도 재배치
+		 })
 	},
 	search : x=>{
-		$(window).off("scroll");
 		$('#cardlist_rap').remove();
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
@@ -1609,7 +1670,7 @@ sein.service ={
 			let searchPage =1;
 			$('#bt_more').remove();
 			$(window).scroll(()=>{
-				if($(document).height() <= $(window).scrollTop()+$(window).height()+1){
+				if($('#cardlist_rap').length>0 && $(document).height() <= $(window).scrollTop()+$(window).height()+1){
 					$.ajax({
 						url:$.ctx()+'/cast/search/'+x+'/',
 						method:'post',
@@ -1663,16 +1724,26 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
-							if(d.page.pageNumber>=d.page.pageCount){
-								$(window).off("scroll");
-							}
 						},
 						error:(m1,m2,m3)=>{
 							alert(m3);
 						}
 					})
+				} else if(!$('#cardlist_rap').length>0){
+					$(window).unbind('scroll');
 				}
 			})
 		})
+	},
+	date_format : x=>{
+		let date = new Date(x);
+		let yyyy = date.getFullYear().toString();
+        let mm = (date.getMonth() + 1).toString();
+        let dd = date.getDate().toString();
+        let hh =date.getHours().toString();
+        let mmm = date.getMinutes().toString();
+        let ss = date.getSeconds().toString();
+        return yyyy + '-' +(mm[1] ? mm : '0'+mm[0]) +'-'+ (dd[1] ? dd : '0'+dd[0])+' '
+        			+ (hh[1] ? hh : '0'+hh[0])+':'+(mmm[1] ? mmm: '0'+mmm[0])+':'+(ss[1] ? ss : '0'+ss[0]);
 	}
 }
