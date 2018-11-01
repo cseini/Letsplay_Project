@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
 import com.play.web.page.Pagination;
-import com.play.web.tx.TxService;
 
 @RestController
 public class BoardCtrl {
@@ -35,7 +34,6 @@ public class BoardCtrl {
 	@Autowired BoardMapper brdMap;
 	@Autowired Pagination page;
 	@Autowired SeinResult sr;
-	@Autowired TxService tx;
 	@Autowired HashMap<String,Object> smap;
 	@Resource(name="castUploadPath")
 	private String castUploadPath;

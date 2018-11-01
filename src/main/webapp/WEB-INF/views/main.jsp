@@ -11,26 +11,24 @@
     <link href="${context}/resources/css/sanghoon.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="${context}/resources/css/Nwagon.css" type="text/css">	<!-- 상훈 차트 라이브러리 -->
-    <script src="${context}/resources/js/Nwagon.js"></script>	<!-- 상훈 차트 라이브러리 -->
-    <script src="https://www.gstatic.com/charts/loader.js"></script> <!-- 구글차트 sanghoon -->
+    <link rel="stylesheet" href="${context}/resources/css/Nwagon.css" type="text/css">	
+    <script src="${context}/resources/js/Nwagon.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=37a0f89c82e3d63327e1b70a745f7933&libraries=services,clusterer,drawing"></script><!-- 상훈 다음지도 api -->
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=93cb0c9bef70e9c3919f68e5b7bc8d15&libraries=services,clusterer,drawing"></script><!-- 태형 -->
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=964e9b31a2ce4d6f616df503391205bb&libraries=services,clusterer,drawing"></script><!-- 태형 -->
-    <link rel="stylesheet" href="https://icono-49d6.kxcdn.com/icono.min.css"><!-- 태형 -->
+    <link rel="stylesheet" href="https://icono-49d6.kxcdn.com/icono.min.css">
     <link href="https://fonts.googleapis.com/css?family=Do+Hyeon%7CGothic+A1:400,600,700,800,900%7CHi+Melody%7CNanum+Pen+Script%7CNoto+Sans+KR&amp;subset=korean" rel="stylesheet"><!-- 태형 -->
 	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>  <!-- 형준 로그인 참고 -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" /> -->
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>  
 	<script src="${context}/resources/js/gijgo.min.js"></script>
-	<script src="${context}/resources/js/dropzone.js"></script>
-	<link rel="stylesheet" type="text/css" href="${context}/resources/css/dropzone.css">
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
 	<script src="${context}/resources/js/hyungjun.js"></script>
+
 </head>
 	
 <body>
@@ -39,7 +37,7 @@
 
 </div>
 <script>
-	hyungjun.init('${context}'); 
+	hyungjun.init('${context}');
 </script>
 </body>
 </html>
