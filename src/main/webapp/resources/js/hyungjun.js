@@ -636,8 +636,6 @@ hyungjun.permision = (()=>{
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
 																sessionStorage.setItem("profileimg",d);
 																hyungjun.permision.mypage();
-																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
-																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
 									                },
 									                error : e=>{
