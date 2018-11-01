@@ -48,7 +48,7 @@ sanghoon.main =(()=>{
 			sanghoon.service.custo();
 		});
 		
-		$('<a/>').attr({id:'top_accom_btn', href:'#'}).html('top 숙소')
+		$('<a/>').attr({id:'top_accom_btn', href:'#'}).html('매출순위')
 		.addClass('ya_cusor')
 		.appendTo($('.nav_right')).click(e=>{
 			e.preventDefault();
@@ -810,7 +810,7 @@ sanghoon.service = {
 					'local': '전체'
 			};
 			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
-			$('<div/>').html('TOP10 숙소 현황').addClass('top10title').appendTo('#page-wrapper');
+			$('<div/>').html('숙소 매출 순위').addClass('top10title').appendTo('#page-wrapper');
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
 			$('<div/>').attr({id:'accom_map'}).appendTo('#page-wrapper');
 			googleChart.service.topChart();
