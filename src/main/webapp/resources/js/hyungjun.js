@@ -27,7 +27,7 @@ hyungjun.permision = (()=>{
 	var reservationList = d=>{
 		$('#header').empty();
 		$('#content').empty();
-		$.getJSON($.ctx()+'/member/list/'+$.cookie("loginID"), d=>{
+		$.getJSON($.ctx()+'/member/list/'+sessionStorage.getItem("login"), d=>{
 			$('<div/>').addClass('reserve-main-content').appendTo('#content');
 			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
 				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
@@ -35,7 +35,6 @@ hyungjun.permision = (()=>{
 						$('<div/>').addClass('history-item-ready-reserve').appendTo('.history-cont');
 							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
 						$.each(d.rlist,(i,j)=>{
-							
 							var tday = new Date(j.pay_date);
 							console.log('tday : ' + tday);
 							console.log('d.pay_date : '+ j.pay_date);
@@ -92,7 +91,7 @@ hyungjun.permision = (()=>{
 											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실일 및 No-Show'),$('<th/>').html('환불불가'))).appendTo('.guide-table');
 											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약 취소하기').appendTo('.modal-body')
 												.click(e=>{
-													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+$.cookie("loginID"));
+													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+sessionStorage.getItem("login"));
 													$('#layerpop').modal('hide');
 													$('#layerpop').on('hidden.bs.modal',()=>{
 														hyungjun.permision.reservationList();
@@ -105,6 +104,60 @@ hyungjun.permision = (()=>{
 										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i);
 									}
 						}); /*예약 현황 each 끝*/
+						
+						$('<div/>').attr({id:'accom_map_hj'}).appendTo('.reserve-main-content');
+						/*var mapContainer = document.getElementById('accom_map_hj'),	// 지도를 표시할 div
+						  mapOption = {
+							  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
+							  level: 9
+						  };
+						  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
+						  var addr = {};
+						  	  addr = {
+								  'title' : j.accomName,
+								  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+							  };
+						  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+						  var imageSize = new daum.maps.Size(34, 60);
+						  
+						  var position
+							  // 마커 이미지를 생성
+							  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+							  var marker = new daum.maps.Marker({
+								  map: map,	// 마커를 표시할 지도
+								  position: addr.latlng,	// 마커를 표시할 위치
+								  image: markerImage	// 마커 이미지
+							  });
+							  var content = '<div class="customoverlay">' +
+							    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+							    '    <span class="title">'+j.accomName+'</span>' +
+							    '  </a>' +
+							    '</div>';
+							  position = addr[i].latlng;
+							  var customOverlay = new daum.maps.CustomOverlay({
+							        position: position,
+							        content: content,
+							        yAnchor: 2.7
+							    });
+							  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+							  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+						  function makeOverListener(map, marker, customOverlay) {
+						        return function() {
+						        	customOverlay.setMap(map);
+						        };
+						    }
+						  // 인포윈도우를 닫는 클로저를 만드는 함수
+						  function makeOutListener(customOverlay) {
+						        return function() {
+						        	customOverlay.setMap(null);
+						        };
+						    }
+						  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
+							  marker = new daum.maps.Marker({points : position.latlng});
+							  marker.setMap(map);
+							  bounds.extend(points.latlng);
+							  map.setBounds(bounds);	// 지도 재배치
+*/						
 		})
 	};
 	
@@ -151,15 +204,11 @@ hyungjun.permision = (()=>{
 										validate ="비밀번호가 틀렸습니다.";	
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
-										sessionStorage.setItem("loginID")
-										
-										
-										
-										$.cookie("loginID", d.mbr.member_id);
-										$.cookie("profileimg", d.mbr.profileimg);
-										$.cookie("nickname", d.mbr.nickname);
-												hyungjun.router.home()
-					 							hyungjun.service.authNav();
+										sessionStorage.setItem("login", d.mbr.member_id);
+										sessionStorage.setItem("profileimg", d.mbr.profileimg);
+										sessionStorage.setItem("nickname", d.mbr.nickname);
+										hyungjun.router.home()
+										hyungjun.service.authNav();
 									}
 									$('#validate').html(validate);
 								},
@@ -237,9 +286,9 @@ hyungjun.permision = (()=>{
 																			profileimg :res.properties['profile_image']
 																		}),
 																		success:d=>{
-																			$.cookie("loginID", res.id)
-																			$.cookie("profileimg", d);
-																			$.cookie("nickname", res.properties['nickname']);
+																			sessionStorage.setItem("login", res.id);
+																			sessionStorage.setItem("profileimg", d);
+																			sessionStorage.setItem("nickname", res.properties['nickname']);
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
 																	});
@@ -248,9 +297,9 @@ hyungjun.permision = (()=>{
 															error:(m1,m2,m3)=>{alert(m3);}
 														});
 												}else{
-													$.cookie("loginID", d.mbr.member_id);
-													$.cookie("profileimg", d.mbr.profileimg);
-													$.cookie("nickname", d.mbr.nickname);
+													sessionStorage.setItem("login", d.mbr.member_id);
+													sessionStorage.setItem("profileimg", d.mbr.profileimg);
+													sessionStorage.setItem("nickname", d.mbr.nickname);
 													hyungjun.router.home()
 													hyungjun.service.authNav();
 															
@@ -350,7 +399,7 @@ hyungjun.permision = (()=>{
 			method:'post',
 			contentType:'application/json',
 			data:JSON.stringify({
-				member_id:$.cookie("loginID"),
+				member_id:sessionStorage.getItem("login"),
 				}),
 			success:d=>{
 				$('#header').empty();
@@ -383,14 +432,14 @@ hyungjun.permision = (()=>{
 															method:'post',
 															contentType:'application/json',
 															data:JSON.stringify({
-																member_id:$.cookie("loginID"),
+																member_id:sessionStorage.getItem("login"),
 																nickname:$('#changeNickname').val()
 															}),
 															success:s=>{
 																$('#layerpop').modal('hide')
 																$('#layerpop').on('hidden.bs.modal',()=>{
 																	hyungjun.permision.mypage();
-																	$.cookie("nickname", $('#changeNickname').val());
+																	sessionStorage.setItem("nickname", $('#changeNickname').val());
 																	$('#mypage').html($('#changeNickname').val());
 								                                })
 															},
@@ -414,7 +463,7 @@ hyungjun.permision = (()=>{
 														method:'post',
 														contentType:'application/json',
 														data:JSON.stringify({
-															member_id:$.cookie("loginID"),
+															member_id:sessionStorage.getItem("login"),
 															phone:$('#changePhone').val()
 														}),
 														success:d=>{
@@ -443,7 +492,7 @@ hyungjun.permision = (()=>{
 														method:'post',
 														contentType:'application/json',
 														data:JSON.stringify({
-															member_id:$.cookie("loginID"),
+															member_id:sessionStorage.getItem("login"),
 															comment:$('#changeComment').val()
 														}),
 														success:d=>{
@@ -482,7 +531,7 @@ hyungjun.permision = (()=>{
 															method:'post',
 															contentType:'application/json',
 															data:JSON.stringify({
-																member_id:$.cookie("loginID"),
+																member_id:sessionStorage.getItem("login"),
 																password:cpw
 															}),
 															success:d=>{
@@ -501,7 +550,7 @@ hyungjun.permision = (()=>{
 																		method:'post',
 																		contentType:'application/json',
 																		data:JSON.stringify({
-																			member_id:$.cookie("loginID"),
+																			member_id:sessionStorage.getItem("login"),
 																			password:pw1
 																		}),
 																		success:d=>{
@@ -537,7 +586,7 @@ hyungjun.permision = (()=>{
 													method:'post',
 													contentType:'application/json',
 													data:JSON.stringify({
-														member_id:$.cookie("loginID"),
+														member_id:sessionStorage.getItem("login"),
 														password:d.mbr.password
 													}),
 													success:d=>{
@@ -567,7 +616,7 @@ hyungjun.permision = (()=>{
 														method:'post',
 														contentType:'application/json',
 														data:JSON.stringify({
-															member_id:$.cookie("loginID"),
+															member_id:sessionStorage.getItem("login"),
 															password:$('#withdrawlPassword').val()
 														}),
 														success:d=>{
@@ -640,7 +689,7 @@ hyungjun.permision = (()=>{
 									            }
 									            
 									            $.ajax({
-									            	url:$.ctx()+'/image/profile/'+$.cookie("loginID"),
+									            	url:$.ctx()+'/image/profile/'+sessionStorage.getItem("login"),
 									            	dataType:'text',
 									            	type:'post',
 									            	data:formData,
@@ -649,7 +698,7 @@ hyungjun.permision = (()=>{
 									                success: d=>{
 									                        $('#layerpop').modal('hide')
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
-																$.cookie("profileimg", d);
+																sessionStorage.setItem("profileimg",d);
 																hyungjun.permision.mypage();
 																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
 																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
@@ -1149,8 +1198,8 @@ hyungjun.service = {
 				$('<ul/>').append(
 							$('<li/>').append(
 									$('<a/>').attr({href:'#', id:'myinfo'}).addClass('ya_cusor').append(
-											$('<img>').attr({src:$.img()+'/profile/'+$.cookie('profileimg')}).addClass('avatar'),
-				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html($.cookie('nickname')).addClass('ya_cusor')
+											$('<img>').attr({src:$.img()+'/profile/'+sessionStorage.getItem("profileimg")}).addClass('avatar'),
+				 							$('<a/>').attr({href:'#', style:'margin-left:5px;'}).html(sessionStorage.getItem("nickname")).addClass('ya_cusor')
 									).append($('<ul/>').addClass('mouseOverUl').append(
 										$('<li/>').append($('<a/>').attr({href:'#', id:'mypage'}).html('마이페이지')).click(e=>{
 											e.preventDefault();
@@ -1158,9 +1207,9 @@ hyungjun.service = {
 										}),		 															
 	 									$('<li/>').append($('<a/>').attr({href:'#',id:'logout'}).html('로그아웃')).click(e=>{
 	 										e.preventDefault();
-	 										$.cookie("loginID","");
-	 										$.cookie("nickname","");
-	 										$.cookie("profileimg","");
+	 										sessionStorage.removeItem("login");
+	 										sessionStorage.removeItem("profileimg");
+	 										sessionStorage.removeItem("nickname");
 	 										hyungjun.router.home();
 	 									}),
 			 							$('<li/>').append($('<a/>').attr({href:'#', id:'moveToReservationList'}).html('예약내역')).click(e=>{
@@ -1316,13 +1365,15 @@ hyungjun.router = {
 		$('#amdin').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/sanghoon.js',()=>{
-				$.cookie("loginID","");
+				sessionStorage.removeItem("login");
+				sessionStorage.removeItem("profileimg");
+				sessionStorage.removeItem("nickname");
 				sanghoon.main.init();
 			});
 		});
 		$('#logo_btn').click(e=>{
 			e.preventDefault();
-			let session = $.cookie("loginID");
+			let session = sessionStorage.getItem("login");
 				if(!session){
 					hyungjun.router.home();
 				}else{

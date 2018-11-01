@@ -995,3 +995,14 @@ nav {
     color: #666666;
     text-decoration: none;
 }
+
+
+#accom_map_hj {
+    margin-top: 20px;
+    position: fixed;
+    margin-left: 50%;
+    width: 700px;
+    height: 553px;
+    margin-top: 75px;
+    margin-left: -500;
+}
