@@ -866,7 +866,6 @@ hyungjun.service = {
 								.addClass(['hj_check_middle','heetae_check_middle_con1'])
 								.appendTo('#mainInput4'))
 						
-						
 						$('#start_date')
 						.datepicker({
 						 minDate: ()=> {
