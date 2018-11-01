@@ -91,7 +91,7 @@
     height:12px;
     background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
     }
-/* ------------------------------------------------------- */
+
 /* 매출정보 css */
 .sales_graph{
     margin: auto;
@@ -165,43 +165,7 @@
     height: 600px;
     
 }
-/* 
-.custo_wrapper{
-    display: grid;
-}
-.custo_box_1{
-}
-#reser_type{
-    display: inline;
-    width: 200px;
-}
-#select_box{
-    display: inline;
-    width: 200px;
-}
-#quarter_sel{
-    display: inline;
-    width: 200px;
-}
-#custo_button{
-    display: inline;
-    width: 200px;
-}
-.custo_box_2{
-    display:inline-block;
-    height: 100%;
-}
-#accom_chart{
-    width: 50%;
-    height: 600px;
-    background-color: red;
-}
-#pop_chart{
-    width: 50%;
-    height: 600px;
-    background-color: black;
-}
- */
+
 /* basic css */
 .basic_wrapper{
     display: grid;
@@ -216,12 +180,7 @@
     border: 1px solid #e5e5e5;
     cursor: pointer;
 }
-/* .basic_box_2{
-    display: flex;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 10px;
-    
-} */
+
 #age_member{
     grid-column-start:1;
     grid-column-end:3;

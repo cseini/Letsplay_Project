@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,13 +87,12 @@ public class BoardCtrl {
 		brd.setMsg_seq(msg_seq);
 		brdMap.delete(brd);;
 	}
-
+	
 	@PostMapping("/cast/reWrite/")
 	public void reWrite(@RequestBody Board cast){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyWrite()");
 		Util.log.accept(cast+"");
-		/*brdMap.reSeqInc();*/
-		brdMap.reWrite(cast);;
+		brdMap.reWrite(cast);
 	}
 	
 	@GetMapping("/cast/reply/{board_id}/{seq}")
@@ -193,11 +193,10 @@ public class BoardCtrl {
 		brdMap.subDes(sr);
 	}
 	
-	@GetMapping("/cast/subcheck/{member_id}/{sub_mem_id}")
+	@GetMapping("/cast/subcheck/{member_id}/{sub_mem_id}/")
 	public int subcheck(@PathVariable String member_id,@PathVariable String sub_mem_id){
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","subcheck()");
-		sr.setMember_id(member_id);
-		sr.setSub_mem_id(sub_mem_id);
+		sr.setSaved_unique(member_id+"_"+sub_mem_id);
 		return brdMap.subcheck(sr); 
 	}
 	
@@ -327,6 +326,15 @@ public class BoardCtrl {
 		Util.log.accept(page+"");
 		Util.log.accept(list+"");
 		return cast;
+	}
+	
+	@GetMapping("/cast/nearAccom/{tag}/")
+	public HashMap<String, Object> nearAccom(@PathVariable String tag){
+		smap.clear();
+		List<SeinResult> list = brdMap.nearAccom("%"+tag+"%");
+		Util.log.accept(list+"");
+		smap.put("list", list);
+		return smap;
 	}
 
 }

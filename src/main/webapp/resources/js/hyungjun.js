@@ -178,22 +178,6 @@ hyungjun.permision = (()=>{
 						        Kakao.API.request({
 						            url: '/v2/user/me',
 						            success: function(res) {
-/*						                console.log('res : ' + JSON.stringify(res));
-						                console.log('authObj : ' + JSON.stringify(authObj));
-						                console.log('email : ' + JSON.stringify(res.kaccount_email));
-						                console.log('id : ' + JSON.stringify(res.id));
-						                console.log('image : ' + JSON.stringify(res.properties.profile_image));
-						                console.log('access_token : ' + JSON.stringify(authObj.access_token));
-						                console.log('nickname : ' + JSON.stringify(res.properties.nickname));
-						                console.log('kakao account : '+ JSON.stringify(res.properties.kakao_account));
-						                console.log('age_range : ' + JSON.stringify(res.has_age_range));
-						                console.log('gender : '+ JSON.stringify(res.has_gender));
-						                console.log('has_birthday : ' + JSON.stringify(res.has_birthday));
-						                console.log(JSON.stringify(res.kakao_account['age_range']));
-						                console.log(JSON.stringify(res.kakao_account['birthday']));
-						                console.log('1 stringify 없이 : ' + res.kakao_account['gender']);
-						                console.log('2 stringify 있음 : '+JSON.stringify(res.kakao_account['gender']));
-						                console.log('res.kakao_account.gender : '+res.kakao_account.gender);*/
 						                let gender;
 						                if(res.kakao_account['gender']=='male'){
 						                	gender = '남'
@@ -850,27 +834,71 @@ hyungjun.service = {
 						})
 						
 						/*--------------------------------------------------------------------*/
-				let today = new Date(new Date().getFullYear(),new Date().getMonth(), new Date().getDate());
-				$('<div/>').attr({id:'checkinDate'}).html('체크인').appendTo('#mainInput');
-				$('<div/>').attr({id:'mainInput3'}).appendTo('#checkinDate');	
-				$('<input/>')
-							.attr({'readonly':'true'
-										,'value':today.getFullYear()+ 
-										"-" +(today.getMonth()+1) 
-										+ "-" + today.getDate()
-										,'id':'start_date'}) // 체크인 날짜 번경
-							.appendTo($('<div>').addClass(['hj_check_middle','heetae_check_middle_con1']).appendTo('#mainInput3'))
-				
-				$('<div/>').attr({id:'checkoutDate'}).html('체크아웃').appendTo('#mainInput');
-				$('<div/>').attr({id:'mainInput4'}).appendTo('#checkoutDate');
-				$('<input/>')
+						let today = new Date(new Date().getFullYear(),
+								new Date().getMonth(), (new Date().getDate()));
+						let save_end_max_date = new Date();
+						save_end_max_date = today
+						let save_start,save_end ; 
+						let rs=5;
+						let checkin_day = new Date(new Date().getFullYear(),
+								new Date().getMonth(), new Date().getDate());	
+						let checkout_day = new Date(new Date().getFullYear(),
+								new Date().getMonth(), new Date().getDate()+1);
+						
+						//이곳 캘린더 날짜번경
+						$('<div/>').attr({id:'checkinDate'}).html('체크인').appendTo('#mainInput');
+						$('<div/>').attr({id:'mainInput3'}).appendTo('#checkinDate');	
+						$('<input/>')
 						.attr({'readonly':'true'
-								,'value':today.getFullYear()+ 
-								"-" +(today.getMonth()+1) 
-								+ "-" + today.getDate()
-								,'id':'end_date'}) // 체크아웃 날짜 번경
-						.appendTo($('<div>').addClass(['hj_check_middle','heetae_check_middle_con1']).appendTo('#mainInput4'))
-			
+								,'value':hyungjun.service.date_format(today)
+								,'id':'start_date'}) //체크인 날짜 번경
+						.appendTo($('<div>')
+									.addClass(['hj_check_middle','heetae_check_middle_con1'])
+									.appendTo('#mainInput3'))
+									
+						$('<div/>').attr({id:'checkoutDate'}).html('체크아웃').appendTo('#mainInput');
+						$('<div/>').attr({id:'mainInput4'}).appendTo('#checkoutDate');			
+						$('<input/>')
+						.attr({'readonly':'true'
+							,'value':hyungjun.service.date_format(checkout_day)
+							,'id':'end_date'}) //체크아웃 날짜 번경
+						.appendTo($('<div>')
+								.addClass(['hj_check_middle','heetae_check_middle_con1'])
+								.appendTo('#mainInput4'))
+						
+						
+						$('#start_date')
+						.datepicker({
+						 minDate: ()=> {
+							 return today;
+				         },
+				         maxDate: ()=> {
+				               return $('#end').val();
+				         }
+						 });
+						
+						$('#end_date').datepicker({
+							minDate: ()=>{
+								let end_min_date = new Date($('#start_date').val().split('-')[0]
+								,(Number($('#start_date').val().split('-')[1])-1)
+								,Number($('#start_date').val().split('-')[2])+1);
+								console.log('end_min_date')
+								console.log(end_min_date)
+								return end_min_date
+							},
+				            maxDate: ()=>{
+				            	let end_max_date = new Date($('#start_date').val().split('-')[0]
+								,($('#start_date').val().split('-')[1])
+								,$('#start_date').val().split('-')[2]-1);
+				            	end_max_date.setMonth(end_max_date.getMonth()-1)
+								end_max_date.setDate(end_max_date.getDate()+8)
+								console.log('end_max_date')
+								console.log(end_max_date)
+								save_end_max_date = new Date()
+								save_end_max_date = end_max_date	
+								return end_max_date
+				            }
+						});		
 			// 이곳 캘린더 날짜번경
 					
 			$('#start_date')
@@ -892,22 +920,66 @@ hyungjun.service = {
 			.addClass('heetae_hide_ico')
 						
 			
-			$('#start_date')
-			.change(e=>{
-				if($('#start_date').val().split('-')[2]>$('#end_date').val().split('-')[2] 
-				|| $('#start_date').val().split('-')[1]>$('#end_date').val().split('-')[1]){
-					$('#end_date').val($('#start_date').val())
-				}
-				$('.heetae_check_bottom_con2')
-				.text($('#end_date').val().split('-')[2]
-				-$('#start_date').val().split('-')[2]+1+'박')
-			})
-			$('#end_date')
-			.change(e=>{
-				$('.heetae_check_bottom_con2')
-				.text($('#end_date').val().split('-')[2]
-				-$('#start_date').val().split('-')[2]+1+'박')
-			})
+				$('#start_date')
+				.change(e=>{
+						if($('#start_date').val()!=save_start){
+							save_start = $('#start_date').val()
+							let sd = new Date($('#start_date').val().split('-')[0]
+							,(($('#start_date').val().split('-')[1])-1)
+							,$('#start_date').val().split('-')[2])
+							
+							let ed = new Date($('#end_date').val().split('-')[0]
+							,(($('#end_date').val().split('-')[1])-1)
+							,$('#end_date').val().split('-')[2])
+							
+							console.log('change 시작날 ')
+							console.log($('#start_date').val())
+							console.log(sd)
+							console.log('change 끝날')
+							console.log($('#end_date').val())
+							console.log(ed)
+							
+							if(sd.getTime()>=ed.getTime()){
+								let tsd = sd
+								tsd.setDate(tsd.getDate()+1)
+								$('#end_date').val(hyungjun.service.date_format(tsd))
+								console.log('start val : '+$('#start_date').val())
+								console.log('end val : '+$('#end_date').val())
+								save_end = $('#start_date').val()
+								
+								ed = new Date($('#end_date').val().split('-')[0]
+								,(Number($('#end_date').val().split('-')[1])-1)
+								,(Number($('#end_date').val().split('-')[2])+1))
+								
+								}
+							
+								let ts = (ed-sd)/(24 * 60 * 60 * 1000);
+								if(ts>8){
+									let tsd = sd
+									tsd.setDate(tsd.getDate()+7)
+									$('#end_date').val(hyungjun.service.date_format(tsd))
+									ed = new Date($('#end_date').val().split('-')[0]
+									,(Number($('#end_date').val().split('-')[1])-1)
+									,(Number($('#end_date').val().split('-')[2])+7))
+									ts = (ed-sd)/(24 * 60 * 60 * 1000);
+								}
+					}
+				})
+				$('#end_date')
+				.change(e=>{
+							if($('#end_date').val()!=save_end){
+								save_end = $('#end_date').val()
+								let sd = new Date($('#start_date').val().split('-')[0]
+								,(($('#start_date').val().split('-')[1])-1)
+								,$('#start_date').val().split('-')[2])
+							
+								let ed = new Date($('#end_date').val().split('-')[0]
+								,(($('#end_date').val().split('-')[1])-1)
+								,$('#end_date').val().split('-')[2])
+								
+								
+							}
+				})
 			
 						/*--------------------------------------------------------------------*/						
 					
@@ -984,11 +1056,6 @@ hyungjun.service = {
 		
 		footer : d=>{
 			$('#footer').remove()
-/*			$.getScript($.script()+'/footer.js',()=>{
-				$('<div/>').attr({id:'mainFooter'}).appendTo('#footer');
-				$('#mainFooter').append(footerUI());
-			})*/
-			
 			$('<div/>').attr({id:'footer'}).addClass('footer').appendTo('#wrapper');
 			$('<section/>').addClass(['footer-inner', 'column1']).append(
 					$('<h2/>').addClass(['icon-comm','icon-logo-footer']).append($('<span/>').addClass('sc-out').html('Yanolja')),
@@ -1210,41 +1277,13 @@ hyungjun.service = {
 		    var diff = (newToday.getTime()-checkinDate.getTime())/(1000*60*60*24);
 			return diff;
 		},
-		
-		dayPresent : d =>{
-			var dayPre = d;
-		    /*var arr1 = dayPre.split('-');*/
-		    /*var dayPreDate = new Date(arr1[0], arr1[1], arr1[2]);*/
-		    console.log('dayPre :  ' + dayPre);
+		date_format : x=>{
+			let yyyy = x.getFullYear().toString();
+		    let mm = (x.getMonth() + 1).toString();
+		    let dd = x.getDate().toString();
+		    return yyyy + '-' +(mm[1] ? mm : '0'+mm[0]) +'-'+ (dd[1] ? dd : '0'+dd[0]);
 		}
-		
-		
 }
-/*		preventF5 : () =>{
-			function LockF5(){
-				 if (event.keyCode == 116) {
-					 alert("새로고침을 할 수 없습니다.");
-					  event.keyCode = 0;
-					  return false;
-				 }
-				}
-			document.onkeydown = noEvent;*/
-				
-/*			function noEvent() { // 새로 고침 방지
-	            if (event.keyCode == 116) {
-	                alert("새로고침을 할 수 없습니다.");
-	                event.keyCode = 2;
-	                e.preventDefault();	  
-	                event.keyCode = 0;
-	                return false;
-	            } else if (event.ctrlKey && (event.keyCode == 78 || event.keyCode == 82)) {
-	                return false;
-	            }
-	        }
-	    document.onkeydown = noEvent; */
-		
-
-
 
 hyungjun.router = {
 	init :x=>{
@@ -1289,29 +1328,16 @@ hyungjun.router = {
 		$('#header').empty();
 		$('#content').empty();
 		$('#footer').empty();
-		/* nav 시작 */
 		hyungjun.service.nav();
-		/* nav 끝 */
-		
-		/* header 시작 */
 		hyungjun.service.header();			
-		/* header 끝 */
-		
-		/* content 시작 */
 		hyungjun.service.content();
-		/* content 끝 */
-		
-		/* footer 시작 */
 		hyungjun.service.footer();
-		/* footer 끝 */
-					
-		/* 클릭 이벤트 시작 */
+
 		$('#hotelSearch').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
 				let se = {'in_day':null,'out_day':null,'accom_seq':null}
 				heetae.main.init(se);
-				//제거 필요
 			});
 		});
 		$('#amdin').addClass('ya_cusor').click(e=>{

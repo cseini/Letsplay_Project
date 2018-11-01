@@ -48,7 +48,7 @@ sanghoon.main =(()=>{
 			sanghoon.service.custo();
 		});
 		
-		$('<a/>').attr({id:'top_accom_btn', href:'#'}).html('top 숙소')
+		$('<a/>').attr({id:'top_accom_btn', href:'#'}).html('매출순위')
 		.addClass('ya_cusor')
 		.appendTo($('.nav_right')).click(e=>{
 			e.preventDefault();
@@ -66,7 +66,7 @@ googleChart.service = {
 		  $.getJSON($.ctx()+'/admin/basic',d=>{
 			  google.charts.load("current", {packages:['corechart']});
 			  google.charts.setOnLoadCallback(drawPay);
-			  console.log(d.pay);
+
 			  function drawPay(){
 				  var data = new google.visualization.DataTable();
 				  data.addColumn('string', '결제수단');
@@ -160,12 +160,7 @@ googleChart.service = {
 						  (d.gender[i].genderCount * 1)
 					  ]);
 				  }
-				  /*$.each(d.gender, (i,j)=>{
-					  data.addRow([
-						  j.genderType,
-						  (j.genderCount * 1)
-					  ]);
-				  });*/
+
 				  var options = {'title':'회원 성별',
 	                       'width':400,
 	                       'height':300,
@@ -246,11 +241,10 @@ googleChart.service = {
 		  });
 	  },
 	  accomInfo : x =>{
-		  //alert("local " + x.local + "start " + x.start + "end " + x.end);
+
 		  switch(x.start){
 		  case 'all':
-			  //alert("전체");
-			 /* var local = x.local;*/
+
 			  $.getJSON($.ctx()+'/admin/accom/'+x.local, d=>{
 				  google.charts.load('current', {'packages':['corechart']});
 			      google.charts.setOnLoadCallback(drawPrice);
@@ -279,7 +273,6 @@ googleChart.service = {
 					  level: 9
 				  };
 				  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
-				  //var bounds = new daum.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
 				  var positions = [];
 				  $.each(d.accomPosition, (i,j)=>{
 					  positions.push({
@@ -334,10 +327,7 @@ googleChart.service = {
 			  });
 			  break;
 		  default:
-/*		  	  var local, start, end;
-		  	  local = x.local;
-		  	  start = x.start;
-		  	  end = x.end;*/
+
 			  $.getJSON($.ctx()+'/admin/accom/'+x.local+'/'+x.start+'/'+x.end, d=>{
 				  google.charts.load('current', {'packages':['corechart']});
 			      google.charts.setOnLoadCallback(drawPrice);
@@ -366,7 +356,6 @@ googleChart.service = {
 					  level: 9
 				  };
 				  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
-				  //var bounds = new daum.maps.LatLngBounds(); // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성
 				  var positions = [];
 				  $.each(d.accomPosition, (i,j)=>{
 					  positions.push({
@@ -424,7 +413,7 @@ googleChart.service = {
 		  
 	  },	// accomInfo 완료
 	  custoInfo : x=>{
-		  console.log(x);
+
 		  var info = {};
 		  var year = new Date().getFullYear();
 		  if(x.type == 'MOTEL'){
@@ -533,8 +522,8 @@ googleChart.service = {
 						'chartSize': { width: 1000, height: 1000 }
 					};
 			  Nwagon.chart(options);
-			  console.log('1');
-			  console.log(options.dataset.values);
+
+
 			 
 			  
 			  google.charts.load('current', {'packages':['corechart']});
@@ -576,25 +565,21 @@ googleChart.service = {
 		  var list = [];
 		  var top_map = {};
 		  $.getJSON($.ctx()+'/admin/top', d=>{
-			  console.log(d.top[0].accomName)
-			  $.each(d.top, (i,j)=>{
-				 console.log(j.accomName); 
-			  });
-			  list_accom()
+
+			  list_accom();
 			  function list_accom(){
 				  for(let i = 0; i < 10; i++){
 					  list[i] = d.top[k];
 					  k++;
-					  console.log("k   "+k);
-					  console.log("y   "+y);
-					  console.log(list[i]);
+
 					  top_map = {
 							  'name' : list[0].accomName,
 							  'longitude' : list[0].longitude,
 							  'latitude' : list[0].latitude,
+							  'accomSeq' :list[0].accomSeq,
 					  }
 				  }
-				 alert(d.top[0].accomName);
+
 				  $.each(list, (i,j)=>{
 					  $('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+y}).appendTo($('.accom_list'));
 						$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+y}).appendTo($('#premium_selecter'+y))
@@ -602,66 +587,14 @@ googleChart.service = {
 							$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+y}).appendTo($('#premium_selecter_li'+y));
 								$('<h3/>').addClass('list_title').attr({id:'list_title'+y}).html(j.accomName).appendTo($('#premium_selecter_writer'+y))
 								.click(e=>{
-									alert(j.accomName+' '+j.longitude+' '+j.latitude);
 									top_map = {
 											'name' : j.accomName,
 											'longitude' : j.longitude,
 											'latitude' : j.latitude,
+											'accomSeq' : j.accomSeq,
 									}
 									googleChart.service.position(top_map);
-									/*
-									var mapContainer = document.getElementById('accom_map'),	// 지도를 표시할 div
-									  mapOption = {
-										  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
-										  level: 9
-									  };
-									  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
-									  var addr = {};
-									  	  addr = {
-											  'title' : j.accomName,
-											  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
-										  };
-									  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
-									  var imageSize = new daum.maps.Size(34, 60);
-									  
-									  var position
-										  // 마커 이미지를 생성
-										  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-										  var marker = new daum.maps.Marker({
-											  map: map,	// 마커를 표시할 지도
-											  position: addr.latlng,	// 마커를 표시할 위치
-											  image: markerImage	// 마커 이미지
-										  });
-										  var content = '<div class="customoverlay">' +
-										    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
-										    '    <span class="title">'+j.accomName+'</span>' +
-										    '  </a>' +
-										    '</div>';
-										  position = addr.latlng;
-										  var customOverlay = new daum.maps.CustomOverlay({
-										        position: position,
-										        content: content,
-										        yAnchor: 2.7
-										    });
-										  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
-										  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-									  function makeOverListener(map, marker, customOverlay) {
-									        return function() {
-									        	customOverlay.setMap(map);
-									        };
-									    }
-									  // 인포윈도우를 닫는 클로저를 만드는 함수
-									  function makeOutListener(customOverlay) {
-									        return function() {
-									        	customOverlay.setMap(null);
-									        };
-									    }
-									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
-										  marker = new daum.maps.Marker({points : position.latlng});
-										  marker.setMap(map);
-										  bounds.extend(addr.latlng);
-										  map.setBounds(bounds);	// 지도 재배치
-										  */
+
 								});
 								$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+y}).appendTo($('#premium_selecter_writer'+y))
 									$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+y));
@@ -677,7 +610,6 @@ googleChart.service = {
 			    $(window).scroll(function() {
 			        if (d.top.length>k && $(window).scrollTop() == $(document).height() - $(window).height()) {
 			          list_accom();
-			          //googleChart.service.topChart(x);
 			        }else if(!$('#premium_selecter0').length>0){
 			        	$(window).unbind('scroll');
 			        }
@@ -691,7 +623,7 @@ googleChart.service = {
 		  });
 	  },
 	  position : x=>{
-		  alert(x.name+' '+x.longitude+' '+x.latitude);
+
 		  var mapContainer = document.getElementById('accom_map'),	// 지도를 표시할 div
 		  mapOption = {
 			  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
@@ -743,11 +675,7 @@ googleChart.service = {
 			  marker.setMap(map);
 			  bounds.extend(addr.latlng);
 			  map.setBounds(bounds);	// 지도 재배치
-		/*	  
-		  daum.maps.event.addListener(marker, 'click', function(){
-			  alert('클릭');
-		  });
-		  */
+		  
 	  }
 	
 };
@@ -774,7 +702,7 @@ sanghoon.service = {
             
         },
 		sales : x=>{
-			console.log('sales 버튼 클릭');
+
 			$('#content').empty();
 			$('<div/>').attr({id:'page-wrapper'}).appendTo('#content');
 			$('<div/>').attr({id:'sales_div'}).appendTo('#page-wrapper');
@@ -873,68 +801,19 @@ sanghoon.service = {
 			
 		},
 		top_accom : x=>{
-			/*
-			var top = {};
-			top = {
-				'type' : 'all',
-				'gender' : 'all',
-				'local' : 'all'
-			}
 			
-			$.getJSON($.ctx()+'/admin/top', d=>{
-				
-			});
-			*/
-/*			$('#content').empty();
-			$('<div/>').addClass('top_wrapper').attr({id:'top_wrapper'}).appendTo($('#content'));
-			$('<div/>').addClass('top_box').attr({id:'top_box'}).appendTo($('#top_box'));
-			$('<p/>').addClass('font_1 font_weight800 padding_top_30').html('TOP 숙소').appendTo($('#top_box'));*/
 			$('#content').empty();
 			
-			//var i = 1;
 			var top_info = {
 					'type': '전체',
 					'gender': '전체',
 					'local': '전체'
 			};
-			//var top_info ='전체전체전체';
 			$('<div/>').attr({id:'page-wrapper'}).appendTo($('#content'));
-			$('<div/>').html('TOP10 숙소 현황').addClass('top10title').appendTo('#page-wrapper');
-			/*
-			$('<div/>').addClass('select_top').appendTo('#page-wrapper');				
-				$('<select/>').addClass('btn btn-light').attr({id:'top_type'}).appendTo($('.select_top'));
-					$.each(['전체', 'MOTEL', 'HOTEL'], (i,j)=>{
-						$('<option/>').attr({value:j}).html(j).appendTo($('#top_type'));
-					});
-				$('<select/>').addClass('btn btn-light').attr({id:'top_gender'}).appendTo($('.select_top'));
-					$.each(['전체', '남', '여'], (i,j)=>{
-						$('<option/>').attr({value:j}).html(j).appendTo($('#top_gender'));
-					});
-				$('<select/>').addClass('btn btn-light').attr({id:'top_local'}).appendTo($('.select_top'));
-					$.each(['전체', '서울', '강원', '경기', '경상남도', '경상북도', '광주', '대구', '대전', '부산', '세종', '울산', '인천', '전라남도', '전라북도', '제주', '충청남도', '충청북도'], (i,j)=>{
-						$('<option/>').attr({value:j}).html(j).appendTo($('#top_local'));
-					});
-					
-				$('<button/>').addClass('btn btn-light').attr({id:'top_button', type:'button'}).html('검색').appendTo($('.select_top'))
-				.click(e=>{
-					$('.accom_list').empty();
-					top_info = {
-						'type': $('#top_type').val(),
-						'gender': $('#top_gender').val(),
-						'local': $('#top_local').val()
-					}
-					
-					
-					//top_info = $('#top_type').val() + $('#top_gender').val() + $('#top_local');
-					googleChart.service.topChart(top_info);
-				});
-				*/
+			$('<div/>').html('숙소 매출 순위').addClass('top10title').appendTo('#page-wrapper');
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
 			$('<div/>').attr({id:'accom_map'}).appendTo('#page-wrapper');
 			googleChart.service.topChart();
-		}/*,
-		top_list : x=>{
-			
-		}*/
+		}
 		
 }

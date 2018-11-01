@@ -215,8 +215,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   <select id="subcheck" resultType="int">
   	SELECT COUNT(*)
   	FROM saved_accom
-  	WHERE MEMBER_ID LIKE #{member_id}
-  	AND SUB_MEM_ID LIKE #{sub_mem_id}
+  	WHERE SAVED_UNIQUE LIKE #{saved_unique}
   </select>
   
   <select id="subcount" resultType="int">
@@ -300,4 +299,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 OR m.NICKNAME LIKE #{search}
   </select>
 
+	<select id="nearAccom" resultMap="seinResult">
+	SELECT *
+	FROM accommodation
+	WHERE ACCOM_ADDR LIKE #{tag}
+	</select>
+	
 </mapper>
