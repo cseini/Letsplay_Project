@@ -236,7 +236,7 @@ sein.service ={
 											}
 										}else{
 											if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-												hyungjoon.permision.login();	
+												hyungjun.permision.login();	
 											};
 										}
 									}),
@@ -407,7 +407,7 @@ sein.service ={
 							}
 						}else{
 							if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-								hyungjoon.permision.login();	
+								hyungjun.permision.login();	
 							};
 						}
 					}),
@@ -483,7 +483,7 @@ sein.service ={
 						}
 					}else{
 						if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-							hyungjoon.permision.login();	
+							hyungjun.permision.login();	
 						};
 					}
 				});
@@ -565,7 +565,7 @@ sein.service ={
 					})
 				}else{
 					if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-						hyungjoon.permision.login();	
+						hyungjun.permision.login();	
 					};
 				}
 			});
@@ -595,18 +595,24 @@ sein.service ={
 				$('<div/>').addClass('bt_rap')
 				.append($('<button/>').attr({type:'submit'}).addClass('btn_saveComment').append($('<b/>').html('대댓글쓰기')))
 				.click(e=>{
-					$.ajax({
-						url:$.ctx()+'/cast/reWrite/',
-						method:'post',
-						contentType:'application/json',
-						data:JSON.stringify({member_id:sessionStorage.getItem('login'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
-						success:d=>{
-							$('#re_write_add').remove();
-							$('#inner_bg_reply').remove();
-							sein.service.reply({board_id:'cast',msg_seq:x.msg_ref});
-						},
-						error:(m1,m2,m3)=>{alert(m3);}
-					})
+					if(sessionStorage.getItem('login')){
+						$.ajax({
+							url:$.ctx()+'/cast/reWrite/',
+							method:'post',
+							contentType:'application/json',
+							data:JSON.stringify({member_id:sessionStorage.getItem('login'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
+							success:d=>{
+								$('#re_write_add').remove();
+								$('#inner_bg_reply').remove();
+								sein.service.reply({board_id:'cast',msg_seq:x.msg_ref});
+							},
+							error:(m1,m2,m3)=>{alert(m3);}
+						})
+					}else{
+						if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+							hyungjun.permision.login();	
+						};
+					}
 				})
 			).appendTo($('#reply_empty'+x.msg_seq));
 					
@@ -654,7 +660,7 @@ sein.service ={
 							.click(e=>{
 								if(sessionStorage.getItem('login')==""){
 									if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-										hyungjoon.permision.login();	
+										hyungjun.permision.login();	
 									};
 								}else{
 									sein.service.rere_write(x);
@@ -1155,7 +1161,7 @@ sein.service ={
 								$('#sub_count').html(sub_count);
 							}else{
 								if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-									hyungjoon.permision.login();	
+									hyungjun.permision.login();	
 								};
 							}							
 						}	
