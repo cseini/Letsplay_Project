@@ -162,10 +162,46 @@ public class AdminCtrl {
 		map.put("custoPop", admMap.getCustoPop());
 		return map;
 	}
+/*	
+	@GetMapping("/admin/top/{type}/{gender}/{local}")
+	public Map<String,Object> top(@PathVariable String type, @PathVariable String gender, @PathVariable String local){
+		map.clear();
+		smap.clear();
+		//System.out.println(type+"      "+gender+"          "+local);
+		if(type.equals("전체")) {
+			type = "%";
+		}
+		if(gender.equals("전체")) {
+			gender = "%";
+		}
+		if(local.equals("전체")) {
+			local = "%";
+		}
+		type += "%";
+		gender += "%";
+		local += "%";
+		System.out.println(type +"  "+ gender + "    "+local);
+		smap.put("type", type);
+		smap.put("gender", gender);
+		smap.put("local", local);
+		map.put("top", admMap.getTop(smap));
+		return map;
+	}
+	*/
 	@GetMapping("/admin/top")
 	public Map<String,Object> top(){
 		map.clear();
-		map.put("top", admMap.getTopRes());
+		map.put("top", admMap.getTop());
 		return map;
 	}
+	/*
+	@GetMapping("/admin/top/{local}")
+	public Map<String,Object> onePosition(@PathVariable String local){
+		map.clear();
+		smap.clear();
+		
+		return map;
+		
+	}
+*/
 }

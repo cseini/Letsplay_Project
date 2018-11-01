@@ -151,6 +151,10 @@ hyungjun.permision = (()=>{
 										validate ="비밀번호가 틀렸습니다.";	
 										$('<div/>').text(validate).appendTo('#loginAlert');
 									}else{
+										sessionStorage.setItem("loginID")
+										
+										
+										
 										$.cookie("loginID", d.mbr.member_id);
 										$.cookie("profileimg", d.mbr.profileimg);
 										$.cookie("nickname", d.mbr.nickname);
