@@ -11,6 +11,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="accom_business_no" column="accom_business_no"/>
 		<result property="accom_type" column="accom_type"/>
 		<result property="accom_date" column="accom_date"/>
+		<result property="longitude" column="longitude"/>
+		<result property="latitude" column="latitude"/>
 		<result property="room_seq" column="room_seq"/>
 		<result property="room_name" column="room_name"/>
 		<result property="room_no" column="room_no"/>
@@ -91,6 +93,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="retrieveAccommodation" resultMap="HeeTaeBean">
 		SELECT * FROM accommodation
 		WHERE ACCOM_SEQ = #{accom_seq}
+	</select>
+	<select id="retrieveReviewRoomSeq" resultMap="HeeTaeBean">
+		SELECT room.room_name FROM room
+		WHERE room.ROOM_SEQ IN(
+		SELECT DISTINCT reservation.room_seq
+			FROM reservation
+			WHERE reservation.room_seq IN(
+			 SELECT room.room_seq FROM room
+			 WHERE room.ACCOM_SEQ = #{accom_seq}
+			)
+			AND reservation.MEMBER_ID = #{member_id}
+			AND reservation.RES_CHECK = '1'
+		)
 	</select>
 	<select id="listRoom" resultMap="HeeTaeBean">
 		SELECT * FROM room
