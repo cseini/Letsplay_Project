@@ -515,11 +515,11 @@ googleChart.service = {
 								'60대 이상'
 							],
 							hrefs: [
-								'http://nuli.navercorp.com//sharing/a11y#k1',
-								'http://nuli.navercorp.com//sharing/a11y#k2',
-								'http://nuli.navercorp.com//sharing/a11y#k3',
-								'http://nuli.navercorp.com//sharing/a11y#k4',
-								'http://nuli.navercorp.com//sharing/a11y#k5'
+								'#',
+								'#',
+								'#',
+								'#',
+								'#'
 							]
 						},
 						'dataset': {
@@ -574,6 +574,7 @@ googleChart.service = {
 		  var y = 0;
 		  var k = 0;
 		  var list = [];
+		  var top_map = {};
 		  $.getJSON($.ctx()+'/admin/top', d=>{
 			  console.log(d.top[0].accomName)
 			  $.each(d.top, (i,j)=>{
@@ -586,9 +587,14 @@ googleChart.service = {
 					  k++;
 					  console.log("k   "+k);
 					  console.log("y   "+y);
-					  console.log(list[i])
+					  console.log(list[i]);
+					  top_map = {
+							  'name' : list[0].accomName,
+							  'longitude' : list[0].longitude,
+							  'latitude' : list[0].latitude,
+					  }
 				  }
-				  
+				 alert(d.top[0].accomName);
 				  $.each(list, (i,j)=>{
 					  $('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+y}).appendTo($('.accom_list'));
 						$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+y}).appendTo($('#premium_selecter'+y))
@@ -597,6 +603,13 @@ googleChart.service = {
 								$('<h3/>').addClass('list_title').attr({id:'list_title'+y}).html(j.accomName).appendTo($('#premium_selecter_writer'+y))
 								.click(e=>{
 									alert(j.accomName+' '+j.longitude+' '+j.latitude);
+									top_map = {
+											'name' : j.accomName,
+											'longitude' : j.longitude,
+											'latitude' : j.latitude,
+									}
+									googleChart.service.position(top_map);
+									/*
 									var mapContainer = document.getElementById('accom_map'),	// 지도를 표시할 div
 									  mapOption = {
 										  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
@@ -624,7 +637,7 @@ googleChart.service = {
 										    '    <span class="title">'+j.accomName+'</span>' +
 										    '  </a>' +
 										    '</div>';
-										  position = addr[i].latlng;
+										  position = addr.latlng;
 										  var customOverlay = new daum.maps.CustomOverlay({
 										        position: position,
 										        content: content,
@@ -646,8 +659,9 @@ googleChart.service = {
 									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
 										  marker = new daum.maps.Marker({points : position.latlng});
 										  marker.setMap(map);
-										  bounds.extend(points.latlng);
+										  bounds.extend(addr.latlng);
 										  map.setBounds(bounds);	// 지도 재배치
+										  */
 								});
 								$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+y}).appendTo($('#premium_selecter_writer'+y))
 									$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+y));
@@ -656,6 +670,7 @@ googleChart.service = {
 									$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+y));
 									y++;
 				  });
+				  googleChart.service.position(top_map);
 			  }
 			  
 			  /*무한스크롤 로직*/
@@ -672,22 +687,67 @@ googleChart.service = {
 					  var regexp = /\B(?=(\d{3})+(?!\d))/g;
 					  return num.toString().replace(regexp, ',');
 					}
-			  /*$('<ul/>').addClass('premium_selecter').attr({id:'premium_selecter'+i}).appendTo($('.accom_list'));
-				$('<li/>').addClass('premium_selecter_sh_li').attr({id:'premium_selecter_li'+i}).appendTo($('#premium_selecter'+i))
-					$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+i,src:'//yaimg.yanolja.com/v5/2017/11/16/17/640/5a0d5025becc08.90955197.jpg'}).appendTo($('#premium_selecter_li'+i))
-					$('<div/>').addClass('premium_selecter_writer').attr({id:'premium_selecter_writer'+i}).appendTo($('#premium_selecter_li'+i));
-						$('<h3/>').attr({id:'list_title'+i}).html('H호텔').appendTo($('#premium_selecter_writer'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('대실').appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('최대 4시간').appendTo($('#premium_selecter_explanation'+i));
-							$('<h4/>').addClass('p_span p_padding20').html(50000).appendTo($('#premium_selecter_explanation'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation'+i));
-						$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+i}).appendTo($('#premium_selecter_writer'+i))
-							$('<h6/>').addClass('p_span').html('숙박').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+i));
-							$('<h4/>').addClass('p_span p_padding30').html(50000+40000).appendTo($('#premium_selecter_explanation_'+i));
-							$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+i));*/
+			    
 		  });
+	  },
+	  position : x=>{
+		  alert(x.name+' '+x.longitude+' '+x.latitude);
+		  var mapContainer = document.getElementById('accom_map'),	// 지도를 표시할 div
+		  mapOption = {
+			  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
+			  level: 9
+		  };
+		  var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
+		  var addr = {};
+		  	  addr = {
+				  'title' : x.accomName,
+				  'latlng' : new daum.maps.LatLng(x.longitude,x.latitude)
+			  };
+		  var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+		  var imageSize = new daum.maps.Size(34, 60);
+		  
+		  var position
+			  // 마커 이미지를 생성
+			  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+			  var marker = new daum.maps.Marker({
+				  map: map,	// 마커를 표시할 지도
+				  position: addr.latlng,	// 마커를 표시할 위치
+				  image: markerImage	// 마커 이미지
+			  });
+			  var content = '<div class="customoverlay">' +
+			    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+			    '    <span class="title">'+x.name+'</span>' +
+			    '  </a>' +
+			    '</div>';
+			  position = addr.latlng;
+			  var customOverlay = new daum.maps.CustomOverlay({
+			        position: position,
+			        content: content,
+			        yAnchor: 2.7
+			    });
+			  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+			  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+		  function makeOverListener(map, marker, customOverlay) {
+		        return function() {
+		        	customOverlay.setMap(map);
+		        };
+		    }
+		  // 인포윈도우를 닫는 클로저를 만드는 함수
+		  function makeOutListener(customOverlay) {
+		        return function() {
+		        	customOverlay.setMap(null);
+		        };
+		    }
+		  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
+			  marker = new daum.maps.Marker({points : position.latlng});
+			  marker.setMap(map);
+			  bounds.extend(addr.latlng);
+			  map.setBounds(bounds);	// 지도 재배치
+		/*	  
+		  daum.maps.event.addListener(marker, 'click', function(){
+			  alert('클릭');
+		  });
+		  */
 	  }
 	
 };
