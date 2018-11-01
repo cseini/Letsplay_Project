@@ -37,6 +37,8 @@ public class AccomCtrl {
 		map.clear();
 		map.put("accom_seq", accom_seq);
 		map = (HashMap<String, Object>) mpr.retrieveAccommodation(map);
+		
+		
 		return map;
 	}
 	@PostMapping("/reservation/")
@@ -44,11 +46,7 @@ public class AccomCtrl {
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
 		map.clear();
-		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
-		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
-		Util.log.accept("숙소 시퀀스  : "+p.get("accom_seq"));
 		lst = mpr.retrieveReservation(p);
-		Util.log.accept("담긴 lst"+lst.toString());
 		map.put("list", lst);
 		return map;
 	}
@@ -57,11 +55,7 @@ public class AccomCtrl {
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
 		map.clear();
-		Util.log.accept("체크인 날짜 : "+p.get("checkin_date"));
-		Util.log.accept("체크아웃 날짜 : "+p.get("checkout_date"));
-		Util.log.accept("객실 시퀀스  : "+p.get("room_seq"));
 		map = mpr.retrieveReservationRoom(p);
-		Util.log.accept("담긴 room_map"+map.toString());
 		return map;
 	}
 	@RequestMapping("/room/{accom_seq}/")
@@ -82,15 +76,22 @@ public class AccomCtrl {
 		map.put("list", lst);
 		return map;
 	}
-	@RequestMapping("/addReview/")
-	public @ResponseBody Map<String,Object> addReview(@RequestBody Map<String,String> p){
+	
+	@RequestMapping("/review/accom/")
+	public @ResponseBody Map<String,Object> retrieveRoomSeq(@RequestBody Map<String,Object> p){
+		lst = mpr.retrieveReviewRoomSeq(p);
+		map.put("list", lst);
+		return map;
+	}
+	
+	@RequestMapping("/review/add/")
+	public @ResponseBody Map<String,Object> addReview(@RequestBody Map<String,Object> p){
 		
 		return map;
 	}
 	@PostMapping("/payment/")
 	public void addPayment(@RequestBody Map<String, Object> p) {
 		map.clear();
-		Util.log.accept("페이먼트 들어온 맵"+p.toString());
 		mpr.insertReservation(p);
 	}
 }

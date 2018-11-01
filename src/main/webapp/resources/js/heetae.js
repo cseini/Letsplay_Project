@@ -17,8 +17,8 @@ heetae.main =(x=>{
 	}
 	var setContentView =x=>{
 		let img, w ,nav ,header ,content , footer
-		,accom,accom2,input_accom_seq,checkin_day,checkout_day,rs,button_check
-		,save_start,save_end,save_acom_start,save_acom_end;
+		,accom,accom2,input_accom_seq,checkin_day,checkout_day,today,rs,button_check
+		,save_start,save_end,save_acom_start,save_acom_end,checking_day,save_end_max_date;
 		var save_checkdate
 		button_check = "accom"
 		save_checkdate = new Array()
@@ -28,6 +28,13 @@ heetae.main =(x=>{
 		header = $('#header');
 		content = $('#content');
 		footer = $('#footer');
+		today = new Date(new Date().getFullYear(),
+				new Date().getMonth(), (new Date().getDate()));
+		save_end_max_date = new Date();
+		save_end_max_date = today
+		console.log('오늘')
+		console.log(today)
+		console.log(today.getDate())
 		rs=5;
 		if(x.accom_seq==null){
 			input_accom_seq = 3;
@@ -39,18 +46,27 @@ heetae.main =(x=>{
 			checkin_day = new Date(new Date().getFullYear(),
 					new Date().getMonth(), new Date().getDate());	
 			checkout_day = new Date(new Date().getFullYear(),
-					new Date().getMonth(), new Date().getDate());
-		}else{
+					new Date().getMonth(), new Date().getDate()+1);
+		}else{ 
 			checkin_day = new Date(x.in_day.split('-')[0]
 			,(x.in_day.split('-')[1])
 			,x.in_day.split('-')[2])
-			checkin_day.setDate(checkin_day.getDate()-1)
+			checkin_day.setDate(checkin_day.getDate())
 			
 			checkout_day = new Date(x.out_day.split('-')[0]
 			,(x.out_day.split('-')[1])
 			,x.out_day.split('-')[2])
-			checkout_day.setDate(checkout_day.getDate()-1)
+			checkout_day.setDate(checkout_day.getDate())
 		}
+		console.log('checkin_day')
+		console.log(checkin_day)
+		console.log(heetae.detail.date_format(checkin_day))
+		console.log('checkout_day')
+		console.log(heetae.detail.date_format(checkout_day))
+		console.log(checkout_day)
+		let mathes = (checkout_day-checkin_day)/(24 * 60 * 60 * 1000);
+		checking_day = mathes+'박'+(mathes+1)+'일'
+		
 		header.empty()
 		content.empty()
 		
@@ -314,35 +330,39 @@ heetae.main =(x=>{
 						.empty()
 						
 						let chk = false;
-						$('<div/>')
-						.addClass('heetae_tab_review_write')
-						.appendTo('.heetae_tab_content')
-						$('<button/>')
-						.attr({'id':"heetae_write_button"
-							,'type':"button"
-							,'data-toggle':"collapse"
-							, 'href':"#heetae_review_collapse"
-							, 'data-target':"#heetae_review_collapse"
-							, 'aria-expanded':"false"
-							, 'aria-controls':"heetae_review_collapse"})
-						.text('리뷰 작성')
-						.addClass('heetae_write_button')
-						.appendTo('.heetae_tab_review_write')
-						.click(e=>{
-								if(chk==false){
-									$('.heetae_write_button')
-									.text('취 소')
-									setTimeout(() => {	
-										chk=true;
-									}, 400);
-								}else{
-									$('.heetae_write_button')
-									.text('리뷰 작성')
-									setTimeout(() => {	
-										chk=false;
-									}, 400);
-								}
-						})
+						
+						if(sessionStorage.getItem("login")!=null){
+							$('<div/>')
+							.addClass('heetae_tab_review_write')
+							.appendTo('.heetae_tab_content')
+							$('<button/>')
+							.attr({'id':"heetae_write_button"
+								,'type':"button"
+								,'data-toggle':"collapse"
+								, 'href':"#heetae_review_collapse"
+								, 'data-target':"#heetae_review_collapse"
+								, 'aria-expanded':"false"
+								, 'aria-controls':"heetae_review_collapse"})
+							.text('리뷰 작성')
+							.addClass('heetae_write_button')
+							.appendTo('.heetae_tab_review_write')
+							.click(e=>{
+									if(chk==false){
+										$('.heetae_write_button')
+										.text('취 소')
+										setTimeout(() => {	
+											chk=true;
+										}, 400);
+									}else{
+										$('.heetae_write_button')
+										.text('리뷰 작성')
+										setTimeout(() => {	
+											chk=false;
+										}, 400);
+									}
+							})
+						}
+						
 						$('<div/>')
 						.attr('id',"heetae_review_collapse")
 						.addClass('collapse')
@@ -356,18 +376,28 @@ heetae.main =(x=>{
 						.addClass(['heetae_review_select_box','custom-select','custom-select-lg','mb-3'])
 						.appendTo('.heetae_review_select_contorller')
 						
-						$('<option/>')
-						.attr('value','1')
-						.text('스탠다드 트윈')
-						.appendTo('.heetae_review_select_box')
-						$('<option/>')
-						.attr('value','2')
-						.text('슈페리어 트리플')
-						.appendTo('.heetae_review_select_box')
-						$('<option/>')
-						.attr('value','3')
-						.text('슈페리어 트리플 트윈')
-						.appendTo('.heetae_review_select_box')
+						//여기부터 시작
+						if(sessionStorage.getItem("login")!=null){
+							$.ajax({
+								url:$.ctx()+'/accom/review/accom/',
+								method:'post',
+								contentType:'application/json',
+								data:JSON.stringify({
+									member_id:sessionStorage.getItem("login")
+									,accom_seq:input_accom_seq}),
+								success:d=>{
+									$.each(d.list,(i,j)=>{
+										$('<option/>')
+										.attr('value',i)
+										.text(j.room_name)
+										.appendTo('.heetae_review_select_box')
+									})
+								},
+								error:(m1,m2,m3)=>{
+									alert('에러');
+								}	
+							})
+						}
 						
 						$('<div/>')
 						.addClass('heetae_support_header')
@@ -387,12 +417,20 @@ heetae.main =(x=>{
 						.addClass('heetae_fileupload_inputbox')
 						.appendTo('.heetae_support_header')
 						
-						$('<input/>')
+						$('<button/>')
+						.text('사진 업로드')
 						.attr({'id':'heetae_review_fileupload',
-								'type':'file'})
-						.addClass('heetae_fileupload_inputbox_input')
+								'type':'button'
+								,'data-target':"#layerpop"
+								,'data-toggle':"modal"})
+						.addClass(['heetae_fileupload_inputbox_input','btn', 'btn-outline-danger'])
 						.appendTo('.heetae_fileupload_inputbox')
-						
+						.click(e=>{
+							e.preventDefault()
+							heetae.detail.modal_util();
+							//드롭박스 필요
+							
+						})
 						$('<textarea/>')
 						.attr({'id':'heetae_card_textarea','cols':"43",'rows':'3','maxlength':"137"})
 						.addClass(['heetae_card','card','card-body'])
@@ -584,15 +622,10 @@ heetae.main =(x=>{
 				$('<div/>')
 				.addClass('heetae_check_middle')
 				.appendTo('.heetae_check_box')
-				
-				
-				
-					
+
 				$('<input/>')
 				.attr({'readonly':'true'
-						,'value':checkin_day.getFullYear()+ 
-						"-" +(checkin_day.getMonth()+1) 
-						+ "-" + checkin_day.getDate()
+						,'value':heetae.detail.date_format(today)
 						,'id':'start_date'}) //체크인 날짜 번경
 				.appendTo($('<div>')
 							.addClass('heetae_check_middle_con1')
@@ -604,37 +637,67 @@ heetae.main =(x=>{
 				.appendTo('.heetae_check_middle')
 				$('<input/>')
 				.attr({'readonly':'true'
-					,'value':checkout_day.getFullYear()+ 
-					"-" +(checkout_day.getMonth()+1) 
-					+ "-" + checkout_day.getDate()
+					,'value':heetae.detail.date_format(checkout_day)
 					,'id':'end_date'}) //체크아웃 날짜 번경
 				.appendTo($('<div>')
 						.addClass('heetae_check_middle_con3')
 						.appendTo('.heetae_check_middle'))
 				
 				//이곳 캘린더 날짜번경	
-						
 				$('#start_date')
-				 .datepicker({
-					 minDate: checkin_day,
-			         maxDate: function () {
-			               return $('#end').val();
-			         }
+				.datepicker({
+				 minDate: ()=> {
+					 /*let sd = new Date($('#start_date').val().split('-')[0]
+						,Number($('#start_date').val().split('-')[1]-1)
+						,$('#start_date').val().split('-')[2]);
+					 let temp = new Date()
+					 console.log('today is')
+					 console.log(today)
+					 console.log('sd is')
+					 console.log(sd)
+					 let ts = (sd-today)/(24 * 60 * 60 * 1000);
+					 console.log('ts is')
+					 console.log(ts)
+					 if(today.getTime()!=sd.getTime() && ts>8){
+						 temp = new Date(save_end_max_date.getFullYear()
+									,(save_end_max_date.getMonth())
+									,save_end_max_date.getDate())
+						 console.log('change temp is')
+						 console.log(temp)
+					 }else{
+						 temp = today;
+					 }
+					 console.log('temp is')
+					 console.log(temp)*/
+					 return today;
+		         },
+		         maxDate: ()=> {
+		               return $('#end').val();
+		         }
 				 });
 				$('#end_date').datepicker({
-					minDate: function () {
-						return new Date($('#start_date').val().split('-')[0]
-						,($('#start_date').val().split('-')[1]-1)
-						,$('#start_date').val().split('-')[2]);
-		            },
-		            maxDate: function () {
-						let td = new Date($('#start_date').val().split('-')[0]
-						,($('#start_date').val().split('-')[1]-1)
-						,$('#start_date').val().split('-')[2]);
-						td.setDate(td.getDate()+8)
-						return td
+					minDate: ()=>{
+						let end_min_date = new Date($('#start_date').val().split('-')[0]
+						,(Number($('#start_date').val().split('-')[1])-1)
+						,Number($('#start_date').val().split('-')[2])+1);
+						console.log('end_min_date')
+						console.log(end_min_date)
+						return end_min_date
+					},
+		            maxDate: ()=>{
+		            	let end_max_date = new Date($('#start_date').val().split('-')[0]
+						,($('#start_date').val().split('-')[1])
+						,$('#start_date').val().split('-')[2]-1);
+		            	end_max_date.setMonth(end_max_date.getMonth()-1)
+						end_max_date.setDate(end_max_date.getDate()+8)
+						console.log('end_max_date')
+						console.log(end_max_date)
+						save_end_max_date = new Date()
+						save_end_max_date = end_max_date	
+						return end_max_date
 		            }
-				});	
+				});		
+						
 				//찾기
 				save_start = $('#start_date').val()
 				save_end = $('#end_date').val()
@@ -665,8 +728,9 @@ heetae.main =(x=>{
 				.text('연박(2박 이상)을 제공하는 숙소 입니다.')
 				.addClass('heetae_check_bottom_con1')
 				.appendTo('.heetae_check_bottom')
+				
 				$('<span/>')
-				.text('1박')
+				.text(checking_day)
 				.addClass('heetae_check_bottom_con2')
 				.appendTo('.heetae_check_bottom')
 				
@@ -675,30 +739,51 @@ heetae.main =(x=>{
 						if($('#start_date').val()!=save_start){
 							save_start = $('#start_date').val()
 							let sd = new Date($('#start_date').val().split('-')[0]
-							,($('#start_date').val().split('-')[1])
+							,(($('#start_date').val().split('-')[1])-1)
 							,$('#start_date').val().split('-')[2])
-							sd.setDate(sd.getDate()-1)
+							
 							let ed = new Date($('#end_date').val().split('-')[0]
-							,($('#end_date').val().split('-')[1])
+							,(($('#end_date').val().split('-')[1])-1)
 							,$('#end_date').val().split('-')[2])
-							ed.setDate(ed.getDate()-1)
-							if(sd.getTime()>ed.getTime()){
-								$('#end_date').val($('#start_date').val())
+							
+							console.log('change 시작날 ')
+							console.log($('#start_date').val())
+							console.log(sd)
+							console.log('change 끝날')
+							console.log($('#end_date').val())
+							console.log(ed)
+							
+							if(sd.getTime()>=ed.getTime()){
+								let tsd = sd
+								tsd.setDate(tsd.getDate()+1)
+								$('#end_date').val(heetae.detail.date_format(tsd))
+								console.log('start val : '+$('#start_date').val())
+								console.log('end val : '+$('#end_date').val())
 								save_end = $('#start_date').val()
+								
 								ed = new Date($('#end_date').val().split('-')[0]
-								,($('#end_date').val().split('-')[1])
-								,$('#end_date').val().split('-')[2])
-								ed.setDate(ed.getDate()-1)
+								,(Number($('#end_date').val().split('-')[1])-1)
+								,(Number($('#end_date').val().split('-')[2])+1))
+								
 								}
-								let ts = ed.getDate()-sd.getDate();
-								if(ts==0){
-									$('.heetae_check_bottom_con2')
-									.text('1박')
-								}else{
-									$('.heetae_check_bottom_con2')
-									.text((ts)+'박'+(ts+1)+'일')
+							
+								let ts = (ed-sd)/(24 * 60 * 60 * 1000);
+								if(ts>8){
+									let tsd = sd
+									tsd.setDate(tsd.getDate()+7)
+									$('#end_date').val(heetae.detail.date_format(tsd))
+									ed = new Date($('#end_date').val().split('-')[0]
+									,(Number($('#end_date').val().split('-')[1])-1)
+									,(Number($('#end_date').val().split('-')[2])+7))
+									ts = (ed-sd)/(24 * 60 * 60 * 1000);
 								}
-								alert(input_accom_seq)
+								console.log('get Time 시작날 ')
+								console.log(sd)
+								console.log('get Time 끝날')
+								console.log(ed)
+								console.log('차이 : '+ts)
+								$('.heetae_check_bottom_con2')
+								.text(ts+'박'+(ts+1)+'일')
 						let t = {'accom_seq':input_accom_seq
 								,'list':s.list
 								,'button_check':button_check}
@@ -710,22 +795,22 @@ heetae.main =(x=>{
 							if($('#end_date').val()!=save_end){
 								save_end = $('#end_date').val()
 								let sd = new Date($('#start_date').val().split('-')[0]
-								,($('#start_date').val().split('-')[1])
+								,(($('#start_date').val().split('-')[1])-1)
 								,$('#start_date').val().split('-')[2])
-								sd.setDate(sd.getDate()-1)
+							
 								let ed = new Date($('#end_date').val().split('-')[0]
-								,($('#end_date').val().split('-')[1])
+								,(($('#end_date').val().split('-')[1])-1)
 								,$('#end_date').val().split('-')[2])
-								ed.setDate(ed.getDate()-1)
-								let ts = ed.getDate()-sd.getDate();
-								if(ts==0){
-									$('.heetae_check_bottom_con2')
-									.text('1박')
-								}else{
-									$('.heetae_check_bottom_con2')
-									.text((ts)+'박'+(ts+1)+'일')
-								}
-								alert(input_accom_seq)
+								
+								
+								let ts = (ed-sd)/(24 * 60 * 60 * 1000);
+								console.log('시작날 ')
+								console.log(sd)
+								console.log('끝날')
+								console.log(ed)
+								console.log('차이 : '+ts)
+								$('.heetae_check_bottom_con2')
+								.text((ts)+'박'+(ts+1)+'일')
 								let t = {'accom_seq':input_accom_seq
 										,'list':s.list
 										,'button_check':button_check}
@@ -757,8 +842,59 @@ heetae.main =(x=>{
 				
 			
 				$('<div/>') //지도
+				.attr({id:'heetae_location'})
 				.addClass('heetae_check_map')
 				.appendTo('.heetae_section2')
+				var mapContainer = document.getElementById('heetae_location'),	// 지도를 표시할 div
+				mapOption = {
+					  center: new daum.maps.LatLng(37.566535,126.97796919999996),	// 지도의 중심좌표
+					  level: 9
+				  };
+				var map = new daum.maps.Map(mapContainer, mapOption);	// 지도를 생성
+				var position = {};
+				position = {
+					'title' : d.accom_name,
+					'latlng' : new daum.maps.LatLng(d.longitude,d.latitude)
+				};
+				var imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+				var imageSize = new daum.maps.Size(34, 60);
+				
+				 var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+				 var marker = new daum.maps.Marker({
+					  map: map,	// 마커를 표시할 지도
+					  position: position.latlng,	// 마커를 표시할 위치
+					  image: markerImage	// 마커 이미지
+				  });
+				 var content = '<div class="customoverlay">' +
+				    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+				    '    <span class="title">'+position.title+'</span>' +
+				    '  </a>' +
+				    '</div>';
+				 var customOverlay = new daum.maps.CustomOverlay({
+				        position: position,
+				        content: content,
+				        yAnchor: 2.7
+				    });
+				 daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+				 daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+			function makeOverListener(map, marker, customOverlay) {
+		        return function() {
+		        	customOverlay.setMap(map);
+		        };
+		    }
+		  // 인포윈도우를 닫는 클로저를 만드는 함수
+		  function makeOutListener(customOverlay) {
+		        return function() {
+		        	customOverlay.setMap(null);
+		        };
+		    }
+		  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
+			  marker = new daum.maps.Marker({points : position.latlng});
+			  marker.setMap(map);
+			  bounds.extend(position.latlng);
+			  map.setBounds(bounds);	// 지도 재배치
+				
+				
 				
 				$('<div/>')
 				.addClass('heetae_cupon_list')
@@ -855,7 +991,8 @@ heetae.detail = {
 		}
 	},
 	accom : x=>{
-		var room_images = [x.list.room_image1,x.list.room_image2,x.list.room_image3]
+		let pay_types
+		let room_images = [x.list.room_image1,x.list.room_image2,x.list.room_image3]
 		$('<div/>')
 		.attr('id',x.num+'_content_room')
 		.addClass('heetae_tab_content_room')
@@ -968,7 +1105,7 @@ heetae.detail = {
 	    .appendTo('#'+x.num+'_info_price')
 	    
 	    $('<em/>')
-	    .text(x.list.room_price)
+	    .text(heetae.detail.money_format(x.list.room_price))
 	    .appendTo('#'+x.num+'price_right')
 	    $('<i/>')
 	    .text('원')
@@ -994,8 +1131,7 @@ heetae.detail = {
 		    .addClass('heetae_tab_info_reserve_btn')
 		    .appendTo('#'+x.num+'_room_info')
 		    
-		    	//변경해야함1 if($.cookie("loginID")==null){
-		    	if($.cookie("loginID")!=null){
+		    	if(sessionStorage.getItem("login")==null){
 		    		$('#'+x.num+'_info_reserve_btn')
 		    		.click(e=>{
 		    			alert('비회원은 예약할 수 없습니다')
@@ -1013,18 +1149,142 @@ heetae.detail = {
 							.html('결제 방법')
 							.attr({style:'padding-bottom:15px; font-weight: bold'})
 							.appendTo('.modal-body');
+							
+							
 							$('<div/>')
-							.html('자동 고정(카드)')
-							.attr({style:'padding-bottom:15px'})
+							.attr({'id':'heetae_select_paytype','data-toggle':'buttons'})
+							.addClass(['heetae_select_paytype_box','btn-group','btn-group-toggle'])
+							.appendTo('.modal-body');
+							
+							$('<label/>')
+							.text('카드 결제')
+							.addClass(['btn','btn-outline-danger'])
+							.appendTo($('#heetae_select_paytype'))
+							.append($('<input/>')
+									.attr({
+										'type':'radio'
+									   ,'name':'options'
+									   ,'id':'option1'
+									   ,'autocomplete' : 'off'})
+									  ).click(e=>{
+										  pay_types = 'CARD'
+									  })
+							$('<label/>')
+							.text('계좌 이체')
+							.addClass(['btn','btn-outline-danger'])
+							.appendTo($('#heetae_select_paytype'))
+							.append($('<input/>')
+									.attr({
+										'type':'radio'
+									   ,'name':'options'
+									   ,'id':'option2'
+									   ,'autocomplete' : 'off'})
+									   ).click(e=>{
+											  pay_types = 'ACCOUNT'
+										  })
+							$('<label/>')
+							.text('비트 코인')
+							.addClass(['btn','btn-outline-danger'])
+							.appendTo($('#heetae_select_paytype'))
+							.append($('<input/>')
+									.attr({
+										'type':'radio'
+									   ,'name':'options'
+									   ,'id':'option3'
+									   ,'autocomplete' : 'off'})
+									   ).click(e=>{
+											  pay_types = 'BITCOIN'
+										  })
+							$('<label/>')
+							.text('PAYPAL')
+							.addClass(['btn','btn-outline-danger'])
+							.appendTo($('#heetae_select_paytype'))
+							.append($('<input/>')
+									.attr({
+										'type':'radio'
+									   ,'name':'options'
+									   ,'id':'option3'
+									   ,'autocomplete' : 'off'})
+									   ).click(e=>{
+											  pay_types = 'PAYPAL'
+										  })
+							$('<label/>')
+							.text('현금 결제')
+							.addClass(['btn','btn-outline-danger'])
+							.appendTo($('#heetae_select_paytype'))
+							.append($('<input/>')
+									.attr({
+										'type':'radio'
+									   ,'name':'options'
+									   ,'id':'option3'
+									   ,'autocomplete' : 'off'})
+									   ).click(e=>{
+											  pay_types = 'CASH'
+										  })
+							
+							$('<div/>')
+							.html('총 결제 금액')
+							.attr({style:'padding-bottom:15px;font-weight: bold; font-size:16px;'})
 							.appendTo('.modal-body');
 							$('<div/>')
-							.html('결제 input 타이틀')
-							.attr({style:'padding-bottom:15px;font-weight: bold'})
+							.addClass('heetae_paybox')
 							.appendTo('.modal-body');
-							$('<input/>')
-							.attr({type:'text', id:'changePhone', placeholder:'입력해 주세요'})
-							.addClass('inputData')
-							.appendTo('.modal-body');
+							
+							$('<div/>')
+							.addClass('heetae_paybox_con1')
+							.appendTo('.heetae_paybox')
+							
+							$('<div/>')
+							.attr('style','float:left;')
+							.text('1박 기준 가격')
+							.appendTo('.heetae_paybox_con1')
+							
+							$('<div/>')
+							.attr('style','float:right;')
+							.text(heetae.detail.money_format(x.list.room_price)+'원')
+							.appendTo('.heetae_paybox_con1')
+							
+							$('<div/>')
+							.addClass('heetae_paybox_con2')
+							.appendTo('.heetae_paybox')
+							
+							let sd = new Date($('#start_date').val().split('-')[0]
+								,(($('#start_date').val().split('-')[1])-1)
+								,$('#start_date').val().split('-')[2])
+							
+							let ed = new Date($('#end_date').val().split('-')[0]
+								,(($('#end_date').val().split('-')[1])-1)
+								,$('#end_date').val().split('-')[2])
+								
+							let ts = (ed-sd)/(24 * 60 * 60 * 1000);
+							
+							$('<div/>')
+							.attr('style','float:left;')
+							.text('총 묵을 일수 ('+$('#start_date').val()+'~'+$('#end_date').val()+') '+ts+'일')
+							.appendTo('.heetae_paybox_con2')
+							
+							$('<div/>')
+							.attr('style','float:right;')
+							.text(heetae.detail.money_format(x.list.room_price)+' * '+ts)
+							.appendTo('.heetae_paybox_con2')
+							
+							$('<div/>')
+							.addClass('heetae_paybox_con3')
+							.appendTo('.heetae_paybox')
+							
+							$('<div/>')
+							.attr('style','float:right;')
+							.addClass('heetae_paybox_con3-2')
+							.text(' '+heetae.detail.money_format(x.list.room_price*ts)+'원 ')
+							.appendTo('.heetae_paybox_con3')
+							
+							$('<div/>')
+							.attr('style','float:right;')
+							.addClass('heetae_paybox_con3-1')
+							.text('총 결제금액 ')
+							.appendTo('.heetae_paybox_con3')
+							
+							
 							$('<button/>')
 							.addClass('heetae_info_modal_btn')
 							.attr({'id':'heetae_payment_agree','data-dismiss':"modal",'style':"margin-right:5px"})
@@ -1040,19 +1300,18 @@ heetae.detail = {
 										,checkout_date:$('#end_date').val()
 										,room_seq:x.list.room_seq}),
 									success:d=>{
-										alert
 										$('#layerpop').on('hidden.bs.modal',()=>{
 												if(d.checkdate){
-													//변경 해야함2 member_id:$.cookie("loginID")
+													console.log(pay_types)
 													$.ajax({
 														url:$.ctx()+'/accom/payment/',
 														method:'post',
 														contentType:'application/json',
 														data:JSON.stringify({
-															member_id:'a1'
+															member_id:sessionStorage.getItem("login")
 															,room_seq:x.list.room_seq
 															,pay_price:x.list.room_price
-															,pay_type:'CARD'
+															,pay_type:pay_types
 															,checkin_date:$('#start_date').val()
 															,checkout_date:$('#end_date').val()
 															}),
@@ -1061,8 +1320,8 @@ heetae.detail = {
 															/*let se = {'in_day':null
 																,'out_day':null
 																,'accom_seq':x.list.accom_seq}
-															heetae.main.init(se);*/
-															$.getScript($.ctx()+'/resources/js/app.js',e=>{
+															heetae.main.init(se);*///메인페이지 이동
+															$.getScript($.ctx()+'/resources/js/hyungjun.js',e=>{
 																app.permision.reservationList();
 															})
 														},
@@ -1073,7 +1332,7 @@ heetae.detail = {
 												}else{
 													alert('이미 예약된 자리입니다')
 												}
-	                                    })
+	                                    }) 
 									},
 									error:(m1,m2,m3)=>{
 										alert('에러');
@@ -1259,6 +1518,16 @@ heetae.detail = {
 			,'score':x.list.room_grade
 			,'append':'#'+x.id+'_review_info_score'})
 	},
+	date_format : x=>{
+		let yyyy = x.getFullYear().toString();
+	    let mm = (x.getMonth() + 1).toString();
+	    let dd = x.getDate().toString();
+	    return yyyy + '-' +(mm[1] ? mm : '0'+mm[0]) +'-'+ (dd[1] ? dd : '0'+dd[0]);
+	},
+	money_format : x=>{
+		var regexp = /\B(?=(\d{3})+(?!\d))/g;
+		  return x.toString().replace(regexp, ',');
+	}
 }
 
 heetae.router = {

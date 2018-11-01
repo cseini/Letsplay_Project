@@ -27,6 +27,8 @@
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>  <!-- 형준 로그인 참고 -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.10/css/gijgo.min.css" rel="stylesheet" type="text/css" /> -->
 	<script src="${context}/resources/js/gijgo.min.js"></script>
+	<script src="${context}/resources/js/dropzone.js"></script>
+	<link rel="stylesheet" type="text/css" href="${context}/resources/css/dropzone.css">
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
 	<script src="${context}/resources/js/app.js"></script>
 </head>

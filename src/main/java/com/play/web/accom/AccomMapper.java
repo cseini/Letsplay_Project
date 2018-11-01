@@ -10,6 +10,7 @@ public interface AccomMapper {
 	public List<Object> retrieveReservation(Map<String, Object> p);
 	public HashMap<String, Object> retrieveReservationRoom(Map<String, Object> p);
 	public HashMap<String, Object> retrieveAccommodation(Map<String, Object> p);
+	public List<Object> retrieveReviewRoomSeq(Map<String, Object> p);
 	public List<Object> listRoom(Map<String, Object> p);
 	public List<Object> listReview(Map<String, Object> p);
 	public int count(Map<String, Object> p);
