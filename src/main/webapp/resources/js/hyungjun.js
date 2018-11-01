@@ -35,6 +35,11 @@ hyungjun.permision = (()=>{
 						$('<div/>').addClass('history-item-ready-reserve').appendTo('.history-cont');
 							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
 						$.each(d.rlist,(i,j)=>{
+							
+							var tday = new Date(j.pay_date);
+							console.log('tday : ' + tday);
+							console.log('d.pay_date : '+ j.pay_date);
+						    
 							$('.info').addClass('info_reservelist_'+i).append(
 								$('<div/>').append(
 													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({style:'cursor:pointer;'}).click(e=>{
@@ -62,7 +67,7 @@ hyungjun.permision = (()=>{
 											$('<li/>').addClass('reserveinfo-item')
 												.append(
 														$('<span/>').html('예약일'),
-														$('<b/>').html(j.pay_date).attr({style:'padding-left: 43px'})),
+														$('<b/>').html(tday).attr({style:'padding-left: 43px'})),
 											$('<li/>').addClass('reserveinfo-item')
 												.append(
 														$('<span/>').html('판매가'),
@@ -1199,7 +1204,16 @@ hyungjun.service = {
 		    console.log('checkinDate :  ' + checkinDate);
 		    var diff = (newToday.getTime()-checkinDate.getTime())/(1000*60*60*24);
 			return diff;
+		},
+		
+		dayPresent : d =>{
+			var dayPre = d;
+		    /*var arr1 = dayPre.split('-');*/
+		    /*var dayPreDate = new Date(arr1[0], arr1[1], arr1[2]);*/
+		    console.log('dayPre :  ' + dayPre);
 		}
+		
+		
 }
 /*		preventF5 : () =>{
 			function LockF5(){
