@@ -174,8 +174,6 @@ sein.board ={
 				})
 			})
 			
-		
-			
 	}
 }
 sein.service ={
@@ -1553,12 +1551,11 @@ sein.service ={
 			 let position;
 			 let accomseq;
 			 $.each(positions,(i,j)=>{
-				// 마커 이미지를 생성
 				  let markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
 				  let marker = new daum.maps.Marker({
-					  map: map,	// 마커를 표시할 지도
-					  position: j.latlng,	// 마커를 표시할 위치
-					  image: markerImage,	// 마커 이미지
+					  map: map,	
+					  position: j.latlng,
+					  image: markerImage,
 					  clickable:true
 				  });
 				  let content = '<div class="customoverlay">' +
@@ -1587,17 +1584,15 @@ sein.service ={
 			        	customOverlay.setMap(map);
 			        };
 			    }
-			  // 인포윈도우를 닫는 클로저를 만드는 함수
 			  function makeOutListener(customOverlay) {
 			        return function() {
 			        	customOverlay.setMap(null);
 			        };
 			    }
-			 	// 지도 재설정 범위정보 객체 생성
 			  for(let k = 0; k < positions.length; k++){
 				  bounds.extend(positions[k].latlng);
 			  }
-			  map.setBounds(bounds);	// 지도 재배치
+			  map.setBounds(bounds);
 		 })
 	},
 	search : x=>{
