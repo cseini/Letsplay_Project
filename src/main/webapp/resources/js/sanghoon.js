@@ -616,7 +616,7 @@ googleChart.service = {
 										  var markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
 										  var marker = new daum.maps.Marker({
 											  map: map,	// 마커를 표시할 지도
-											  position: addr[i].latlng,	// 마커를 표시할 위치
+											  position: addr.latlng,	// 마커를 표시할 위치
 											  image: markerImage	// 마커 이미지
 										  });
 										  var content = '<div class="customoverlay">' +
@@ -646,7 +646,7 @@ googleChart.service = {
 									  var bounds = new daum.maps.LatLngBounds();	// 지도 재설정 범위정보 객체 생성
 										  marker = new daum.maps.Marker({points : position.latlng});
 										  marker.setMap(map);
-										  bounds.extend(positions[k].latlng);
+										  bounds.extend(position.latlng);
 										  map.setBounds(bounds);	// 지도 재배치
 								});
 								$('<div/>').addClass('premium_selecter_explanation').attr({id:'premium_selecter_explanation_'+y}).appendTo($('#premium_selecter_writer'+y))
@@ -870,7 +870,7 @@ sanghoon.service = {
 				});
 				*/
 			$('<div/>').addClass('accom_list').appendTo('#page-wrapper');
-			$('<div/>').addClass('accom_map').appendTo('#page-wrapper');
+			$('<div/>').attr({id:'accom_map'}).appendTo('#page-wrapper');
 			googleChart.service.topChart();
 		}/*,
 		top_list : x=>{
