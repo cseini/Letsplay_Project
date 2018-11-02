@@ -6,8 +6,6 @@ sein.board ={
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #f5f5f5'}).appendTo($('#content'));
-		
-		/*검색창*/
 		$('<div/>').addClass('search_rap').append(
 			$('<div/>').addClass('input-group').append(
 				$('<input/>').attr({id:'search',type:'text',placeholder:'검색어를 입력하세요.',style:'text-align:center;'}).addClass('form-control'),
@@ -18,12 +16,8 @@ sein.board ={
 				)
 			)
 		).appendTo($('#sein_content'));
-		
-		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
-		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));		
-		/*글쓰기 버튼*/
 		if(sessionStorage.getItem('login')){
 			$('<div/>').addClass('bt_rap').append(
 				$('<span/>').addClass('bt_write').append(
@@ -34,10 +28,7 @@ sein.board ={
 			})
 			.appendTo($('#cardlist_rap'));
 		}
-		/*컨텐츠 리스트 전체*/
-		
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
-		alert($.ctx()+'/cast/')
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
@@ -291,7 +282,6 @@ sein.service ={
 			
 			$.getJSON($.ctx()+'/cast/read/'+x.msg_seq,d=>{
 				let like_count=d.like_count;
-				/*개인별 게시글 좋아요 북마크  체크*/
 				$.ajax({
 					url:$.ctx()+'/cast/check/',
 					method:'post',
@@ -364,8 +354,6 @@ sein.service ={
 				
 				$('<div/>').addClass('detail_area').appendTo($('.inner_bg'));
 				$('<p/>').html('&nbsp').appendTo($('.detail_area'));
-
-				/*--------content시작-------*/
 				$('<h3>'+d.msg_content+'</h3>').appendTo($('.detail_area'));
 				$('<div/>').attr({id:'imgAdd',style:'text-align:center',align:'center'}).append(
 						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo})
@@ -375,12 +363,10 @@ sein.service ={
 					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1,style:'margin-top:10px;'}).appendTo($('#imgAdd'));
 				}
 				
-				/*해당 주소 지도*/
 				if(!d.msg_addr==''||!d.msg_addr==undefined){
 					sein.service.map({detail:d,appendTo:'.inner_bg'});
 				}
 					
-				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
 				$('<div/>').addClass('bt_detail').appendTo($('.bt_rap'));
 				$('<ul/>').append(
@@ -492,13 +478,13 @@ sein.service ={
 					$('.bt_read').remove();
 				}
 				sein.service.reply(d);
-				/*구독중체크*/
+
 				$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 					if(d=='1'){
 						$('.bt_read').addClass('on');
 					}
 				})
-				/*구독수체크*/
+
 				$.getJSON($.ctx()+'/cast/subcount/'+sessionStorage.getItem('login')+'/',d=>{
 					$('#sub_count').html(d);
 				})
@@ -570,7 +556,7 @@ sein.service ={
 					};
 				}
 			});
-			/*댓글 리스트*/
+
 			$('<div/>').addClass('re_box').appendTo($('.re_inner'));
 			sein.service.re_list(x);
 			
@@ -1108,24 +1094,18 @@ sein.service ={
 	caster : x=>{
 		$('#sein_content').empty();
 		var sub_count;
-		/*구독중체크*/
 		$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 			if(d===1){
 				$('.bt_read').addClass('on');
 			}
 		})
-
-		/*구독수*/
 		$.getJSON($.ctx()+'/cast/subcount/'+x.member_id+'/',d=>{
 			$('#sub_count').html(d);
 			sub_count = d;
 		})
-		/*캐스트수*/
 		$.getJSON($.ctx()+'/cast/castcount/'+x.member_id+'/',d=>{
 			$('#cast_count').html(d);
 		})
-		
-		
 		$('<div/>').addClass('contents bg_type2').attr({style:'min-height: 400px;'}).appendTo($('#sein_content'));
 		$('<div/>').addClass('caster_rap').appendTo($('.bg_type2'));
 		$('<div/>').addClass('caster_inner').append(
@@ -1172,13 +1152,10 @@ sein.service ={
 			$('<div/>').addClass('caster_l').append($('<b/>').html('캐스트'),$('<br/>'),$('<span/>').attr({id:'cast_count'})),
 			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').attr({id:'sub_count'}))
 		).appendTo($('.caster_rap'));
-		
 		if(x.member_id==sessionStorage.getItem('login')){
 			$('.bt_read').remove();
 		}
-		
 		$('<div/>').addClass('contents').appendTo($('#sein_content'));
-		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
 		$.ajax({
