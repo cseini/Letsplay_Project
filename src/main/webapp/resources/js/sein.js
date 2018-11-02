@@ -36,7 +36,6 @@ sein.board ={
 			data:JSON.stringify({board_id:'cast',pageNumber:1}),
 			success:d=>{
 				$.each(d.list,(i,j)=>{
-					console.log('캐스트 리스트 진입')
 					$('<div/>').addClass('grid-item card_inner').append(
 							$('<div/>').addClass('card_top').append(
 								$('<a/>').attr({href:'#'}).append(
@@ -172,7 +171,6 @@ sein.board ={
 }
 sein.service ={
 		banner : x=>{
-			console.log('배너 진입');
 			$('<div/>').addClass('banner_rap').attr({id:'div_banner',style:'margin-bottom:10px'}).appendTo($('#sein_content'));
 			$('<div/>').attr({id:'carousel','data-ride':'carousel'}).addClass('carousel slide').appendTo($('#div_banner'));
 			$('<ol/>').addClass('carousel-indicators').appendTo($('#carousel'));
@@ -563,11 +561,9 @@ sein.service ={
 		},
 		re_list : x=>{
 			$.getJSON($.ctx()+'/cast/reply/'+x.board_id+'/'+x.msg_seq,d=>{
-				console.log('댓글 개수 : '+d.list.length);
 				$.each(d.list,(i,j)=>{
 					sein.service.re_read(j);	
 					$.getJSON($.ctx()+'/cast/rereply/'+x.board_id+'/'+j.msg_seq,d1=>{
-						console.log('대댓글 개수 : '+d1.list.length);
 						$.each(d1.list,(i,j)=>{
 							sein.service.rereply(j);	
 						})
