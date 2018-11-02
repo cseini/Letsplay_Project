@@ -273,7 +273,7 @@ sein.service ={
 			$.each(JSON.parse(sessionStorage.getItem('recent')),(i,j)=>{
 				recent.push(j);
 			})
-			recent.push({msg_seq:x.msg_seq,msg_photo:x.msg_photo,profileimg:x.profileimg,msg_title:x.msg_title,nickname:x.nickname,tag:x.tag,like_count:x.like_count,msg_count:x.msg_count});
+			recent.push({msg_seq:x.msg_seq,msg_photo:x.msg_photo,profileimg:x.profileimg,msg_title:x.msg_title,nickname:x.nickname,tag:x.tag,like_count:x.like_count,msg_count:x.msg_count,comment:x.comment});
 			sessionStorage.setItem('recent',JSON.stringify(recent));
 			
 			$('#wrapper').scroll(()=>{e.preventDefault()});
@@ -1370,6 +1370,8 @@ sein.service ={
 			$('<li/>').attr({id:'recent'+j.msg_seq}).append(
 				$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
 					$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo,style:'cursor:pointer'}).click(e=>{
+						$('.contents').remove();
+						$('<div/>').attr({id:'sein_content'}).appendTo($('#content'))
 						sein.service.detail(j);
 					})
 				),
@@ -1415,6 +1417,8 @@ sein.service ={
 		$('<li/>').attr({id:'bookmark'+x.msg_seq}).append(
 				$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
 					$('<img/>').attr({src:$.img()+'/cast/'+x.msg_photo,style:'cursor:pointer'}).click(e=>{
+						$('.contents').remove();
+						$('<div/>').attr({id:'sein_content'}).appendTo($('#content'))
 						sein.service.detail(x);
 					})
 				),
@@ -1459,6 +1463,8 @@ sein.service ={
 				$('<a/>').attr({href:'#'}).append(
 					$('<div/>').addClass('user_pic').append(
 						$('<img/>').addClass('profile_pic').attr({src:$.img()+'/profile/'+x.profileimg}).click(e=>{
+							$('.contents').remove();
+							$('<div/>').attr({id:'sein_content'}).appendTo($('#content'))
 							sein.service.caster(x);
 						})			
 					),
