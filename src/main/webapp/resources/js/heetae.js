@@ -3,7 +3,7 @@ var heetae = heetae || {}
 
 heetae=(()=>{
 	var init =x=>{
-		heetae.router.init(x)
+		heetae.router.init(x) 
 	}
 	return {init : init}
 })()
