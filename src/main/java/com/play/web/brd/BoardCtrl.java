@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
 import com.play.web.page.Pagination;
-import com.play.web.tx.TxService;
 
 @RestController
 public class BoardCtrl {
@@ -35,7 +34,6 @@ public class BoardCtrl {
 	@Autowired BoardMapper brdMap;
 	@Autowired Pagination page;
 	@Autowired SeinResult sr;
-	@Autowired TxService tx;
 	@Autowired HashMap<String,Object> smap;
 	@Resource(name="castUploadPath")
 	private String castUploadPath;
@@ -305,26 +303,20 @@ public class BoardCtrl {
 	@GetMapping("/cast/removeImg/{filename}")
 	public void removeImg(@PathVariable String filename) {
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","removeImg()");
-		Util.log.accept(filename);
 		new File(castUploadPath,filename).delete();
 	}
 	
 	@PostMapping("/cast/search/{search}")
 	public HashMap<String,Object> search(@RequestBody HashMap<String, Object> cast,@PathVariable String search) {
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","search()");
-		Util.log.accept("페이지 : "+cast.get("pageNumber")+"");
 		cast.put("countRow", brdMap.searchCount("%"+search+"%"));
 		page.carryOut(cast);
 		cast.put("search", "%"+search+"%");
-		Util.log.accept(cast.get("search")+"");
 		cast.put("beginRow", page.getBeginRow());
 		cast.put("endRow", page.getEndRow());
 		List<SeinResult> list = brdMap.search(cast);
 		cast.put("page", page);
 		cast.put("list", list);
-		Util.log.accept(cast+"");
-		Util.log.accept(page+"");
-		Util.log.accept(list+"");
 		return cast;
 	}
 	
@@ -332,7 +324,6 @@ public class BoardCtrl {
 	public HashMap<String, Object> nearAccom(@PathVariable String tag){
 		smap.clear();
 		List<SeinResult> list = brdMap.nearAccom("%"+tag+"%");
-		Util.log.accept(list+"");
 		smap.put("list", list);
 		return smap;
 	}

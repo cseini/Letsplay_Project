@@ -1,12 +1,6 @@
 package com.play.web.accom;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +26,6 @@ import com.play.web.mbr.Member;
 import com.play.web.mbr.MemberMapper;
 
 @RestController
-@RequestMapping("/accom")
 public class AccomCtrl {
 	static final Logger logger = LoggerFactory.getLogger(AccomCtrl.class);
 	@Autowired AccomMapper mpr;
@@ -45,7 +38,7 @@ public class AccomCtrl {
 	private String uploadPath;
 	String savedName ="";
 	
-	@RequestMapping("/detail/{accom_seq}/")
+	@RequestMapping("/accom/detail/{accom_seq}/")
 	public @ResponseBody Map<String,Object> retriveAccom(@PathVariable String accom_seq) {
 		map.clear();
 		map.put("accom_seq", accom_seq);
@@ -54,7 +47,7 @@ public class AccomCtrl {
 		
 		return map;
 	}
-	@PostMapping("/reservation/")
+	@PostMapping("/accom/reservation/")
 	public @ResponseBody Map<String,Object> retriveReservation
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
@@ -63,7 +56,7 @@ public class AccomCtrl {
 		map.put("list", lst);
 		return map;
 	}
-	@PostMapping("/reservation/room/")
+	@PostMapping("/accom/reservation/room/")
 	public @ResponseBody Map<String,Object> retriveReservationRoom
 	(@RequestBody Map<String, Object> p){
 		lst.clear();
@@ -71,7 +64,7 @@ public class AccomCtrl {
 		map = mpr.retrieveReservationRoom(p);
 		return map;
 	}
-	@RequestMapping("/room/{accom_seq}/")
+	@RequestMapping("/accom/room/{accom_seq}/")
 	public @ResponseBody Map<String,Object> listRoom(@PathVariable String accom_seq) {
 		map.clear();
 		lst.clear();
@@ -80,6 +73,7 @@ public class AccomCtrl {
 		map.put("list", lst);
 		return map;
 	}
+	
 	@RequestMapping("/review/{accom_seq}/{review_count}/")
 	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq, @PathVariable int review_count ){
 		map.clear();
@@ -96,7 +90,7 @@ public class AccomCtrl {
 		return map;
 	}
 	
-	@RequestMapping("/review/accom/")
+	@RequestMapping("/accom/review/accom/")
 	public @ResponseBody Map<String,Object> retrieveRoomSeq(@RequestBody Map<String,Object> p){
 		lst = mpr.retrieveReviewRoomSeq(p);
 		map.put("list", lst);
@@ -108,11 +102,38 @@ public class AccomCtrl {
 		p.put("board_id", "review");
 		mpr.insertReview(p);
 	}
-	@PostMapping("/payment/")
+	@PostMapping("/accom/payment/")
 	public void addPayment(@RequestBody Map<String, Object> p) {
 		map.clear();
 		mpr.insertReservation(p);
 	}
+	
+	@PostMapping("/taehyeong/search")
+	public @ResponseBody HashMap<String,Object> search(@RequestBody HashMap<String,Object>searchMap){
+	map.clear();
+	map.put("list", mpr.list(searchMap));
+	map.put("checkin_date", searchMap.get("checkin_date"));
+	map.put("checkout_date", searchMap.get("checkout_date"));
+	map.put("accom_addr", searchMap.get("accom_addr"));
+	map.put("accom_type", searchMap.get("accom_type"));
+	map.put("imageSrc", searchMap.get("imageSrc"));
+	return map;
+	}
+
+	@PostMapping("/taehyeong/lowPriceList")
+	public @ResponseBody HashMap<String,Object> lowPriceList(@RequestBody HashMap<String,Object> priceMap){
+		map.clear();
+		map.put("list", mpr.lowList(priceMap));
+		map.put("accom_type", priceMap.get("accom_type"));
+		map.put("accom_addr", priceMap.get("accom_addr"));
+		map.put("checkin_date", priceMap.get("checkin_date"));
+		map.put("checkout_date", priceMap.get("checkout_date"));
+		map.put("imageSrc", priceMap.get("imageSrc"));
+		System.out.println(priceMap);
+		System.out.println(map.get("list"));
+		return map;
+	}
+	
 	@PostMapping("/profile/{member_id}")
 	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
 		map.clear();

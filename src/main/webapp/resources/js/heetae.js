@@ -410,7 +410,6 @@ heetae.main =(x=>{
 								                formData.append('files', fileList[uploadFileList[i]]);
 								            }
 								            save_form_data = formData
-								            console.log('hi'+uploadFileList)
 								            $('#layerpop').modal('hide')
 								            
 								            
@@ -587,7 +586,6 @@ heetae.main =(x=>{
 								success:d=>{
 									$('.heetae_review_select_box').empty()
 									$.each(d.list,(i,j)=>{
-										console.log(j.room_seq)
 										$('<option/>')
 										.attr('value',j.room_seq)
 										.text(j.room_name)
@@ -662,7 +660,6 @@ heetae.main =(x=>{
 							}
 							
 							
-							console.log('갖고와'+$(".heetae_review_select_box option:selected").val())
 							$.ajax({
 								url:$.ctx()+'/accom/review/add/',
 								method:'post',
@@ -802,7 +799,6 @@ heetae.main =(x=>{
 						.appendTo('.heetae_review_message')
 						$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',r=>{
 							$.each(r.list,(i,j)=>{
-								console.log(j.msg_title)
 								let review_temp = {
 										'id':'review_'+review_count,
 										'list':j
@@ -900,28 +896,6 @@ heetae.main =(x=>{
 				$('#start_date')
 				.datepicker({
 				 minDate: ()=> {
-					 /*let sd = new Date($('#start_date').val().split('-')[0]
-						,Number($('#start_date').val().split('-')[1]-1)
-						,$('#start_date').val().split('-')[2]);
-					 let temp = new Date()
-					 console.log('today is')
-					 console.log(today)
-					 console.log('sd is')
-					 console.log(sd)
-					 let ts = (sd-today)/(24 * 60 * 60 * 1000);
-					 console.log('ts is')
-					 console.log(ts)
-					 if(today.getTime()!=sd.getTime() && ts>8){
-						 temp = new Date(save_end_max_date.getFullYear()
-									,(save_end_max_date.getMonth())
-									,save_end_max_date.getDate())
-						 console.log('change temp is')
-						 console.log(temp)
-					 }else{
-						 temp = today;
-					 }
-					 console.log('temp is')
-					 console.log(temp)*/
 					 return today;
 		         },
 		         maxDate: ()=> {
@@ -933,8 +907,6 @@ heetae.main =(x=>{
 						let end_min_date = new Date($('#start_date').val().split('-')[0]
 						,(Number($('#start_date').val().split('-')[1])-1)
 						,Number($('#start_date').val().split('-')[2])+1);
-						console.log('end_min_date')
-						console.log(end_min_date)
 						return end_min_date
 					},
 		            maxDate: ()=>{
@@ -943,8 +915,6 @@ heetae.main =(x=>{
 						,$('#start_date').val().split('-')[2]-1);
 		            	end_max_date.setMonth(end_max_date.getMonth()-1)
 						end_max_date.setDate(end_max_date.getDate()+8)
-						console.log('end_max_date')
-						console.log(end_max_date)
 						save_end_max_date = new Date()
 						save_end_max_date = end_max_date	
 						return end_max_date
@@ -999,19 +969,11 @@ heetae.main =(x=>{
 							,(($('#end_date').val().split('-')[1])-1)
 							,$('#end_date').val().split('-')[2])
 							
-							console.log('change 시작날 ')
-							console.log($('#start_date').val())
-							console.log(sd)
-							console.log('change 끝날')
-							console.log($('#end_date').val())
-							console.log(ed)
 							
 							if(sd.getTime()>=ed.getTime()){
 								let tsd = sd
 								tsd.setDate(tsd.getDate()+1)
 								$('#end_date').val(heetae.detail.date_format(tsd))
-								console.log('start val : '+$('#start_date').val())
-								console.log('end val : '+$('#end_date').val())
 								save_end = $('#start_date').val()
 								
 								ed = new Date($('#end_date').val().split('-')[0]
@@ -1030,11 +992,6 @@ heetae.main =(x=>{
 									,(Number($('#end_date').val().split('-')[2])+7))
 									ts = (ed-sd)/(24 * 60 * 60 * 1000);
 								}
-								console.log('get Time 시작날 ')
-								console.log(sd)
-								console.log('get Time 끝날')
-								console.log(ed)
-								console.log('차이 : '+ts)
 								$('.heetae_check_bottom_con2')
 								.text(ts+'박'+(ts+1)+'일')
 						let t = {'accom_seq':input_accom_seq
@@ -1057,11 +1014,6 @@ heetae.main =(x=>{
 								
 								
 								let ts = (ed-sd)/(24 * 60 * 60 * 1000);
-								console.log('시작날 ')
-								console.log(sd)
-								console.log('끝날')
-								console.log(ed)
-								console.log('차이 : '+ts)
 								$('.heetae_check_bottom_con2')
 								.text((ts)+'박'+(ts+1)+'일')
 								let t = {'accom_seq':input_accom_seq
@@ -1080,7 +1032,6 @@ heetae.main =(x=>{
 						,accom_seq:input_accom_seq}),
 					success:d=>{
 						$.each(d.list,(i,j)=>{
-							console.log('first checkdate : '+j.checkdate)
 							save_checkdate.push(j.checkdate)
 						})
 						$.each(s.list,(i,j)=>{
@@ -1378,7 +1329,6 @@ heetae.detail = {
 	    .text('18:00입실')
 	    .appendTo('#'+x.num+'_price_left')
 	    
-	    console.log('체크 데이터'+x.checkdate)
 	    if(x.checkdate=='true'){
 	    	$('<a/>')
 		    .attr({'id':x.num+'_info_reserve_btn','href':'#'})
@@ -1557,7 +1507,6 @@ heetae.detail = {
 									success:d=>{
 										$('#layerpop').on('hidden.bs.modal',()=>{
 												if(d.checkdate){
-													console.log(pay_types)
 													$.ajax({
 														url:$.ctx()+'/accom/payment/',
 														method:'post',

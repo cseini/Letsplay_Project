@@ -233,7 +233,6 @@ hyungjun.permision = (()=>{
 														});
 												}else{
 													sessionStorage.setItem("login", d.mbr.member_id);
-													alert(sessionStorage.getItem("login"));
 													sessionStorage.setItem("profileimg", d.mbr.profileimg);
 													sessionStorage.setItem("nickname", d.mbr.nickname);
 													hyungjun.router.home()
@@ -636,8 +635,6 @@ hyungjun.permision = (()=>{
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
 																sessionStorage.setItem("profileimg",d);
 																hyungjun.permision.mypage();
-																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
-																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
 									                },
 									                error : e=>{
@@ -715,53 +712,54 @@ hyungjun.permision = (()=>{
 							            files = $('#multipaartFileList_' + fileIndex)[0].files;
 							        }
 							        
-							        // 다중파일 등록
-							        if(files != null){
-							            for(var i = 0; i < files.length; i++){
-							                // 파일 이름
-							                var fileName = files[i].name;
-							                var fileNameArr = fileName.split("\.");
-							                // 확장자
-							                var ext = fileNameArr[fileNameArr.length - 1];
-							                // 파일 사이즈(단위 :MB)
-							                var fileSize = files[i].size / 1024 / 1024;
-							                
-							                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-							                    // 확장자 체크
-							                    alert("등록 불가 확장자");
-							                    break;
-							                }else if(fileSize > uploadSize){
-							                    // 파일 사이즈 체크
-							                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
-							                    break;
-							                }else{
-							                    // 전체 파일 사이즈
-							                    totalFileSize += fileSize;
-							                    // 파일 배열에 넣기
-							                    fileList[fileIndex] = files[i];
-							                    // 파일 사이즈 배열에 넣기
-							                    fileSizeList[fileIndex] = fileSize;
-							                    // 업로드 파일 목록 생성
-							                    addFileList(fileIndex, fileName, fileSize);
-							                    // 파일 번호 증가
-							                    fileIndex++;
-							                }
-							            }
-							        }else{
-							            alert("ERROR");
-							        }
-							    }
-							 
-							    // 업로드 파일 목록 생성
-							    function addFileList(fIndex, fileName, fileSize){
-							        var html = "";
-							        html += "<tr id='fileTr_" + fIndex + "'>";
-							        html += "    <td class='center' id='fileNameLocation'>";
-							        html +=         fileName
-							        html += "    </td>"
-							        html += "</tr>"
-							        $('#fileTableTbody').append(html);
-							    }
+							        /*/ 다중파일 등록
+*/	                                if(files != null){
+	                                    for(var i = 0; i < 1; i++){
+	                                        // 파일 이름
+	                                        var fileName = files[i].name;
+	                                        var fileNameArr = fileName.split("\.");
+	                                        // 확장자
+	                                        var ext = fileNameArr[fileNameArr.length - 1];
+	                                        // 파일 사이즈(단위 :MB)
+	                                        var fileSize = files[i].size / 1024 / 1024;
+	                                        
+	                                        if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+	                                            // 확장자 체크
+	                                            alert("등록 불가 확장자");
+	                                            break;
+	                                        }else if(fileSize > uploadSize){
+	                                            // 파일 사이즈 체크
+	                                            alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+	                                            break;
+	                                        }else{
+	                                            // 전체 파일 사이즈
+	                                            totalFileSize += fileSize;
+	                                            // 파일 배열에 넣기
+	                                            fileList[fileIndex] = files[i];
+	                                            // 파일 사이즈 배열에 넣기
+	                                            fileSizeList[fileIndex] = fileSize;
+	                                            // 업로드 파일 목록 생성
+	                                            addFileList(fileIndex, fileName, fileSize);
+	                                            // 파일 번호 증가
+	                                            fileIndex;
+	                                        }
+	                                    }
+	                                }else{
+	                                    alert("ERROR");
+	                                }
+	                            }
+	                        
+	                            // 업로드 파일 목록 생성
+	                            function addFileList(fIndex, fileName, fileSize){
+	                                $('#fileTr_0').remove()
+	                                var html = "";
+	                                html += "<tr id='fileTr_" + fIndex + "'>";
+	                                html += "    <td class='center' id='fileNameLocation'>";
+	                                html +=         fileName
+	                                html += "    </td>"
+	                                html += "</tr>"
+	                                $('#fileTableTbody').append(html);
+	                            }
 							 
 							    // 업로드 파일 삭제
 							    function deleteFile(fIndex){
@@ -985,33 +983,36 @@ hyungjun.service = {
 				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
 					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
 					.click(e=>{
-                        let accom_type_eng = $('#accomSelect').val();
-                        if(accom_type_eng=="모텔"){
-                            accom_type_eng = "motel"
-                        }else{
-                            accom_type_eng = "hotel"
-                        }
-                        $.ajax({
-                            url:'/web/taehyeong/search',
-                            method:'post',
-                            contentType : 'application/json',
-                            data : JSON.stringify({accom_type:accom_type_eng,
-                                accom_addr:$('#accomAddr').val(),
-                                checkin_date:$('#start_date').val(),
-                                checkout_date:$('#end_date').val()}),
-                                success:x=>{
-                                    let d = x
-                                    $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
-                                        taehyeong.content1.surroundings(d);
-                                    });
-                                },
-                                error:()=>{
-                                    alert('에러')
-                                }
-                        })
-                    });
-			/* header 끝 */
-		},
+                        let imageSrc;
+                       let accom_type_eng = $('#accomSelect').val();
+                       if(accom_type_eng=="모텔"){
+                           accom_type_eng = "motel"
+                           imageSrc='https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg'
+                       }else{
+                           accom_type_eng = "hotel"
+                               imageSrc='https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-hotel.svg'
+                       }
+                       $.ajax({
+                           url:'/web/taehyeong/search',
+                           method:'post',
+                           contentType : 'application/json',
+                           data : JSON.stringify({accom_type:accom_type_eng,
+                               accom_addr:$('#accomAddr').val(),
+                               checkin_date:$('#start_date').val(),
+                               checkout_date:$('#end_date').val(),
+                               imageSrc : imageSrc}),
+                               success:d=>{
+                                   $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
+                                       taehyeong.main.init(d);
+                                   });
+                               },
+                               error:()=>{
+                                   alert('에러')
+                               }
+                       })
+                   });
+            /* header 끝 */
+        },
 		content :x=>{
 			/* content 시작 */
 			$('#content').remove();
@@ -1289,9 +1290,6 @@ hyungjun.router = {
 		$.getScript(x+'/resources/js/router.js',
 			()=>{
 				$.extend(new Session(x));
-				$.getScript($.ctx()+'/resources/js/util.js')
-					.done(x=>{
-						if( typeof console === 'object' ) {
 							console.log(
 									"%c                                                ", 
 									`background: url("http://image.sportsseoul.com/2016/04/06/news/2016040601000286800018951.jpg") no-repeat; 
@@ -1313,9 +1311,6 @@ hyungjun.router = {
 			                    '숙박예약사이트 야놀자와 동일하게 구현하였습니다.'
 						    );
 						    
-						}
-					})
-					.fail(x=>{console.log('실패')});
 				hyungjun.main.init();
 			}
 		);
