@@ -1191,7 +1191,6 @@ hyungjun.service = {
 				$('<div/>').addClass('mainNav').appendTo($('#nav'));
 					$('<a/>').addClass('yanoljaMainLogo').attr({id:'logo_btn'}).appendTo('.mainNav');
 					$('<div/>').addClass('nav_left').appendTo('.mainNav');
-						$('<a/>').attr({href:'#', id:'hotelSearch'}).html('숙소검색').appendTo('.nav_left');
 						$('<a/>').attr({href:'#', id:'board'}).html('캐스트').appendTo('.nav_left');
 					$('<div/>').addClass('nav_right').appendTo('.mainNav');
 						$('<a/>').attr({href:'#', id:'amdin'}).html('관리자').appendTo('.nav_right');
@@ -1326,14 +1325,6 @@ hyungjun.router = {
 		hyungjun.service.header();			
 		hyungjun.service.content();
 		hyungjun.service.footer();
-
-		$('#hotelSearch').addClass('ya_cusor').click(e=>{
-			e.preventDefault();
-			$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-				let se = {'in_day':null,'out_day':null,'accom_seq':null}
-				heetae.main.init(se);
-			});
-		});
 		$('#amdin').addClass('ya_cusor').click(e=>{
 			e.preventDefault();
 			$.getScript($.ctx()+'/resources/js/sanghoon.js',()=>{

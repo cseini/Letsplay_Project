@@ -1,7 +1,6 @@
-"user strict"
 var taehyeong = taehyeong || {};
-let k = 0;
-let y = 0;
+var k = k || 0;
+var y = y || 0;
 taehyeong.main =(x=>{
 	var init =x=>{
 	$('#header').empty();
@@ -405,7 +404,7 @@ taehyeong.second={
 				$('<h6/>').addClass('p_span p_padding5').html('20:00~').appendTo($('#premium_selecter_explanation_'+y));
 				$('<h4/>').addClass('p_span p_padding30').html(taehyeong.add.comma(j.PRICE+40000)).appendTo($('#premium_selecter_explanation_'+y));
 				$('<h6/>').addClass('p_span').html('원').appendTo($('#premium_selecter_explanation_'+y));
-				let split_introduce = j.ACCOM_INTRODUCE.split('-')
+				let split_introduce = j.ACCOM_INTRODUCE.split('-');
 				$('<h6/>').addClass('font_color11').html(split_introduce[0]).appendTo($('#premium_selecter_writer'+y));
 				$('<h6/>').addClass('font_color11').html(split_introduce[1]).appendTo($('#premium_selecter_writer'+y));
 				y++

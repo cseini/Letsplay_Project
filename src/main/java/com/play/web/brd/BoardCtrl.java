@@ -228,8 +228,6 @@ public class BoardCtrl {
                 savedName = uuid + originalFilename.substring(originalFilename.lastIndexOf('.'));
         		Util.log.accept(castUploadPath+savedName);
         		FileCopyUtils.copy(mpf.getBytes(), new File(castUploadPath, savedName));
-                System.out.println("originalFilename => "+originalFilename);
-                System.out.println("fullpath => "+castUploadPath+savedName);
       
             } catch (Exception e) {
                 e.printStackTrace();

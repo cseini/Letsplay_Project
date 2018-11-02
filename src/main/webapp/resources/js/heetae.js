@@ -19,7 +19,7 @@ heetae.main =(x=>{
 		let img, w ,nav ,header ,content , footer
 		,accom,accom2,input_accom_seq,checkin_day,checkout_day,today,rating_grade,button_check
 		,save_start,save_end,save_acom_start,save_acom_end,checking_day,save_end_max_date,save_form_data
-		,review_count,save_review_count;
+		,review_count,save_review_count,buy_check;
 		var save_checkdate
 		button_check = "accom"
 		save_checkdate = new Array()
@@ -90,9 +90,9 @@ heetae.main =(x=>{
 			.appendTo('.heetae_current')
 			
 			
-			let arr = [img+'/bg-showcase-1.jpg'
-				,img+'/bg-showcase-2.jpg'
-				,img+'/bg-showcase-3.jpg']
+			let arr = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab2701f1.04281148.jpg'
+					  ,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab6a6c46.53211259.jpg'
+				,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4a7beeb49.67142626.jpg']
 			
 			$.each(arr,(i,j)=>{
 				let clazz = 'carousel-item'
@@ -311,6 +311,7 @@ heetae.main =(x=>{
 						'id' : 'tab_button2'})
 				.text('후기')
 				.addClass('heetae_tab_button')
+				.appendTo('.heetae_tab_head')
 				.click(e=>{
 					e.preventDefault()
 					if(button_check!="review"){
@@ -327,37 +328,62 @@ heetae.main =(x=>{
 						
 						let chk = false;
 						
-						if(sessionStorage.getItem("login")!=null){
-							$('<div/>')
-							.addClass('heetae_tab_review_write')
-							.appendTo('.heetae_tab_content')
-							$('<button/>')
-							.attr({'id':"heetae_write_button"
-								,'type':"button"
-								,'data-toggle':"collapse"
-								, 'href':"#heetae_review_collapse"
-								, 'data-target':"#heetae_review_collapse"
-								, 'aria-expanded':"false"
-								, 'aria-controls':"heetae_review_collapse"})
-							.text('리뷰 작성')
-							.addClass('heetae_write_button')
-							.appendTo('.heetae_tab_review_write')
-							.click(e=>{
-									if(chk==false){
-										$('.heetae_write_button')
-										.text('취 소')
-										setTimeout(() => {	
-											chk=true;
-										}, 400);
+						$.ajax({
+							url:$.ctx()+'/accom/myreview/',
+							method:'post',
+							contentType:'application/json',
+							data:JSON.stringify({
+								member_id:sessionStorage.getItem("login")
+								,accom_seq:input_accom_seq}),
+							success:d=>{
+								$.each(d.list,(i,j)=>{
+									if(j.room_seq==''){
+										console.log('false')
+										buy_check = false
 									}else{
-										$('.heetae_write_button')
-										.text('리뷰 작성')
-										setTimeout(() => {	
-											chk=false;
-										}, 400);
+										console.log('true')
+										buy_check = true
 									}
-							})
-						}
+								})
+									
+							},
+							error:(m1,m2,m3)=>{
+								alert('에러');
+							},
+							complete:()=>{
+								if(sessionStorage.getItem("login")!=null && buy_check==true){
+									console.log('안틀림')
+									$('<div/>')
+									.addClass('heetae_tab_review_write')
+									.appendTo('.heetae_tab_content')
+									$('<button/>')
+									.attr({'id':"heetae_write_button"
+										,'type':"button"
+										,'data-toggle':"collapse"
+										, 'href':"#heetae_review_collapse"
+										, 'data-target':"#heetae_review_collapse"
+										, 'aria-expanded':"false"
+										, 'aria-controls':"heetae_review_collapse"})
+									.text('리뷰 작성')
+									.addClass('heetae_write_button')
+									.appendTo('.heetae_tab_review_write')
+									.click(e=>{
+											if(chk==false){
+												$('.heetae_write_button')
+												.text('취 소')
+												setTimeout(() => {	
+													chk=true;
+												}, 400);
+											}else{
+												$('.heetae_write_button')
+												.text('리뷰 작성')
+												setTimeout(() => {	
+													chk=false;
+												}, 400);
+											}
+									})
+								}
+						
 						
 						$('<div/>')
 						.attr('id',"heetae_review_collapse")
@@ -577,7 +603,7 @@ heetae.main =(x=>{
 						//여기부터 시작
 						if(sessionStorage.getItem("login")!=null){
 							$.ajax({
-								url:$.ctx()+'/accom/review/accom/',
+								url:$.ctx()+'/accom/myreview/',
 								method:'post',
 								contentType:'application/json',
 								data:JSON.stringify({
@@ -643,7 +669,6 @@ heetae.main =(x=>{
 						.addClass('heetae_textarea_submit')
 						.appendTo('.heetae_textarea_support')
 						.click(e=>{
-							//ㄱㄷ 값채움
 							let reco = 2
 							if($('#heetae_chekcbox_good').prop("checked")==true){
 								reco = 1
@@ -652,7 +677,6 @@ heetae.main =(x=>{
 							let dum = {
 								'msg_title':$('.heetae_review_input_title').val(),
 								'msg_content':$('#heetae_card_textarea').val(),
-								//'msg_photo':'',
 								'member_id':sessionStorage.getItem("login"),
 								'accom_seq':$(".heetae_review_select_box option:selected").val(),
 								'accom_reco':reco,
@@ -674,7 +698,7 @@ heetae.main =(x=>{
 									room_grade:rating_grade,
 								}),
 								success:d=>{
-									let se = {'in_day':null,'out_day':null,'accom_seq':d.accom_seq}
+									let se = {'in_day':null,'out_day':null,'accom_seq':input_accom_seq}
                                     heetae.main.init(se);
 								},
 								error:(m1,m2,m3)=>{
@@ -682,7 +706,6 @@ heetae.main =(x=>{
 								}	
 							})
 							
-							//초기화
 							save_form_data = null
 							$('.heetae_review_input_title').val('')
 							$('#heetae_card_textarea').val('')
@@ -797,7 +820,7 @@ heetae.main =(x=>{
 						$('<p/>')
 						.text('는 숙소에 직접 방문한 회원만 작성할 수 있습니다.')
 						.appendTo('.heetae_review_message')
-						$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',r=>{
+						$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',r=>{
 							$.each(r.list,(i,j)=>{
 								let review_temp = {
 										'id':'review_'+review_count,
@@ -818,7 +841,7 @@ heetae.main =(x=>{
 								let testd =()=>{
 									if(save_review_count!=review_count){
 										$('.heetae_review_more').remove()
-										$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',g=>{
+										$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',g=>{
 											$.each(g.list,(i,j)=>{
 												let review_temp = {
 														'id':'review_'+review_count,
@@ -841,9 +864,11 @@ heetae.main =(x=>{
 									}
 								}
 						})
-				}
-			})
-			.appendTo('.heetae_tab_head')
+					}
+							
+				})
+			}
+		})
 			
 			
 			
@@ -851,7 +876,7 @@ heetae.main =(x=>{
 				.addClass('heetae_section2')
 				.appendTo('.heetae_section_form')
 				
-				$('<div/>') //체크박스
+				$('<div/>')
 				.addClass('heetae_check_box')
 				.appendTo('.heetae_section2')
 				
@@ -875,7 +900,7 @@ heetae.main =(x=>{
 				$('<input/>')
 				.attr({'readonly':'true'
 						,'value':heetae.detail.date_format(today)
-						,'id':'start_date'}) //체크인 날짜 번경
+						,'id':'start_date'})
 				.appendTo($('<div>')
 							.addClass('heetae_check_middle_con1')
 							.appendTo('.heetae_check_middle'))
@@ -887,12 +912,12 @@ heetae.main =(x=>{
 				$('<input/>')
 				.attr({'readonly':'true'
 					,'value':heetae.detail.date_format(checkout_day)
-					,'id':'end_date'}) //체크아웃 날짜 번경
+					,'id':'end_date'}) 
 				.appendTo($('<div>')
 						.addClass('heetae_check_middle_con3')
 						.appendTo('.heetae_check_middle'))
 				
-				//이곳 캘린더 날짜번경	
+				
 				$('#start_date')
 				.datepicker({
 				 minDate: ()=> {
@@ -1196,7 +1221,9 @@ heetae.detail = {
 	},
 	accom : x=>{
 		let pay_types
-		let room_images = [x.list.room_image1,x.list.room_image2,x.list.room_image3]
+		let room_images = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a50b97e0.42514041.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5547721.64570908.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5957530.55534901.jpg']
 		$('<div/>')
 		.attr('id',x.num+'_content_room')
 		.addClass('heetae_tab_content_room')
@@ -1227,7 +1254,7 @@ heetae.detail = {
 	        clazz = 'carousel-item active'
 	      }
 	      $('<img>')
-	      .attr('src',$.img()+'/'+j)
+	      .attr('src',j)
 	      .addClass('heetae_header')
 	      .appendTo($('<div/>')
 	          .attr('id','tab_select_'+(i+1))
@@ -1524,7 +1551,7 @@ heetae.detail = {
 																,'accom_seq':x.list.accom_seq}
 															heetae.main.init(se);*///메인페이지 이동
 															$.getScript($.ctx()+'/resources/js/hyungjun.js',e=>{
-																app.permision.reservationList();
+																hyungjun.permision.reservationList();
 															})
 														},
 														error:(m1,m2,m3)=>{
