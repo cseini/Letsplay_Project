@@ -10,7 +10,7 @@ sein.board ={
 			$('<div/>').addClass('input-group').append(
 				$('<input/>').attr({id:'search',type:'text',placeholder:'검색어를 입력하세요.',style:'text-align:center;'}).addClass('form-control'),
 				$('<div/>').addClass('input-group-btn').append(
-					$('<button/>').addClass('btn btn-danger').attr({type:'button'}).text('통합검색').click(e=>{
+					$('<button/>').addClass('btn btn-danger').attr({type:'button'}).attr({style:'margin-top:0px'}).text('통합검색').click(e=>{
 						sein.service.search($('#search').val())
 					})
 				)

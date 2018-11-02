@@ -1,34 +1,39 @@
 .date_selecter{
 	background-color: #F2F2F2;
-	width:100%;
-	height:55px;
-	margin-top: 0;
-	padding: 10px;
-	padding-left: 30px;
-	text-align: left;
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    padding-left: 30px;
+    text-align: left;
+    position: fixed;
+    z-index: 1;
 }
 .category{
-	box-sizing:border-box;
-	text-align: left;
-	height: 50px;
-	border-bottom: 1px solid #DDDDDD;
-	padding-top: 7.5px;
-	padding-bottom: 7.5px; 
-	padding-left: 30px;
-	padding-right: 30px;
+	box-sizing: border-box;
+    text-align: left;
+    height: 45px;
+    width: 100%;
+    border-bottom: 1px solid #DDDDDD;
+    padding-top: 7.5px;
+    padding-bottom: 7.5px;
+    padding-left: 30px;
+    padding-right: 30px;
+    position: fixed;
+    z-index: 1;
+    background: white;
 }
 
 .category_font{
 	display: inline-block;
-	font-family: 'Hi Melody', cursive;
-	font-size:20px;
+	font-family: 'Nanum Gothic Coding', monospace;
+	font-size:15px;
 	margin-right: 4%;
 	cursor: pointer;
 }
 @media (max-width:760px){
 .category_font{
 	display: inline-block;
-	font-family: 'Hi Melody', cursive;
+	font-family: 'Nanum Gothic Coding', monospace;
 	font-size:16px;
 	margin-right: 5%;
 	cursor: pointer;
@@ -64,8 +69,8 @@
 }
 .list_font{
 	display: inline-block;
-	font-family: 'Hi Melody', cursive;
-	font-size: 16px;
+	font-family: 'Nanum Gothic Coding', monospace;
+	font-size: 14px;
 }
 .icono-reset{
 	zoom:0.6;
@@ -80,8 +85,7 @@
 	float: right;
 }
 .font_1{
-	font-family: 'Hi Melody', cursive;
-	font-size: 20px;
+	font-size: 18px;
 }
 .first_list{
 	border-bottom: 1px solid #e5e5e5;
@@ -130,15 +134,14 @@
 	0% {opacity: 0;}
 	100%{opacity: 1;}
 }
-.radio1__input{
-	height: auto;
+.radio1__input:hover{
+	text-decoration: underline;
+	cursor: pointer;
+	color:red;
 }
 .radio1__input__font{
 	font-size: 14px;
 	margin: 0;
-}
-#radio1_input0{
-	color: #ff2d60;
 }
 .list_li1_div{
 	display: inline-block;
@@ -152,9 +155,6 @@
 .radio__12{
 	width: 320px;
 }
-.radio3_button{
-	float: right;
-}
 .map_header_writer{
 	display: inline-block;
 	margin-right: 5%;
@@ -162,8 +162,8 @@
 .font_2{
 	display: inline-block;
 }
-.font_weight800{
-	font-weight: 800;
+.font_weight600{
+	font-weight: 600;
 }
 .high_rank_img{
 	display:block;
@@ -228,7 +228,7 @@
     top: 5%;
     font-size: 24px;
     font-weight: 600;
-    color: darkgrey;
+    color: white;
 }
 .image_Box10{
 	display: inline-block;
@@ -252,8 +252,49 @@
 .customoverlay a {display:block;text-decoration:none;color:#000;text-align:center;border-radius:6px;font-size:14px;font-weight:bold;overflow:hidden;background: #d95050;background: #d95050 url(http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
 .customoverlay .title {display:block;text-align:center;background:#fff;margin-right:35px;padding:10px 15px;font-size:14px;font-weight:bold;}
 .customoverlay:after {content:'';position:absolute;margin-left:-12px;left:50%;bottom:-12px;width:22px;height:12px;background:url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
-
+.btn-danger{
+	float:right;
+	margin-top: 15px;
+    width: 100px;
+}
+.th_check_middle div input {
+    border: none;
+    display: block;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 25px;
+    line-height: 16px;
+    padding: 4px 0;
+    width: 100%;
+    background: 0 0;
+    text-align: center;
+    color: rgba(0, 0, 0, .87);
+}
+#icono-rightArrow{
+	vertical-align: bottom;
+	margin-left: 20px;
+    margin-right: 20px;
+}
+.date_selecter_contain{
+    height: 50px;
+    width: 100%;
+}
+.category_contain{
+    height: 45px;
+    width: 100%;
+}
 .list_title:hover{
-    cursor: pointer;
-    color: red;
+	cursor: pointer;
+	color: red;
+}
+
+#slider12a .slider-track-high, #slider12c .slider-track-high {
+	background: green;
+}
+
+#slider12b .slider-track-low, #slider12c .slider-track-low {
+	background: red;
+}
+
+#slider12c .slider-selection {
+	background: yellow;
 }
