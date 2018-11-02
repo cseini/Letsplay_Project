@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="room_seq" column="room_seq"/>
 		<result property="room_name" column="room_name"/>
 		<result property="room_no" column="room_no"/>
+		<result property="room_grade" column="room_grade"/>
 		<result property="room_price" column="room_price"/>
 		<result property="room_image1" column="room_image1"/>
 		<result property="room_image2" column="room_image2"/>
@@ -35,6 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="checkin_date" column="checkin_date"/>
 		<result property="checkout_date" column="checkout_date"/>
 		<result property="checkdate" column="check_in_out"/>
+		<result property="review_count" column="review_count"/>
+		<result property="review_count_up" column="review_count"/>
+		<result property="review_count_down" column="review_count"/>
 	</resultMap>
 	<select id="retrieveReservation" resultMap="HeeTaeBean">
 		select room.room_seq, B.checkdate
@@ -95,12 +99,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE ACCOM_SEQ = #{accom_seq}
 	</select>
 	<select id="retrieveReviewRoomSeq" resultMap="HeeTaeBean">
-		SELECT room.room_name FROM room
+		SELECT room.ROOM_SEQ, room.ROOM_NAME FROM room
 		WHERE room.ROOM_SEQ IN(
-		SELECT DISTINCT reservation.room_seq
+		SELECT DISTINCT reservation.ROOM_SEQ
 			FROM reservation
-			WHERE reservation.room_seq IN(
-			 SELECT room.room_seq FROM room
+			WHERE reservation.ROOM_SEQ IN(
+			 SELECT room.ROOM_SEQ FROM room
 			 WHERE room.ACCOM_SEQ = #{accom_seq}
 			)
 			AND reservation.MEMBER_ID = #{member_id}
@@ -112,16 +116,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE ACCOM_SEQ = #{accom_seq}
 	</select>
 	<select id="listReview" resultMap="HeeTaeBean">
-		SELECT * FROM acom_review
-		WHERE ACCOM_SEQ = #{accom_seq}
+		select A.*
+		from(
+		SELECT rank() over(order by msg_date desc) as review_count,msg_title, msg_content, msg_photo, msg_date,member_id,name,
+		ROOM_SEQ, ROOM_NAME, room_grade, accom_reco 
+		FROM acom_review
+			WHERE ACCOM_SEQ = #{accom_seq}
+			)A
+		where A.review_count between ${review_count_down} and ${review_count_up}
+			order by A.review_count 
 	</select>
 	<select id="insertReview" resultMap="HeeTaeBean">
-		INSERT INTO acom_review(
-		MSG_TITLE, MSG_CONTENT, MSG_PHOTO, BOARD_ID, MEMBER_ID,
-		ROOM_SEQ, ROOM_GRADE, ACCOM_RECO, PAY_NO)
-		VALUES( #{msg_title},'#{msg_content}','#{msg_photo}'
-		,'#{msg_date}','#{board_id}','#{member_id}','#{name}'
-		,'#{accom_reco}','#{pay_no}' )
+		INSERT INTO board(
+		MSG_TITLE, MSG_CONTENT, MSG_PHOTO,
+		BOARD_ID,MEMBER_ID,ROOM_SEQ, ROOM_GRADE, ACCOM_RECO)
+		VALUES( #{msg_title},#{msg_content},#{msg_photo}
+		,#{board_id},#{member_id},#{room_seq}
+		,#{room_grade},#{accom_reco} )
 	</select>
 	<select id="insertReservation" resultMap="HeeTaeBean">
 		INSERT INTO reservation
