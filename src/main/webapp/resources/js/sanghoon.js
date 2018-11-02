@@ -418,7 +418,7 @@ googleChart.service = {
 		  var year = new Date().getFullYear();
 		  if(x.type == 'MOTEL'){
 			  switch(x.quarter){
-			  case '1quarter':
+			  case '1분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-01-01',
@@ -426,7 +426,7 @@ googleChart.service = {
 			      }
 				  googleChart.service.custoChart(info);
 				  break;
-			  case '2quarter':
+			  case '2분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-04-01',
@@ -434,7 +434,7 @@ googleChart.service = {
 			      }
 				  googleChart.service.custoChart(info);
 				  break;
-			  case '3quarter':
+			  case '3분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-07-01',
@@ -453,7 +453,7 @@ googleChart.service = {
 			  }
 		  }else{
 			  switch(x.quarter){
-			  case '1quarter':
+			  case '1분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-01-01',
@@ -461,7 +461,7 @@ googleChart.service = {
 			      }
 				  googleChart.service.custoChart(info);
 				  break;
-			  case '2quarter':
+			  case '2분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-04-01',
@@ -469,7 +469,7 @@ googleChart.service = {
 			      }
 				  googleChart.service.custoChart(info);
 				  break;
-			  case '3quarter':
+			  case '3분기':
 				  info = {
 					  'type' : x.type,
 					  'start' : year+'-07-01',
@@ -776,13 +776,13 @@ sanghoon.service = {
 				$('<option/>').attr({value:j}).html(j).appendTo($('#reser_type'));
 			});
 			$('<select/>').addClass('form-control').attr({id:'quarter_sel'}).appendTo($('#select_box'));
-			$.each(['1quarter', '2quarter', '3quarter', '4quarter'], (i,j)=>{
+			$.each(['1분기', '2분기', '3분기', '4분기'], (i,j)=>{
 				$('<option/>').attr({value:j}).html(j).appendTo($('#quarter_sel'));
 			});
 			var info = {};
 			info = {
 					'type' : 'MOTEL',
-					'quarter' : '1quarter'
+					'quarter' : '1분기'
 			}
 			$('<button/>').addClass('btn btn-light').attr({id:'custo_button', type: 'button'}).html('검색').appendTo($('#select_box'))
 			.click(e=>{
