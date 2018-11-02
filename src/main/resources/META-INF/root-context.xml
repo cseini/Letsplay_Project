@@ -51,15 +51,15 @@
 	
 	<mybatis-spring:scan base-package="com.play.web"/>
 	<bean id="uploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\csein\\OneDrive\\문서\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\profile\\"/> 	
+		<constructor-arg value="//usr//local//apache-tomcat-9.0.12//webapps//ROOT//resources//img//profile//"/> 	
 	</bean>	
 	
 	<bean id="castUploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\csein\\OneDrive\\문서\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\cast\\"/>
+		<constructor-arg value="//usr//local//apache-tomcat-9.0.12//webapps//ROOT//resources//img//cast//"/>
 	</bean>	
 	
 	<bean id="accomUploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\user\\Documents\\masterNewPlay2\\src\\main\\webapp\\resources\\img"/> 	
+		<constructor-arg value="//usr//local//apache-tomcat-9.0.12//webapps//ROOT//resources//img//accom_review//"/> 	
 	</bean>	
 	
 		
