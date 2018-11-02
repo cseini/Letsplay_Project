@@ -37,8 +37,6 @@ hyungjun.permision = (()=>{
 							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
 						$.each(d.rlist,(i,j)=>{
 							var tday = new Date(j.pay_date);
-							console.log('tday : ' + tday);
-							console.log('d.pay_date : '+ j.pay_date);
 						    
 							$('.info').addClass('info_reservelist_'+i).append(
 								$('<div/>').append(
@@ -879,8 +877,6 @@ hyungjun.service = {
 								let end_min_date = new Date($('#start_date').val().split('-')[0]
 								,(Number($('#start_date').val().split('-')[1])-1)
 								,Number($('#start_date').val().split('-')[2])+1);
-								console.log('end_min_date')
-								console.log(end_min_date)
 								return end_min_date
 							},
 				            maxDate: ()=>{
@@ -889,8 +885,6 @@ hyungjun.service = {
 								,$('#start_date').val().split('-')[2]-1);
 				            	end_max_date.setMonth(end_max_date.getMonth()-1)
 								end_max_date.setDate(end_max_date.getDate()+8)
-								console.log('end_max_date')
-								console.log(end_max_date)
 								save_end_max_date = new Date()
 								save_end_max_date = end_max_date	
 								return end_max_date
@@ -929,19 +923,11 @@ hyungjun.service = {
 							,(($('#end_date').val().split('-')[1])-1)
 							,$('#end_date').val().split('-')[2])
 							
-							console.log('change 시작날 ')
-							console.log($('#start_date').val())
-							console.log(sd)
-							console.log('change 끝날')
-							console.log($('#end_date').val())
-							console.log(ed)
 							
 							if(sd.getTime()>=ed.getTime()){
 								let tsd = sd
 								tsd.setDate(tsd.getDate()+1)
 								$('#end_date').val(hyungjun.service.date_format(tsd))
-								console.log('start val : '+$('#start_date').val())
-								console.log('end val : '+$('#end_date').val())
 								save_end = $('#start_date').val()
 								
 								ed = new Date($('#end_date').val().split('-')[0]
@@ -1272,7 +1258,6 @@ hyungjun.service = {
 		    var arr1 = strDate1.split('-');
 		    var checkinDate = new Date(arr1[0], arr1[1], arr1[2].split(',')[0]);
 		    checkinDate.setMonth(checkinDate.getMonth()-1);
-		    console.log('checkinDate :  ' + checkinDate);
 		    var diff = (newToday.getTime()-checkinDate.getTime())/(1000*60*60*24);
 			return diff;
 		},
