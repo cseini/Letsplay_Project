@@ -3,13 +3,9 @@ var sein = sein || {};
 
 sein.board ={
 	cast : x=>{
-
-		$.cookie.json=true;
 		$('#header').empty();
 		$('#content').empty();
 		$('<div/>').attr({id:'sein_content',style:'background-color: #f5f5f5'}).appendTo($('#content'));
-		
-		/*검색창*/
 		$('<div/>').addClass('search_rap').append(
 			$('<div/>').addClass('input-group').append(
 				$('<input/>').attr({id:'search',type:'text',placeholder:'검색어를 입력하세요.',style:'text-align:center;'}).addClass('form-control'),
@@ -20,12 +16,8 @@ sein.board ={
 				)
 			)
 		).appendTo($('#sein_content'));
-		
-		/*배너 슬라이드*/
 		sein.service.banner($('#sein_content'));
-		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));		
-		/*글쓰기 버튼*/
 		if(sessionStorage.getItem('login')){
 			$('<div/>').addClass('bt_rap').append(
 				$('<span/>').addClass('bt_write').append(
@@ -36,8 +28,6 @@ sein.board ={
 			})
 			.appendTo($('#cardlist_rap'));
 		}
-		/*컨텐츠 리스트 전체*/
-		
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
 		$.ajax({
 			url:$.ctx()+'/cast/',
@@ -163,10 +153,14 @@ sein.board ={
 								})
 								var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 								$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+								if(!d.page.existNext){
+									$(window).unbind('scroll');	
+								}
 							},
 							error:(m1,m2,m3)=>{
 								alert(m3);
 							}
+							
 						})
 					} else if(!$('#cardlist_rap').length>0){
 						$(window).unbind('scroll');
@@ -234,7 +228,7 @@ sein.service ={
 											}
 										}else{
 											if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-												hyungjoon.permision.login();	
+												hyungjun.permision.login();	
 											};
 										}
 									}),
@@ -288,7 +282,6 @@ sein.service ={
 			
 			$.getJSON($.ctx()+'/cast/read/'+x.msg_seq,d=>{
 				let like_count=d.like_count;
-				/*개인별 게시글 좋아요 북마크  체크*/
 				$.ajax({
 					url:$.ctx()+'/cast/check/',
 					method:'post',
@@ -361,8 +354,6 @@ sein.service ={
 				
 				$('<div/>').addClass('detail_area').appendTo($('.inner_bg'));
 				$('<p/>').html('&nbsp').appendTo($('.detail_area'));
-
-				/*--------content시작-------*/
 				$('<h3>'+d.msg_content+'</h3>').appendTo($('.detail_area'));
 				$('<div/>').attr({id:'imgAdd',style:'text-align:center',align:'center'}).append(
 						$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo})
@@ -372,12 +363,10 @@ sein.service ={
 					$('<img/>').attr({src:$.img()+'/cast/'+d.msg_photo1,style:'margin-top:10px;'}).appendTo($('#imgAdd'));
 				}
 				
-				/*해당 주소 지도*/
 				if(!d.msg_addr==''||!d.msg_addr==undefined){
 					sein.service.map({detail:d,appendTo:'.inner_bg'});
 				}
 					
-				/*----- bottom 시작 -----*/
 				$('<div/>').addClass('bt_rap').appendTo($('.inner_bg'));
 				$('<div/>').addClass('bt_detail').appendTo($('.bt_rap'));
 				$('<ul/>').append(
@@ -405,7 +394,7 @@ sein.service ={
 							}
 						}else{
 							if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-								hyungjoon.permision.login();	
+								hyungjun.permision.login();	
 							};
 						}
 					}),
@@ -481,7 +470,7 @@ sein.service ={
 						}
 					}else{
 						if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-							hyungjoon.permision.login();	
+							hyungjun.permision.login();	
 						};
 					}
 				});
@@ -489,13 +478,13 @@ sein.service ={
 					$('.bt_read').remove();
 				}
 				sein.service.reply(d);
-				/*구독중체크*/
+
 				$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 					if(d=='1'){
 						$('.bt_read').addClass('on');
 					}
 				})
-				/*구독수체크*/
+
 				$.getJSON($.ctx()+'/cast/subcount/'+sessionStorage.getItem('login')+'/',d=>{
 					$('#sub_count').html(d);
 				})
@@ -563,11 +552,11 @@ sein.service ={
 					})
 				}else{
 					if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-						hyungjoon.permision.login();	
+						hyungjun.permision.login();	
 					};
 				}
 			});
-			/*댓글 리스트*/
+
 			$('<div/>').addClass('re_box').appendTo($('.re_inner'));
 			sein.service.re_list(x);
 			
@@ -593,18 +582,24 @@ sein.service ={
 				$('<div/>').addClass('bt_rap')
 				.append($('<button/>').attr({type:'submit'}).addClass('btn_saveComment').append($('<b/>').html('대댓글쓰기')))
 				.click(e=>{
-					$.ajax({
-						url:$.ctx()+'/cast/reWrite/',
-						method:'post',
-						contentType:'application/json',
-						data:JSON.stringify({member_id:sessionStorage.getItem('login'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
-						success:d=>{
-							$('#re_write_add').remove();
-							$('#inner_bg_reply').remove();
-							sein.service.reply({board_id:'cast',msg_seq:x.msg_ref});
-						},
-						error:(m1,m2,m3)=>{alert(m3);}
-					})
+					if(sessionStorage.getItem('login')){
+						$.ajax({
+							url:$.ctx()+'/cast/reWrite/',
+							method:'post',
+							contentType:'application/json',
+							data:JSON.stringify({member_id:sessionStorage.getItem('login'),msg_seq:x.msg_seq,board_id:'cast',board_depth:'2',msg_content:$('#commentMod').val()}),
+							success:d=>{
+								$('#re_write_add').remove();
+								$('#inner_bg_reply').remove();
+								sein.service.reply({board_id:'cast',msg_seq:x.msg_ref});
+							},
+							error:(m1,m2,m3)=>{alert(m3);}
+						})
+					}else{
+						if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
+							hyungjun.permision.login();	
+						};
+					}
 				})
 			).appendTo($('#reply_empty'+x.msg_seq));
 					
@@ -652,7 +647,7 @@ sein.service ={
 							.click(e=>{
 								if(sessionStorage.getItem('login')==""){
 									if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-										hyungjoon.permision.login();	
+										hyungjun.permision.login();	
 									};
 								}else{
 									sein.service.rere_write(x);
@@ -688,11 +683,11 @@ sein.service ={
 			}
 		},
 		facebook : x=>{
-			let url = 'http://www.facebook.com/share.php?u='+window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+			let url = 'https://www.facebook.com/sharer.php?u=' + window.location.protocol + "//" + window.location.host + window.location.pathname;
 			window.open(url);
 		},
 		copyURL : x=>{
-			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + "/" + window.location.pathname)
+			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + window.location.pathname)
 		},
 		write : x=>{
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
@@ -1099,24 +1094,18 @@ sein.service ={
 	caster : x=>{
 		$('#sein_content').empty();
 		var sub_count;
-		/*구독중체크*/
 		$.getJSON($.ctx()+'/cast/subcheck/'+sessionStorage.getItem('login')+'/'+x.member_id+'/',d=>{
 			if(d===1){
 				$('.bt_read').addClass('on');
 			}
 		})
-
-		/*구독수*/
 		$.getJSON($.ctx()+'/cast/subcount/'+x.member_id+'/',d=>{
 			$('#sub_count').html(d);
 			sub_count = d;
 		})
-		/*캐스트수*/
 		$.getJSON($.ctx()+'/cast/castcount/'+x.member_id+'/',d=>{
 			$('#cast_count').html(d);
 		})
-		
-		
 		$('<div/>').addClass('contents bg_type2').attr({style:'min-height: 400px;'}).appendTo($('#sein_content'));
 		$('<div/>').addClass('caster_rap').appendTo($('.bg_type2'));
 		$('<div/>').addClass('caster_inner').append(
@@ -1153,7 +1142,7 @@ sein.service ={
 								$('#sub_count').html(sub_count);
 							}else{
 								if(confirm('로그인이 필요한 서비스입니다. 로그인 창으로 이동할까요?')){
-									hyungjoon.permision.login();	
+									hyungjun.permision.login();	
 								};
 							}							
 						}	
@@ -1163,13 +1152,10 @@ sein.service ={
 			$('<div/>').addClass('caster_l').append($('<b/>').html('캐스트'),$('<br/>'),$('<span/>').attr({id:'cast_count'})),
 			$('<div/>').addClass('caster_r').append($('<b/>').html('구독'),$('<br/>'),$('<span/>').attr({id:'sub_count'}))
 		).appendTo($('.caster_rap'));
-		
 		if(x.member_id==sessionStorage.getItem('login')){
 			$('.bt_read').remove();
 		}
-		
 		$('<div/>').addClass('contents').appendTo($('#sein_content'));
-		
 		$('<div/>').attr({id:'cardlist_rap'}).appendTo($('#sein_content'));
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
 		$.ajax({
@@ -1223,7 +1209,10 @@ sein.service ={
 					}
 				})
 				var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
-					$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+				$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+				if(!d.page.existNext){
+					$(window).unbind('scroll');	
+				}
 			},
 			error:(m1,m2,m3)=>{
 				alert(m3);
@@ -1291,6 +1280,9 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+							if(!d.page.existNext){
+								$(window).unbind('scroll');	
+							}
 						},
 						error:(m1,m2,m3)=>{
 							alert(m3);
@@ -1714,6 +1706,9 @@ sein.service ={
 							})
 							var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 							$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
+							if(!d.page.existNext){
+								$(window).unbind('scroll');	
+							}
 						},
 						error:(m1,m2,m3)=>{
 							alert(m3);
