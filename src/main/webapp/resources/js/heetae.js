@@ -90,9 +90,9 @@ heetae.main =(x=>{
 			.appendTo('.heetae_current')
 			
 			
-			let arr = [img+'/bg-showcase-1.jpg'
-				,img+'/bg-showcase-2.jpg'
-				,img+'/bg-showcase-3.jpg']
+			let arr = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab2701f1.04281148.jpg'
+					  ,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab6a6c46.53211259.jpg'
+				,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4a7beeb49.67142626.jpg']
 			
 			$.each(arr,(i,j)=>{
 				let clazz = 'carousel-item'
@@ -1245,7 +1245,9 @@ heetae.detail = {
 	},
 	accom : x=>{
 		let pay_types
-		let room_images = [x.list.room_image1,x.list.room_image2,x.list.room_image3]
+		let room_images = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a50b97e0.42514041.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5547721.64570908.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5957530.55534901.jpg']
 		$('<div/>')
 		.attr('id',x.num+'_content_room')
 		.addClass('heetae_tab_content_room')
@@ -1276,7 +1278,7 @@ heetae.detail = {
 	        clazz = 'carousel-item active'
 	      }
 	      $('<img>')
-	      .attr('src',$.img()+'/'+j)
+	      .attr('src',j)
 	      .addClass('heetae_header')
 	      .appendTo($('<div/>')
 	          .attr('id','tab_select_'+(i+1))
