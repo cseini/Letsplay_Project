@@ -338,10 +338,8 @@ heetae.main =(x=>{
 							success:d=>{
 								$.each(d.list,(i,j)=>{
 									if(j.room_seq==''){
-										console.log('false')
 										buy_check = false
 									}else{
-										console.log('true')
 										buy_check = true
 									}
 								})
@@ -352,7 +350,6 @@ heetae.main =(x=>{
 							},
 							complete:()=>{
 								if(sessionStorage.getItem("login")!=null && buy_check==true){
-									console.log('안틀림')
 									$('<div/>')
 									.addClass('heetae_tab_review_write')
 									.appendTo('.heetae_tab_content')
