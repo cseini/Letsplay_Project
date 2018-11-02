@@ -106,8 +106,8 @@ taehyeong.main =(x=>{
 			imageSrc = taehyeong.change.marker_img(x.accom_type)
 			$('#radio1_writer0').click(()=>{
 				k = 0; y = 0;
-				$.ajax({
-                    url:'/web/taehyeong/search',
+				$.ajax({ 
+                    url:$.ctx()+'taehyeong/search',
                     method:'post',
                     contentType : 'application/json',
                     data : JSON.stringify({
@@ -129,7 +129,7 @@ taehyeong.main =(x=>{
 			$('#radio1_writer1').click(()=>{
 				k = 0; y = 0;
 				$.ajax({
-                    url:'/web/taehyeong/lowPriceList',
+                    url:$.ctx()+'/taehyeong/lowPriceList',
                     method:'post',
                     contentType : 'application/json',
                     data : JSON.stringify({
@@ -157,7 +157,7 @@ taehyeong.main =(x=>{
 			$('<p/>').addClass('radio1__input__font radio1__input').attr({id:'radio2_writer0'}).html('모텔').appendTo($('#radio2__'))
 			.click(()=>{
 				 $.ajax({
-                     url:'/web/taehyeong/search',
+                     url:$.ctx()+'/taehyeong/search',
                      method:'post',
                      contentType : 'application/json',
                      data : JSON.stringify({
@@ -180,7 +180,7 @@ taehyeong.main =(x=>{
 				.click(()=>{
 					k = 0; y = 0;
 					 $.ajax({
-	                     url:'/web/taehyeong/search',
+	                     url:$.ctx()+'/taehyeong/search',
 	                     method:'post',
 	                     contentType : 'application/json',
 	                     data : JSON.stringify({

@@ -979,7 +979,7 @@ hyungjun.service = {
                                imageSrc='https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-hotel.svg'
                        }
                        $.ajax({
-                           url:'/web/taehyeong/search',
+                           url:$.ctx()+'/taehyeong/search',
                            method:'post',
                            contentType : 'application/json',
                            data : JSON.stringify({accom_type:accom_type_eng,
@@ -1292,7 +1292,7 @@ hyungjun.router = {
 			                    '           _..`--’_..-_/  /--’_.’ ,’\n' +
 						        '          (il),-’‘  (li),’  ((!.-‘\n\n\n' +
 			                    '다섯명의 비트캠프 수강생이 작업한 프로젝트 작품으로\n'+
-			                    '숙박예약사이트 야놀자와 동일하게 구현하였습니다.'
+			                    '숙박예약사이트 야놀자를 모티브로 하여 구현하였습니다.'
 						    );
 						    
 				hyungjun.main.init();
