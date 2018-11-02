@@ -53,7 +53,6 @@
 	<bean id="uploadPath" class="java.lang.String">
 		<constructor-arg value="//usr//local//apache-tomcat-9.0.12//webapps//ROOT//resources//img//profile//"/> 	
 	</bean>	
-	
 	<bean id="castUploadPath" class="java.lang.String">
 		<constructor-arg value="//usr//local//apache-tomcat-9.0.12//webapps//ROOT//resources//img//cast//"/>
 	</bean>	
