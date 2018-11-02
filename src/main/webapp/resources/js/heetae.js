@@ -577,7 +577,7 @@ heetae.main =(x=>{
 						//여기부터 시작
 						if(sessionStorage.getItem("login")!=null){
 							$.ajax({
-								url:$.ctx()+'/accom/review/accom/',
+								url:$.ctx()+'/accom/myreview/',
 								method:'post',
 								contentType:'application/json',
 								data:JSON.stringify({
@@ -797,7 +797,7 @@ heetae.main =(x=>{
 						$('<p/>')
 						.text('는 숙소에 직접 방문한 회원만 작성할 수 있습니다.')
 						.appendTo('.heetae_review_message')
-						$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',r=>{
+						$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',r=>{
 							$.each(r.list,(i,j)=>{
 								let review_temp = {
 										'id':'review_'+review_count,
@@ -818,7 +818,7 @@ heetae.main =(x=>{
 								let testd =()=>{
 									if(save_review_count!=review_count){
 										$('.heetae_review_more').remove()
-										$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',g=>{
+										$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',g=>{
 											$.each(g.list,(i,j)=>{
 												let review_temp = {
 														'id':'review_'+review_count,
@@ -1526,7 +1526,7 @@ heetae.detail = {
 																,'accom_seq':x.list.accom_seq}
 															heetae.main.init(se);*///메인페이지 이동
 															$.getScript($.ctx()+'/resources/js/hyungjun.js',e=>{
-																app.permision.reservationList();
+																hyungjun.permision.reservationList();
 															})
 														},
 														error:(m1,m2,m3)=>{
