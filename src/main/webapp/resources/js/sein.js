@@ -1467,7 +1467,7 @@ sein.service ={
 							$('<div/>').attr({id:'sein_content'}).appendTo($('#content'))
 							sein.service.caster(x);
 						})			
-					),
+					), 
 					$('<div/>').addClass('user_info').append(
 						$('<a/>').attr({href:'#'}).append(
 							$('<strong>'+x.nickname+'</strong>'),
