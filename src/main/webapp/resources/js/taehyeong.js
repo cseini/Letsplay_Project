@@ -222,11 +222,11 @@ taehyeong.main =(x=>{
 			})
 			taehyeong.outside.clear();
 		})
-		
 		$('<div/>').addClass('font_1 font_weight600').html('이 지역 추천').appendTo($('#list'));
 		$('<div/>').addClass('first_list').attr({id:'first_list'}).appendTo($('#list'))
 		let high_rank_img = [x.list[0],x.list[1],x.list[2],x.list[3]];
-		
+		k = 0;
+		y = 0;
 		$.each(high_rank_img,(i,j)=>{
 			$('<div/>').addClass('first_list_one').attr({id:'first_list_one'+i}).appendTo($('#first_list'))
 			$('<div>').addClass('image_Box10').attr({id:'image_Box10'+i}).appendTo($('#first_list_one'+i))
