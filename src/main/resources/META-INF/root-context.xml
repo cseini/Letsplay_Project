@@ -64,7 +64,7 @@
 	
 	<mybatis-spring:scan base-package="com.play.web"/>
 	<bean id="uploadPath" class="java.lang.String">
-		<constructor-arg value="C:\\Users\\HJ\\Documents\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\profile"/> 	
+		<constructor-arg value="C:\\Users\\csein\\OneDrive\\문서\\masterNewPlay2\\src\\main\\webapp\\resources\\img\\profile\\"/> 	
 	</bean>	
 	
 	<bean id="castUploadPath" class="java.lang.String">

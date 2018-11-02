@@ -37,6 +37,7 @@ sein.board ={
 		/*컨텐츠 리스트 전체*/
 		
 		$('<div>').attr({style:'margin-top:10px'}).addClass('grid card_type').appendTo($('#cardlist_rap'));
+		alert($.ctx()+'/cast/')
 		$.ajax({
 			url:$.ctx()+'/cast/',
 			method:'post',
@@ -696,11 +697,11 @@ sein.service ={
 			}
 		},
 		facebook : x=>{
-			let url = 'http://www.facebook.com/share.php?u='+window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+			let url = 'https://www.facebook.com/sharer.php?u=' + window.location.protocol + "//" + window.location.host + window.location.pathname;
 			window.open(url);
 		},
 		copyURL : x=>{
-			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + "/" + window.location.pathname)
+			let copyUrl = prompt('아래 주소복사 후 붙여넣기 하세요.',window.location.protocol + "//" + window.location.host + window.location.pathname)
 		},
 		write : x=>{
 			$('<div/>').addClass('contents').attr({id:'modalContent'}).appendTo($('.modal-body'));
