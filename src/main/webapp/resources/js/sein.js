@@ -11,7 +11,11 @@ sein.board ={
 				$('<input/>').attr({id:'search',type:'text',placeholder:'검색어를 입력하세요.',style:'text-align:center;'}).addClass('form-control'),
 				$('<div/>').addClass('input-group-btn').append(
 					$('<button/>').addClass('btn btn-danger').attr({type:'button'}).attr({style:'margin-top:0px'}).text('통합검색').click(e=>{
-						sein.service.search($('#search').val())
+						if(!$('#search').val()==''){
+							sein.service.search($('#search').val())
+						}else{
+							alert('검색어를 입력해주세요.');
+						}
 					})
 				)
 			)
@@ -1589,50 +1593,55 @@ sein.service ={
 			contentType:'application/json',
 			data:JSON.stringify({board_id:'cast',pageNumber:1}),
 			success:d=>{
-				$.each(d.list,(i,j)=>{
-					$('<div/>').addClass('grid-item card_inner').append(
-							$('<div/>').addClass('card_top').append(
-								$('<a/>').attr({href:'#'}).append(
-									$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
-									.click(e=>{
-										sein.service.detail(j);	
-									})
+				if(d.list.length){
+					$.each(d.list,(i,j)=>{
+						$('<div/>').addClass('grid-item card_inner').append(
+								$('<div/>').addClass('card_top').append(
+									$('<a/>').attr({href:'#'}).append(
+										$('<img/>').attr({src:$.img()+'/cast/'+j.msg_photo})
+										.click(e=>{
+											sein.service.detail(j);	
+										})
+									)
+								),
+								$('<div/>').addClass('card_bottom').append(
+									$('<div/>').addClass('user_pic').append(
+										$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
+											sein.service.caster(j);
+										})				
+									),
+									$('<div/>').addClass('user_info').append(
+										$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
+										.click(e=>{
+											sein.service.detail(j);	
+										}),
+										$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
+										.click(e=>{
+											sein.service.caster(j);
+										})
+									),
+									$('<div/>').addClass('user_cont').append(
+										$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))
+										.click(e=>{
+											sein.service.detail(j);
+										})
+									),
+									$('<div/>').addClass('count').append(
+										$('<span/>').addClass('ico_like'),
+										$('<b/>').html(j.like_count),
+										$('<span/>').addClass('ico_read'),
+										$('<b/>').html(j.msg_count)
+									)
 								)
-							),
-							$('<div/>').addClass('card_bottom').append(
-								$('<div/>').addClass('user_pic').append(
-									$('<img/>').attr({src:$.img()+'/profile/'+j.profileimg}).click(e=>{
-										sein.service.caster(j);
-									})				
-								),
-								$('<div/>').addClass('user_info').append(
-									$('<a/>').attr({href:'#'}).append($('<strong>'+j.msg_title+'</strong>'))
-									.click(e=>{
-										sein.service.detail(j);	
-									}),
-									$('<a/>').attr({href:'#'}).append($('<span>'+j.nickname+'</span>'))
-									.click(e=>{
-										sein.service.caster(j);
-									})
-								),
-								$('<div/>').addClass('user_cont').append(
-									$('<a/>').attr({href:'#'}).append($('<span>'+j.tag+'</span>'))
-									.click(e=>{
-										sein.service.detail(j);
-									})
-								),
-								$('<div/>').addClass('count').append(
-									$('<span/>').addClass('ico_like'),
-									$('<b/>').html(j.like_count),
-									$('<span/>').addClass('ico_read'),
-									$('<b/>').html(j.msg_count)
-								)
-							)
-						).appendTo($('.grid'));
-					if(!d.page.existNext){
-						$('#bt_more').empty();
-					}
-				})
+							).appendTo($('.grid'));
+						if(!d.page.existNext){
+							$('#bt_more').empty();
+						}
+					})
+				}else{
+					$('#bt_more').empty();
+					$('<h3/>').text('검색결과가 없습니다.').attr({style:'margin-top:30px;text-align:center'}).appendTo($('.grid'));
+				}
 				var $grid = $('.grid').isotope({itemSelector:'.grid-item'})
 					$grid.imagesLoaded().progress(()=>{$grid.isotope('layout');})
 			},
