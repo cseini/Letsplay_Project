@@ -669,7 +669,6 @@ heetae.main =(x=>{
 						.addClass('heetae_textarea_submit')
 						.appendTo('.heetae_textarea_support')
 						.click(e=>{
-							//ㄱㄷ 값채움
 							let reco = 2
 							if($('#heetae_chekcbox_good').prop("checked")==true){
 								reco = 1
@@ -678,7 +677,6 @@ heetae.main =(x=>{
 							let dum = {
 								'msg_title':$('.heetae_review_input_title').val(),
 								'msg_content':$('#heetae_card_textarea').val(),
-								//'msg_photo':'',
 								'member_id':sessionStorage.getItem("login"),
 								'accom_seq':$(".heetae_review_select_box option:selected").val(),
 								'accom_reco':reco,
@@ -700,7 +698,7 @@ heetae.main =(x=>{
 									room_grade:rating_grade,
 								}),
 								success:d=>{
-									let se = {'in_day':null,'out_day':null,'accom_seq':d.accom_seq}
+									let se = {'in_day':null,'out_day':null,'accom_seq':input_accom_seq}
                                     heetae.main.init(se);
 								},
 								error:(m1,m2,m3)=>{
@@ -708,7 +706,6 @@ heetae.main =(x=>{
 								}	
 							})
 							
-							//초기화
 							save_form_data = null
 							$('.heetae_review_input_title').val('')
 							$('#heetae_card_textarea').val('')
@@ -879,7 +876,7 @@ heetae.main =(x=>{
 				.addClass('heetae_section2')
 				.appendTo('.heetae_section_form')
 				
-				$('<div/>') //체크박스
+				$('<div/>')
 				.addClass('heetae_check_box')
 				.appendTo('.heetae_section2')
 				
@@ -903,7 +900,7 @@ heetae.main =(x=>{
 				$('<input/>')
 				.attr({'readonly':'true'
 						,'value':heetae.detail.date_format(today)
-						,'id':'start_date'}) //체크인 날짜 번경
+						,'id':'start_date'})
 				.appendTo($('<div>')
 							.addClass('heetae_check_middle_con1')
 							.appendTo('.heetae_check_middle'))
@@ -915,12 +912,12 @@ heetae.main =(x=>{
 				$('<input/>')
 				.attr({'readonly':'true'
 					,'value':heetae.detail.date_format(checkout_day)
-					,'id':'end_date'}) //체크아웃 날짜 번경
+					,'id':'end_date'}) 
 				.appendTo($('<div>')
 						.addClass('heetae_check_middle_con3')
 						.appendTo('.heetae_check_middle'))
 				
-				//이곳 캘린더 날짜번경	
+				
 				$('#start_date')
 				.datepicker({
 				 minDate: ()=> {
