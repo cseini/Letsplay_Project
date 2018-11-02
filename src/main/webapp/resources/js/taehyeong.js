@@ -374,12 +374,9 @@ taehyeong.second={
 	list: x=>{
 			let list_count = new Array();
 			for(let i =0; i<10; i++){
-				console.log('k의 시작점 : ' +k)
 				list_count[i] = x.list[k]
 				k++
 			}
-			console.log('k :' + k)
-			console.log('bbbb:'+list_count.length)
 			$.each(list_count,(i,j)=>{
 				$('<li/>').addClass('premium_selecter_li').attr({id:'premium_selecter_li'+y}).appendTo($('#premium_selecter'))
 				$('<img/>').addClass('premium_selecter_img cursor_pointer').attr({id:'list_img'+y,src:j.ACCOM_PHOTO1}).appendTo($('#premium_selecter_li'+y))

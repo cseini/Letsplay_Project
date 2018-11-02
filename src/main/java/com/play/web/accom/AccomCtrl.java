@@ -1,20 +1,29 @@
 package com.play.web.accom;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
+import com.play.web.mbr.Member;
+import com.play.web.mbr.MemberMapper;
 
 @RestController
 public class AccomCtrl {
@@ -23,6 +32,11 @@ public class AccomCtrl {
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
 	@Autowired List<Object>lst;
+	@Autowired Member mbr;
+	@Autowired MemberMapper mbrMap;
+	@Resource(name="accomUploadPath")
+	private String uploadPath;
+	String savedName ="";
 	
 	@RequestMapping("/accom/detail/{accom_seq}/")
 	public @ResponseBody Map<String,Object> retriveAccom(@PathVariable String accom_seq) {
@@ -59,12 +73,19 @@ public class AccomCtrl {
 		map.put("list", lst);
 		return map;
 	}
-	@RequestMapping("/accom/review/{accom_seq}")
-	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq){
+	
+	@RequestMapping("/review/{accom_seq}/{review_count}/")
+	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq, @PathVariable int review_count ){
 		map.clear();
 		lst.clear();
 		map.put("accom_seq", accom_seq);
+		map.put("review_count_up", String.valueOf((review_count+4)));
+		map.put("review_count_down", String.valueOf((review_count)));
+		Util.log.accept("이쪽 나오는중"+map.get("review_count_up"));
+		Util.log.accept("이쪽 나오는중"+map.get("review_count_down"));
 		lst = mpr.listReview(map);
+		Util.log.accept("이쪽 나오는중"+lst.toString());
+		
 		map.put("list", lst);
 		return map;
 	}
@@ -76,16 +97,17 @@ public class AccomCtrl {
 		return map;
 	}
 	
-	@RequestMapping("/accom/review/add/")
-	public @ResponseBody Map<String,Object> addReview(@RequestBody Map<String,Object> p){
-		
-		return map;
+	@RequestMapping("/review/add/")
+	public void addReview(@RequestBody Map<String,Object> p){
+		p.put("board_id", "review");
+		mpr.insertReview(p);
 	}
 	@PostMapping("/accom/payment/")
 	public void addPayment(@RequestBody Map<String, Object> p) {
 		map.clear();
 		mpr.insertReservation(p);
 	}
+	
 	@PostMapping("/taehyeong/search")
 	public @ResponseBody HashMap<String,Object> search(@RequestBody HashMap<String,Object>searchMap){
 	map.clear();
@@ -110,5 +132,20 @@ public class AccomCtrl {
 		System.out.println(priceMap);
 		System.out.println(map.get("list"));
 		return map;
+	}
+	
+	@PostMapping("/profile/{member_id}")
+	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
+		map.clear();
+		String savedName = uploadPhoto(files.getOriginalFilename(), files.getBytes(), member_id);
+		mbr.setProfileimg(savedName);
+		mbr.setMember_id(member_id);
+		mbrMap.update(mbr);
+		return savedName;
+	}
+	private String uploadPhoto(String originalName, byte[] fileData, String member_id) throws Exception {
+		savedName = UUID.randomUUID() + "." + originalName.split("\\.")[1];		
+		FileCopyUtils.copy(fileData, new File(uploadPath, savedName));
+		return savedName;
 	}
 }

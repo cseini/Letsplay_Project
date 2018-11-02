@@ -1002,11 +1002,6 @@ hyungjun.service = {
                                checkout_date:$('#end_date').val(),
                                imageSrc : imageSrc}),
                                success:d=>{
-                                   console.log(d.imageSrc)
-                                   console.log(d.accom_type)
-                                   console.log('어콤 addr : '+d.accom_addr)
-                                   console.log(d.checkin_date)
-                                   console.log(d.checkout_date)
                                    $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
                                        taehyeong.main.init(d);
                                    });
