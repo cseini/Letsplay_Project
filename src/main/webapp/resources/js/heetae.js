@@ -90,9 +90,9 @@ heetae.main =(x=>{
 			.appendTo('.heetae_current')
 			
 			
-			let arr = [img+'/bg-showcase-1.jpg'
-				,img+'/bg-showcase-2.jpg'
-				,img+'/bg-showcase-3.jpg']
+			let arr = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab2701f1.04281148.jpg'
+					  ,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4ab6a6c46.53211259.jpg'
+				,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/1280/5996a4a7beeb49.67142626.jpg']
 			
 			$.each(arr,(i,j)=>{
 				let clazz = 'carousel-item'
@@ -577,7 +577,7 @@ heetae.main =(x=>{
 						//여기부터 시작
 						if(sessionStorage.getItem("login")!=null){
 							$.ajax({
-								url:$.ctx()+'/accom/review/accom/',
+								url:$.ctx()+'/accom/myreview/',
 								method:'post',
 								contentType:'application/json',
 								data:JSON.stringify({
@@ -797,7 +797,7 @@ heetae.main =(x=>{
 						$('<p/>')
 						.text('는 숙소에 직접 방문한 회원만 작성할 수 있습니다.')
 						.appendTo('.heetae_review_message')
-						$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',r=>{
+						$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',r=>{
 							$.each(r.list,(i,j)=>{
 								let review_temp = {
 										'id':'review_'+review_count,
@@ -818,7 +818,7 @@ heetae.main =(x=>{
 								let testd =()=>{
 									if(save_review_count!=review_count){
 										$('.heetae_review_more').remove()
-										$.getJSON($.ctx()+"/accom/review/"+d.accom_seq+'/'+review_count+'/',g=>{
+										$.getJSON($.ctx()+"/accom/review/list/"+d.accom_seq+'/'+review_count+'/',g=>{
 											$.each(g.list,(i,j)=>{
 												let review_temp = {
 														'id':'review_'+review_count,
@@ -1196,7 +1196,9 @@ heetae.detail = {
 	},
 	accom : x=>{
 		let pay_types
-		let room_images = [x.list.room_image1,x.list.room_image2,x.list.room_image3]
+		let room_images = ['//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a50b97e0.42514041.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5547721.64570908.jpg'
+			,'//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5957530.55534901.jpg']
 		$('<div/>')
 		.attr('id',x.num+'_content_room')
 		.addClass('heetae_tab_content_room')
@@ -1227,7 +1229,7 @@ heetae.detail = {
 	        clazz = 'carousel-item active'
 	      }
 	      $('<img>')
-	      .attr('src',$.img()+'/'+j)
+	      .attr('src',j)
 	      .addClass('heetae_header')
 	      .appendTo($('<div/>')
 	          .attr('id','tab_select_'+(i+1))
@@ -1524,7 +1526,7 @@ heetae.detail = {
 																,'accom_seq':x.list.accom_seq}
 															heetae.main.init(se);*///메인페이지 이동
 															$.getScript($.ctx()+'/resources/js/hyungjun.js',e=>{
-																app.permision.reservationList();
+																hyungjun.permision.reservationList();
 															})
 														},
 														error:(m1,m2,m3)=>{

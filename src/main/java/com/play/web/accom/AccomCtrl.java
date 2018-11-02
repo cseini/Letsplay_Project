@@ -74,30 +74,27 @@ public class AccomCtrl {
 		return map;
 	}
 	
-	@RequestMapping("/review/{accom_seq}/{review_count}/")
+	@RequestMapping("/accom/review/list/{accom_seq}/{review_count}/")
 	public @ResponseBody Map<String,Object> listReview(@PathVariable String accom_seq, @PathVariable int review_count ){
 		map.clear();
 		lst.clear();
 		map.put("accom_seq", accom_seq);
 		map.put("review_count_up", String.valueOf((review_count+4)));
 		map.put("review_count_down", String.valueOf((review_count)));
-		Util.log.accept("이쪽 나오는중"+map.get("review_count_up"));
-		Util.log.accept("이쪽 나오는중"+map.get("review_count_down"));
 		lst = mpr.listReview(map);
-		Util.log.accept("이쪽 나오는중"+lst.toString());
 		
 		map.put("list", lst);
 		return map;
 	}
 	
-	@RequestMapping("/accom/review/accom/")
+	@RequestMapping("/accom/myreview/")
 	public @ResponseBody Map<String,Object> retrieveRoomSeq(@RequestBody Map<String,Object> p){
 		lst = mpr.retrieveReviewRoomSeq(p);
 		map.put("list", lst);
 		return map;
 	}
 	
-	@RequestMapping("/review/add/")
+	@RequestMapping("/accom/review/add/")
 	public void addReview(@RequestBody Map<String,Object> p){
 		p.put("board_id", "review");
 		mpr.insertReview(p);

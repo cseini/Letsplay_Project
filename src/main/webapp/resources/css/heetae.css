@@ -1000,6 +1000,24 @@ em{
     text-decoration: none;
 }
 
+.heetae_room_image1{
+	background-image: url(//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a50b97e0.42514041.jpg);
+    background-size: cover;
+    background-position: center center;
+}
+
+.heetae_room_image2{
+	background-image: url("//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5547721.64570908.jpg");
+    background-size: cover;
+    background-position: center center;
+}
+
+.heetae_room_image3{
+	background-image: url("//yaimg.yanolja.com/resize/place/v4/2017/08/18/17/640/5996a4a5957530.55534901.jpg");
+    background-size: cover;
+    background-position: center center;
+}
+
 
 .heetae_footer{
 	width: 100%;
