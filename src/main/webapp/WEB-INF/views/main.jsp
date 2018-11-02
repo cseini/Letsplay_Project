@@ -31,6 +31,7 @@
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/dropzone.css">
 	<link rel="stylesheet" type="text/css" href="${context}/resources/css/gijgo.min.css">
 	<script src="${context}/resources/js/hyungjun.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding" rel="stylesheet">
 </head>
 	
 <body>

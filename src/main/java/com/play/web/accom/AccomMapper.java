@@ -17,4 +17,9 @@ public interface AccomMapper {
 	public void insertReview(Map<String, Object> p);
 	public void insertReservation(Map<String, Object> p);
 	public void delete(Map<String, Object> p);
+	/**************
+	 --  태형 처리한 부분
+	 **************/
+	public List<HashMap<String,Object>>list(HashMap<String,Object> searchMap);
+	public List<HashMap<String, Object>> lowList(HashMap<String,Object> priceMap);
 }

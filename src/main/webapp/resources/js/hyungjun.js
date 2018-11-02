@@ -985,33 +985,41 @@ hyungjun.service = {
 				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
 					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
 					.click(e=>{
-                        let accom_type_eng = $('#accomSelect').val();
-                        if(accom_type_eng=="모텔"){
-                            accom_type_eng = "motel"
-                        }else{
-                            accom_type_eng = "hotel"
-                        }
-                        $.ajax({
-                            url:'/web/taehyeong/search',
-                            method:'post',
-                            contentType : 'application/json',
-                            data : JSON.stringify({accom_type:accom_type_eng,
-                                accom_addr:$('#accomAddr').val(),
-                                checkin_date:$('#start_date').val(),
-                                checkout_date:$('#end_date').val()}),
-                                success:x=>{
-                                    let d = x
-                                    $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
-                                        taehyeong.content1.surroundings(d);
-                                    });
-                                },
-                                error:()=>{
-                                    alert('에러')
-                                }
-                        })
-                    });
-			/* header 끝 */
-		},
+                        let imageSrc;
+                       let accom_type_eng = $('#accomSelect').val();
+                       if(accom_type_eng=="모텔"){
+                           accom_type_eng = "motel"
+                           imageSrc='https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg'
+                       }else{
+                           accom_type_eng = "hotel"
+                               imageSrc='https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-hotel.svg'
+                       }
+                       $.ajax({
+                           url:'/web/taehyeong/search',
+                           method:'post',
+                           contentType : 'application/json',
+                           data : JSON.stringify({accom_type:accom_type_eng,
+                               accom_addr:$('#accomAddr').val(),
+                               checkin_date:$('#start_date').val(),
+                               checkout_date:$('#end_date').val(),
+                               imageSrc : imageSrc}),
+                               success:d=>{
+                                   console.log(d.imageSrc)
+                                   console.log(d.accom_type)
+                                   console.log('어콤 addr : '+d.accom_addr)
+                                   console.log(d.checkin_date)
+                                   console.log(d.checkout_date)
+                                   $.getScript($.ctx()+'/resources/js/taehyeong.js',()=>{
+                                       taehyeong.main.init(d);
+                                   });
+                               },
+                               error:()=>{
+                                   alert('에러')
+                               }
+                       })
+                   });
+            /* header 끝 */
+        },
 		content :x=>{
 			/* content 시작 */
 			$('#content').remove();
