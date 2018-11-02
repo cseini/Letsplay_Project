@@ -788,7 +788,7 @@ hyungjun.permision = (()=>{
 
 hyungjun.service = {
 		header :x=>{
-			$('#header').remove();
+			$('#header').empty();
 			/* header 시작 */
 			$('<div/>').attr({id:'header'}).appendTo('#wrapper');
 			$('<div/>').addClass('mainheader').appendTo('#header');		
@@ -1061,15 +1061,15 @@ hyungjun.service = {
 					$('<h2/>').addClass(['icon-comm','icon-logo-footer']).append($('<span/>').addClass('sc-out').html('Yanolja')),
 					$('<ul/>').addClass('foot-menu').append(
 							$('<li/>').addClass('foot-menu__item').append(
-									$('<a/>').attr({href:'http://yanolja.in/ko/companyinfo/',title:'회사소개로 이동'}).addClass('foot-menu__link').html('회사소개')),
+									$('<a/>').attr({href:'#',title:'회사소개로 이동'}).addClass('foot-menu__link').html('회사소개')),
 							$('<li/>').addClass('foot-menu__item').append(
-									$('<a/>').attr({href:'http://www.yanoljalab.com/ad.php?utm_source=yanolja&amp;utm_medium=site&amp;utm_campaign=ad_bottom',title:'제휴광고문의로 이동'}).addClass('foot-menu__link').html('제휴광고문의')),
+									$('<a/>').attr({href:'#',title:'제휴광고문의로 이동'}).addClass('foot-menu__link').html('제휴광고문의')),
 							$('<li/>').addClass('foot-menu__item').append(
-									$('<a/>').attr({href:'http://yanolja.in/recruitment/',title:'인재채용으로 이동'}).addClass('foot-menu__link').html('인재채용')),
+									$('<a/>').attr({href:'#',title:'인재채용으로 이동'}).addClass('foot-menu__link').html('인재채용')),
 							$('<li/>').addClass('foot-menu__item').append(
-									$('<a/>').attr({href:'http://policy.yanolja.com/?t=service',title:'이용약관으로 이동'}).addClass('foot-menu__link').html('이용약관')),
+									$('<a/>').attr({href:'#',title:'이용약관으로 이동'}).addClass('foot-menu__link').html('이용약관')),
 							$('<li/>').addClass('foot-menu__item').append(
-									$('<a/>').attr({href:'http://policy.yanolja.com/?t=privacy',title:'개인정보처리방침으로 이동'}).addClass(['foot-menu__link']).html('개인정보처리방침'))
+									$('<a/>').attr({href:'#',title:'개인정보처리방침으로 이동'}).addClass(['foot-menu__link']).html('개인정보처리방침'))
 					),
 					$('<div/>').addClass('familysite').append(
 							$('<div/>').addClass('familysite__select').append(
@@ -1142,23 +1142,23 @@ hyungjun.service = {
 					),
 					$('<div/>').addClass('foot-family').append(
 							$('<div/>').addClass('cs-center').append(
-									$('<a/>').attr({href:'http://help.yanolja.com/faq', title:'야놀자 고객센터로 이동'}).append(
+									$('<a/>').attr({href:'#', title:'야놀자 고객센터로 이동'}).append(
 											$('<em/>').html('고객센터'),
 											$('<div/>').html('1644-1346(오전 9시 ~ 익일 새벽 3시)')
 									)
 							),
 							$('<div/>').addClass('snslink').append(
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.facebook.com/yanolja/?fref=ts', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 페이스북으로 이동'}).append($('<i/>').addClass(['icon-sns-facebook','icon-comm']).attr({style:'background-position: 0 -202px;'})),
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.instagram.com/yanoljainsta/', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 인스타그램으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-instargram']).attr({style:'background-position: -25px -202px;'})),
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'https://www.youtube.com/user/yanoljamedia', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 유튜브으로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-youtube']).attr({style:'background-position: -50px -202px;'})),
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://tv.naver.com/yanolja', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 네이버TV로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-comm icon-sns-navertv']).attr({style:'background-position: -300px -202px;'})),
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://post.naver.com/my.nhn?memberNo=2768780', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 네이버 포스트로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-naverpos'])),
-									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'http://blog.naver.com/yanolog', target:'_blank'
+									$('<a/>').attr({rel:['noopener', 'noreferrer'],href:'#', target:'_blank'
 										,title:'야놀자 네이버블로그로 이동'}).append($('<i/>').addClass(['icon-comm', 'icon-sns-naverblog']))
 							)
 					)
