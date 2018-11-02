@@ -19,7 +19,7 @@ heetae.main =(x=>{
 		let img, w ,nav ,header ,content , footer
 		,accom,accom2,input_accom_seq,checkin_day,checkout_day,today,rating_grade,button_check
 		,save_start,save_end,save_acom_start,save_acom_end,checking_day,save_end_max_date,save_form_data
-		,review_count,save_review_count;
+		,review_count,save_review_count,buy_check;
 		var save_checkdate
 		button_check = "accom"
 		save_checkdate = new Array()
@@ -311,6 +311,7 @@ heetae.main =(x=>{
 						'id' : 'tab_button2'})
 				.text('후기')
 				.addClass('heetae_tab_button')
+				.appendTo('.heetae_tab_head')
 				.click(e=>{
 					e.preventDefault()
 					if(button_check!="review"){
@@ -327,37 +328,62 @@ heetae.main =(x=>{
 						
 						let chk = false;
 						
-						if(sessionStorage.getItem("login")!=null){
-							$('<div/>')
-							.addClass('heetae_tab_review_write')
-							.appendTo('.heetae_tab_content')
-							$('<button/>')
-							.attr({'id':"heetae_write_button"
-								,'type':"button"
-								,'data-toggle':"collapse"
-								, 'href':"#heetae_review_collapse"
-								, 'data-target':"#heetae_review_collapse"
-								, 'aria-expanded':"false"
-								, 'aria-controls':"heetae_review_collapse"})
-							.text('리뷰 작성')
-							.addClass('heetae_write_button')
-							.appendTo('.heetae_tab_review_write')
-							.click(e=>{
-									if(chk==false){
-										$('.heetae_write_button')
-										.text('취 소')
-										setTimeout(() => {	
-											chk=true;
-										}, 400);
+						$.ajax({
+							url:$.ctx()+'/accom/myreview/',
+							method:'post',
+							contentType:'application/json',
+							data:JSON.stringify({
+								member_id:sessionStorage.getItem("login")
+								,accom_seq:input_accom_seq}),
+							success:d=>{
+								$.each(d.list,(i,j)=>{
+									if(j.room_seq==''){
+										console.log('false')
+										buy_check = false
 									}else{
-										$('.heetae_write_button')
-										.text('리뷰 작성')
-										setTimeout(() => {	
-											chk=false;
-										}, 400);
+										console.log('true')
+										buy_check = true
 									}
-							})
-						}
+								})
+									
+							},
+							error:(m1,m2,m3)=>{
+								alert('에러');
+							},
+							complete:()=>{
+								if(sessionStorage.getItem("login")!=null && buy_check==true){
+									console.log('안틀림')
+									$('<div/>')
+									.addClass('heetae_tab_review_write')
+									.appendTo('.heetae_tab_content')
+									$('<button/>')
+									.attr({'id':"heetae_write_button"
+										,'type':"button"
+										,'data-toggle':"collapse"
+										, 'href':"#heetae_review_collapse"
+										, 'data-target':"#heetae_review_collapse"
+										, 'aria-expanded':"false"
+										, 'aria-controls':"heetae_review_collapse"})
+									.text('리뷰 작성')
+									.addClass('heetae_write_button')
+									.appendTo('.heetae_tab_review_write')
+									.click(e=>{
+											if(chk==false){
+												$('.heetae_write_button')
+												.text('취 소')
+												setTimeout(() => {	
+													chk=true;
+												}, 400);
+											}else{
+												$('.heetae_write_button')
+												.text('리뷰 작성')
+												setTimeout(() => {	
+													chk=false;
+												}, 400);
+											}
+									})
+								}
+						
 						
 						$('<div/>')
 						.attr('id',"heetae_review_collapse")
@@ -841,9 +867,11 @@ heetae.main =(x=>{
 									}
 								}
 						})
-				}
-			})
-			.appendTo('.heetae_tab_head')
+					}
+							
+				})
+			}
+		})
 			
 			
 			
