@@ -1740,7 +1740,6 @@ heetae.router = {
 		$.getScript(x+'/resources/js/router.js',
 				()=>{
 					$.extend(new Session(x))
-					$.getScript($.ctx()+'/resources/js/util.js')
 					heetae.main.init()
 				}
 		)

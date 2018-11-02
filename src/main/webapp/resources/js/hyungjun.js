@@ -233,7 +233,6 @@ hyungjun.permision = (()=>{
 														});
 												}else{
 													sessionStorage.setItem("login", d.mbr.member_id);
-													alert(sessionStorage.getItem("login"));
 													sessionStorage.setItem("profileimg", d.mbr.profileimg);
 													sessionStorage.setItem("nickname", d.mbr.nickname);
 													hyungjun.router.home()
@@ -636,8 +635,6 @@ hyungjun.permision = (()=>{
 									                        $('#layerpop').on('hidden.bs.modal',()=>{
 																sessionStorage.setItem("profileimg",d);
 																hyungjun.permision.mypage();
-																/*$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
-																append($('<img>').attr({src:$.img()+'/profile/'+d.mbr.profileimg}).addClass('bigAvatar'));*/
 							                                })
 									                },
 									                error : e=>{
@@ -715,53 +712,54 @@ hyungjun.permision = (()=>{
 							            files = $('#multipaartFileList_' + fileIndex)[0].files;
 							        }
 							        
-							        // 다중파일 등록
-							        if(files != null){
-							            for(var i = 0; i < files.length; i++){
-							                // 파일 이름
-							                var fileName = files[i].name;
-							                var fileNameArr = fileName.split("\.");
-							                // 확장자
-							                var ext = fileNameArr[fileNameArr.length - 1];
-							                // 파일 사이즈(단위 :MB)
-							                var fileSize = files[i].size / 1024 / 1024;
-							                
-							                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-							                    // 확장자 체크
-							                    alert("등록 불가 확장자");
-							                    break;
-							                }else if(fileSize > uploadSize){
-							                    // 파일 사이즈 체크
-							                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
-							                    break;
-							                }else{
-							                    // 전체 파일 사이즈
-							                    totalFileSize += fileSize;
-							                    // 파일 배열에 넣기
-							                    fileList[fileIndex] = files[i];
-							                    // 파일 사이즈 배열에 넣기
-							                    fileSizeList[fileIndex] = fileSize;
-							                    // 업로드 파일 목록 생성
-							                    addFileList(fileIndex, fileName, fileSize);
-							                    // 파일 번호 증가
-							                    fileIndex++;
-							                }
-							            }
-							        }else{
-							            alert("ERROR");
-							        }
-							    }
-							 
-							    // 업로드 파일 목록 생성
-							    function addFileList(fIndex, fileName, fileSize){
-							        var html = "";
-							        html += "<tr id='fileTr_" + fIndex + "'>";
-							        html += "    <td class='center' id='fileNameLocation'>";
-							        html +=         fileName
-							        html += "    </td>"
-							        html += "</tr>"
-							        $('#fileTableTbody').append(html);
-							    }
+							        /*/ 다중파일 등록
+*/	                                if(files != null){
+	                                    for(var i = 0; i < 1; i++){
+	                                        // 파일 이름
+	                                        var fileName = files[i].name;
+	                                        var fileNameArr = fileName.split("\.");
+	                                        // 확장자
+	                                        var ext = fileNameArr[fileNameArr.length - 1];
+	                                        // 파일 사이즈(단위 :MB)
+	                                        var fileSize = files[i].size / 1024 / 1024;
+	                                        
+	                                        if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+	                                            // 확장자 체크
+	                                            alert("등록 불가 확장자");
+	                                            break;
+	                                        }else if(fileSize > uploadSize){
+	                                            // 파일 사이즈 체크
+	                                            alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+	                                            break;
+	                                        }else{
+	                                            // 전체 파일 사이즈
+	                                            totalFileSize += fileSize;
+	                                            // 파일 배열에 넣기
+	                                            fileList[fileIndex] = files[i];
+	                                            // 파일 사이즈 배열에 넣기
+	                                            fileSizeList[fileIndex] = fileSize;
+	                                            // 업로드 파일 목록 생성
+	                                            addFileList(fileIndex, fileName, fileSize);
+	                                            // 파일 번호 증가
+	                                            fileIndex;
+	                                        }
+	                                    }
+	                                }else{
+	                                    alert("ERROR");
+	                                }
+	                            }
+	                        
+	                            // 업로드 파일 목록 생성
+	                            function addFileList(fIndex, fileName, fileSize){
+	                                $('#fileTr_0').remove()
+	                                var html = "";
+	                                html += "<tr id='fileTr_" + fIndex + "'>";
+	                                html += "    <td class='center' id='fileNameLocation'>";
+	                                html +=         fileName
+	                                html += "    </td>"
+	                                html += "</tr>"
+	                                $('#fileTableTbody').append(html);
+	                            }
 							 
 							    // 업로드 파일 삭제
 							    function deleteFile(fIndex){
@@ -1297,9 +1295,6 @@ hyungjun.router = {
 		$.getScript(x+'/resources/js/router.js',
 			()=>{
 				$.extend(new Session(x));
-				$.getScript($.ctx()+'/resources/js/util.js')
-					.done(x=>{
-						if( typeof console === 'object' ) {
 							console.log(
 									"%c                                                ", 
 									`background: url("http://image.sportsseoul.com/2016/04/06/news/2016040601000286800018951.jpg") no-repeat; 
@@ -1321,9 +1316,6 @@ hyungjun.router = {
 			                    '숙박예약사이트 야놀자와 동일하게 구현하였습니다.'
 						    );
 						    
-						}
-					})
-					.fail(x=>{console.log('실패')});
 				hyungjun.main.init();
 			}
 		);
