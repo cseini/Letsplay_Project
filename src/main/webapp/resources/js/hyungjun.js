@@ -924,7 +924,6 @@ hyungjun.service = {
 							,(($('#end_date').val().split('-')[1])-1)
 							,$('#end_date').val().split('-')[2])
 							
-							
 							if(sd.getTime()>=ed.getTime()){
 								let tsd = sd
 								tsd.setDate(tsd.getDate()+1)
