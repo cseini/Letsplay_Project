@@ -203,13 +203,14 @@ hyungjun.permision = (()=>{
 																name:res.properties['nickname'],
 																nickname:res.properties['nickname'],
 																profileimg :res.properties['profile_image'],
+																profileimg :'default.jpg',
 																gender : gender,
 																kakao: '2'
 															}),
 															success:d=>{
 																alert('\n 카카오톡으로 가입이 성공하였습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
 																login(); 
-																/*카톡 불러온 사진 서버 저장*/
+																/*카톡 불러온 사진 서버 저장
 												                  $.ajax({
 																		url:$.ctx()+'/image/kakaoProfile/',
 																		method:'post',
@@ -224,7 +225,7 @@ hyungjun.permision = (()=>{
 																			sessionStorage.setItem("nickname", res.properties['nickname']);
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
-																	});
+																	});*/
 													            /*카톡 불러온 사진 서버 저장*/
 															},
 															error:(m1,m2,m3)=>{alert(m3);}

@@ -1,9 +1,18 @@
 package com.play.web.mbr;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +34,25 @@ public class MemberCtrl {
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
 	@Autowired List<HashMap<String, Object>> rlist;
+	@Resource(name="uploadPath")
+	private String uploadPath;
+	String savedName ="";
 	
 	@PostMapping("/join")
-	public void join(@RequestBody Member param) {
-		if(param.getBirthdate()!=null) {
-			param.setProfileimg("default.jpg");
+	public void join(@RequestBody Member param) throws IOException {
+		if(param.getKakao().equals('1')) {
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
-			param.setKakao("1");
 			mbrMap.post(param);
 		} else {
-			param.setKakao("2");  // 카톡 가입일 경우 2번임
-			mbrMap.post(param);
+/*			URL url = new URL(mbr.getProfileimg());
+			String ext = mbr.getProfileimg().substring(mbr.getProfileimg().lastIndexOf(".")+1,mbr.getProfileimg().length()); 
+			BufferedImage img = ImageIO.read(url);
+	        savedName = UUID.randomUUID() + "." +ext;
+	        File file=new File(uploadPath,savedName);
+	        ImageIO.write(img, ext, file);
+	        mbr.setProfileimg(savedName);*/
+	        mbrMap.post(param);
 		}
 	}
 	
