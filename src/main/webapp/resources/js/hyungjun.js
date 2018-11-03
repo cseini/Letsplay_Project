@@ -967,8 +967,7 @@ hyungjun.service = {
 			
 						/*--------------------------------------------------------------------*/						
 					
-				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
-					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
+					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainInput')
 					.click(e=>{
                         let imageSrc;
                        let accom_type_eng = $('#accomSelect').val();
