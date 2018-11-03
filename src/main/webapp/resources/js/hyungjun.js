@@ -285,6 +285,10 @@ hyungjun.permision = (()=>{
 							$('#joinIdAlert').empty();
 							validate ="입력되지 않은 항목이 있습니다.";
 							$('<div/>').text(validate).appendTo('#joinIdAlert');
+						} else if(birthdate.length!=8 || !birthdate){
+							$('#joinIdAlert').empty();
+							validate ="생년월일을 ex)890505-1 형식으로 입력해주세요.";
+							$('<div/>').text(validate).appendTo('#joinIdAlert');
 						} else {
 							$.ajax({
 								url:$.ctx()+'/member/login',

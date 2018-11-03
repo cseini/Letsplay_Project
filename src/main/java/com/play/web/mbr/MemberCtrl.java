@@ -1,18 +1,10 @@
 package com.play.web.mbr;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
-
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +26,11 @@ public class MemberCtrl {
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
 	@Autowired List<HashMap<String, Object>> rlist;
-	@Resource(name="uploadPath")
-	private String uploadPath;
 	String savedName ="";
 	
 	@PostMapping("/join")
 	public void join(@RequestBody Member param) throws IOException {
-		if(param.getKakao().equals('1')) {
+		if(param.getBirthdate()!=null) {
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
 			mbrMap.post(param);
