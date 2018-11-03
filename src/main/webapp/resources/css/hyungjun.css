@@ -1,10 +1,7 @@
 @charset "UTF-8";
 
-#mainInput3 div{
-	padding-left: 14%;
-}
-#mainInput4 div{
-	padding-left: 14%;
+.mainInput3_4{
+	padding-left: 10%;
 }
 
 
@@ -471,7 +468,7 @@
 
 #mainInput {
     width: 62%;
-    height: 17%;
+    height: 128px;
     padding-top: 1%;
     background-color: white;
 }
@@ -588,7 +585,7 @@
 
 .centered-left1 {
     position: absolute;
-    top: 21%;
+    top: 150px;
     font-size: 60px;
     color: #ffffff;
     margin-left: 15%;
@@ -597,7 +594,7 @@
 
 .centered-left2 {
     position: absolute;
-    top: 31%;
+    top: 229px;
     font-size: 60px;
     color: #ffffff;
     margin-left: 15%;
@@ -607,8 +604,8 @@
 .centered-left3 {
     position: absolute;
     color: #000000;
-    top: 48%;
     margin-left: 15%;
+    top: 350px;
 }
 
 .btn-search-stay {

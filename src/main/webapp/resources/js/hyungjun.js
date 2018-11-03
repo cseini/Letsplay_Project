@@ -844,7 +844,7 @@ hyungjun.service = {
 						
 						//이곳 캘린더 날짜번경
 						$('<div/>').attr({id:'checkinDate'}).html('체크인').appendTo('#mainInput');
-						$('<div/>').attr({id:'mainInput3'}).appendTo('#checkinDate');	
+						$('<div/>').attr({id:'mainInput3'}).addClass('mainInput3_4').appendTo('#checkinDate');	
 						$('<input/>')
 						.attr({'readonly':'true'
 								,'value':hyungjun.service.date_format(today)
@@ -854,7 +854,7 @@ hyungjun.service = {
 									.appendTo('#mainInput3'))
 									
 						$('<div/>').attr({id:'checkoutDate'}).html('체크아웃').appendTo('#mainInput');
-						$('<div/>').attr({id:'mainInput4'}).appendTo('#checkoutDate');			
+						$('<div/>').attr({id:'mainInput4'}).addClass('mainInput3_4').appendTo('#checkoutDate');			
 						$('<input/>')
 						.attr({'readonly':'true'
 							,'value':hyungjun.service.date_format(checkout_day)
