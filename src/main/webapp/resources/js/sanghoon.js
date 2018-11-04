@@ -491,7 +491,7 @@ googleChart.service = {
 	  custoChart : x=>{
 		  $.getJSON($.ctx()+'/admin/custo/'+x.type+'/'+x.start+'/'+x.end, d=>{
 			  var custoAccom = [];
-			  for(var i = 1; i < d.custoAccom.length; i++){
+			  for(var i = 0; i < d.custoAccom.length; i++){
 				  custoAccom.push(d.custoAccom[i].payCount);
 			  }
 			  var options = {
