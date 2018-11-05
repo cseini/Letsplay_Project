@@ -11,7 +11,7 @@ hyungjun =(()=>{
 hyungjun.main =(()=>{
 	var init =()=>{
 		onCreate();
-		Kakao.init('ab11f68d3c4372117993ec440aec4768');
+		Kakao.init('964e9b31a2ce4d6f616df503391205bb');
 	};
 	var onCreate =()=>{
 		setContentView();
