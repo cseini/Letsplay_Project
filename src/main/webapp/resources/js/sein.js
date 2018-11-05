@@ -324,7 +324,7 @@ sein.service ={
 						}),
 						$('<a/>').addClass('btn btn-danger').attr({href:'#'}).html('삭제').click(e=>{
 							if(confirm('삭제하시겠습니까?')==true){
-								$.getJSON($.ctx()+'/cast/delete/'+d.board_id+'/'+d.msg_seq);
+								$.getJSON($.ctx()+'/cast/delete/'+d.board_id+'/'+d.msg_seq+'/'+d.msg_photo+'/'+d.msg_photo1);
 								sein.board.cast();
 							}
 						})
@@ -1365,7 +1365,7 @@ sein.service ={
 	},
 	recent : x=>{
 		let recent = new Array();
-		$.each(x,(i,j)=>{
+		$.each(x.reverse(),(i,j)=>{
 			recent.push(j)
 			$('<li/>').attr({id:'recent'+j.msg_seq}).append(
 				$('<div/>').addClass('list_l').attr({style:'height:140px'}).append(
@@ -1528,65 +1528,66 @@ sein.service ={
 			    });
 	          bounds.extend(coords);
 		    } 
-		});
-		 $.getJSON($.ctx()+'/cast/nearAccom/'+x.detail.tag.substring(1)+'/',d=>{
-			 let positions = [];
-			 $.each(d.list, (i,j)=>{
-				 positions.push({
-					  'seq' : j.accom_seq,
-					  'title' : j.accom_name,
-					  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+		     $.getJSON($.ctx()+'/cast/nearAccom/'+x.detail.tag.substring(1)+'/',d=>{
+				 let positions = [];
+				 $.each(d.list, (i,j)=>{
+					 positions.push({
+						  'seq' : j.accom_seq,
+						  'title' : j.accom_name,
+						  'latlng' : new daum.maps.LatLng(j.longitude,j.latitude)
+					  });
 				  });
-			  });
-			 
-			 let imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
-			 let imageSize = new daum.maps.Size(34, 60);
-			 let position;
-			 let accomseq;
-			 $.each(positions,(i,j)=>{
-				  let markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
-				  let marker = new daum.maps.Marker({
-					  map: map,	
-					  position: j.latlng,
-					  image: markerImage,
-					  clickable:true
-				  });
-				  let content = '<div class="customoverlay">' +
-				    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
-				    '    <span class="title">'+j.title+'</span>' +
-				    '  </a>' +
-				    '</div>';
-				  position = j.latlng;
-				  let customOverlay = new daum.maps.CustomOverlay({
-				        position: position,
-				        content: content,
-				        yAnchor: 2.7
-				    });
-				  accomseq = j.seq;
-				  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
-				  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-				  daum.maps.event.addListener(marker, 'click', function() {
-				  $.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-						let se = {'in_day':null,'out_day':null,'accom_seq':accomseq}
-                     heetae.main.init(se);
+				 
+				 let imageSrc = "https://yaimg.yanolja.com/joy/pw/icon/marker/map-marker-motel.svg";
+				 let imageSize = new daum.maps.Size(34, 60);
+				 let position;
+				 let accomseq;
+				 $.each(positions,(i,j)=>{
+					  let markerImage = new daum.maps.MarkerImage(imageSrc, imageSize);
+					  let marker = new daum.maps.Marker({
+						  map: map,	
+						  position: j.latlng,
+						  image: markerImage,
+						  clickable:true
+					  });
+					  let content = '<div class="customoverlay">' +
+					    '  <a href="http://map.daum.net/link/map/11394059" target="_blank">' +
+					    '    <span class="title">'+j.title+'</span>' +
+					    '  </a>' +
+					    '</div>';
+					  position = j.latlng;
+					  let customOverlay = new daum.maps.CustomOverlay({
+					        position: position,
+					        content: content,
+					        yAnchor: 2.7
+					    });
+					  accomseq = j.seq;
+					  daum.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, customOverlay));
+					  daum.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
+					  daum.maps.event.addListener(marker, 'click', function() {
+					  $.getScript($.ctx()+'/resources/js/heetae.js',()=>{
+							let se = {'in_day':null,'out_day':null,'accom_seq':accomseq}
+	                     heetae.main.init(se);
+						});
 					});
-				});
+				 })
+				  function makeOverListener(map, marker, customOverlay) {
+				        return function() {
+				        	customOverlay.setMap(map);
+				        };
+				    }
+				  function makeOutListener(customOverlay) {
+				        return function() {
+				        	customOverlay.setMap(null);
+				        };
+				    }
+				  for(let k = 0; k < positions.length; k++){
+					  bounds.extend(positions[k].latlng);
+				  }
+				  map.setBounds(bounds); 
 			 })
-			  function makeOverListener(map, marker, customOverlay) {
-			        return function() {
-			        	customOverlay.setMap(map);
-			        };
-			    }
-			  function makeOutListener(customOverlay) {
-			        return function() {
-			        	customOverlay.setMap(null);
-			        };
-			    }
-			  for(let k = 0; k < positions.length; k++){
-				  bounds.extend(positions[k].latlng);
-			  }
-			  map.setBounds(bounds);
-		 })
+		});
+		
 	},
 	search : x=>{
 		$('#cardlist_rap').remove();

@@ -83,6 +83,8 @@ public class BoardCtrl {
 		logger.info("\n BoardCtrl :::::::::: {} !!-----","replyDelete()");
 		brd.setBoard_id(board_id);
 		brd.setMsg_seq(msg_seq);
+		new File(castUploadPath,brd.getMsg_photo()).delete();
+   	 	new File(castUploadPath,brd.getMsg_photo1()).delete();
 		brdMap.delete(brd);;
 	}
 	

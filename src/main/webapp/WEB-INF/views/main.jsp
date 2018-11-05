@@ -16,11 +16,9 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4018b61d957ec307137687e0629296fd&libraries=services,clusterer,drawing"></script><!-- 상훈 다음지도 api -->
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=93cb0c9bef70e9c3919f68e5b7bc8d15&libraries=services,clusterer,drawing"></script><!-- 태형 -->
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=964e9b31a2ce4d6f616df503391205bb&libraries=services,clusterer,drawing"></script><!-- 태형 -->
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=964e9b31a2ce4d6f616df503391205bb&libraries=services,clusterer,drawing"></script>
     <link rel="stylesheet" href="https://icono-49d6.kxcdn.com/icono.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon%7CGothic+A1:400,600,700,800,900%7CHi+Melody%7CNanum+Pen+Script%7CNoto+Sans+KR&amp;subset=korean" rel="stylesheet"><!-- 태형 -->
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon%7CGothic+A1:400,600,700,800,900%7CHi+Melody%7CNanum+Pen+Script%7CNoto+Sans+KR&amp;subset=korean" rel="stylesheet">
 	<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
