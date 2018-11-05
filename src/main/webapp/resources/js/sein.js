@@ -324,7 +324,7 @@ sein.service ={
 						}),
 						$('<a/>').addClass('btn btn-danger').attr({href:'#'}).html('삭제').click(e=>{
 							if(confirm('삭제하시겠습니까?')==true){
-								$.getJSON($.ctx()+'/cast/delete/'+d.board_id+'/'+d.msg_seq+'/'+d.msg_photo+'/'+d.msg_photo1);
+								$.getJSON($.ctx()+'/cast/delete/'+d.board_id+'/'+d.msg_seq+'/');
 								sein.board.cast();
 							} 
 						})
