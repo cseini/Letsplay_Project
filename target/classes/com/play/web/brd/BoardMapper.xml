@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	</if>
   	WHERE BOARD_ID LIKE #{board_id}
   	AND MSG_SEQ LIKE #{msg_seq}
-  </update>
+  </update> 
   
   <delete id="delete">
   	DELETE FROM board

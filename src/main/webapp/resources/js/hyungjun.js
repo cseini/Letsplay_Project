@@ -4,7 +4,6 @@ hyungjun =(()=>{
 	var init =x=>{
 		hyungjun.router.init(x);
 	};
-	
 	return {init : init};
 })();
 
@@ -12,7 +11,7 @@ hyungjun =(()=>{
 hyungjun.main =(()=>{
 	var init =()=>{
 		onCreate();
-		Kakao.init('ab11f68d3c4372117993ec440aec4768');
+		Kakao.init('4018b61d957ec307137687e0629296fd');
 	};
 	var onCreate =()=>{
 		setContentView();
@@ -24,92 +23,6 @@ hyungjun.main =(()=>{
 })();
 
 hyungjun.permision = (()=>{
-	var reservationList = d=>{
-		$('#header').empty();
-		$('#content').empty();
-		var top_map = {};
-		$.getJSON($.ctx()+'/member/list/'+sessionStorage.getItem("login"), d=>{
-			$('<div/>').addClass('reserve-main-content').appendTo('#content');
-			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
-				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
-					$('<section/>').addClass('history-cont').appendTo('.reserve-content');
-						$('<div/>').addClass('history-item-ready-reserve').appendTo('.history-cont');
-							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
-						$.each(d.rlist,(i,j)=>{
-							var tday = new Date(j.pay_date);
-						    
-							$('.info').addClass('info_reservelist_'+i).append(
-								$('<div/>').append(
-													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({style:'cursor:pointer;'}).click(e=>{
-														$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
-															let se = {'in_day':null,'out_day':null,'accom_seq':j.accom_seq}
-		                                                    heetae.main.init(se);
-														});
-													}),
-													$('<span/>').html(j.room_no)),
-								$('<div/>').addClass('txt-address').html(j.accom_addr),
-								$('<ul/>').addClass('reserveinfo-list')
-									.append(
-											$('<li/>').addClass('reserveinfo-item')
-												.append(
-														$('<span/>').html('예약번호'),
-														$('<b/>').html(j.pay_no).attr({style:'padding-left: 30px'})),
-											$('<li/>').addClass('reserveinfo-item')
-												.append(
-														$('<span/>').html('입실'),
-														$('<b/>').html(j.checkin_date).attr({style:'padding-left: 60px'})),
-											$('<li/>').addClass('reserveinfo-item')
-												.append(
-														$('<span/>').html('퇴실'),
-														$('<b/>').html(j.checkout_date).attr({style:'padding-left: 60px'})),
-											$('<li/>').addClass('reserveinfo-item')
-												.append(
-														$('<span/>').html('예약일'),
-														$('<b/>').html(tday).attr({style:'padding-left: 43px'})),
-											$('<li/>').addClass('reserveinfo-item')
-												.append(
-														$('<span/>').html('판매가'),
-														$('<b/>').html(j.pay_price).attr({style:'padding-left: 43px'}))
-									)
-								);
-								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
-									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
-									var diff = hyungjun.service.dayDiffCalc(j.checkin_date)
-									if(diff<0 && j.res_check==1){
-										$('<button/>').addClass('btns').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'btns'}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
-										.click(e=>{
-											hyungjun.service.myModal();
-											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
-											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-											$('<div/>').html('개인정보 수집/이용 약관, 개인정보 제 3자 제공 약관을 확인하였으며 이에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
-											$('<div/>').addClass('guide-box').appendTo('.modal-body');
-											$('<table/>').addClass('guide-table').appendTo('.guide-box');
-											$('<colgroup/>').addClass('cancelColgroup').append($('<col/>').attr({style:'width:50%'}),$('<col/>').attr({style:'width:50%'})).appendTo('.guide-table');
-											$('<thead/>').append($('<tr/>').append($('<th/>').html('취소기준일'),$('<th/>').html('취소수수료'))).appendTo('.guide-table');
-											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실 1일전 까지'),$('<th/>').html('없음'))).appendTo('.guide-table');
-											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실일 및 No-Show'),$('<th/>').html('환불불가'))).appendTo('.guide-table');
-											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약 취소하기').appendTo('.modal-body')
-												.click(e=>{
-													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+sessionStorage.getItem("login"));
-													$('#layerpop').modal('hide');
-													$('#layerpop').on('hidden.bs.modal',()=>{
-														hyungjun.permision.reservationList();
-					                                })
-												});
-										});
-									} else if(diff >= 0 && j.res_check==1){
-										$('<button/>').addClass('btns-deny').text('사용 완료').appendTo('#reserveCancelBtn_'+i);		
-									} else {
-										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i);
-									}
-									
-									
-						}); /*예약 현황 each 끝*/
-						
-
-		})
-	};
-	
 	var login = ()=>{
 		let validate ="";
 		$('#header').empty();
@@ -203,13 +116,14 @@ hyungjun.permision = (()=>{
 																name:res.properties['nickname'],
 																nickname:res.properties['nickname'],
 																profileimg :res.properties['profile_image'],
+																profileimg :'default.jpg',
 																gender : gender,
 																kakao: '2'
 															}),
 															success:d=>{
 																alert('\n 카카오톡으로 가입이 성공하였습니다. \n\n  로그인 하시면 야놀자 서비스를 이용가능합니다.\n');
 																login(); 
-																/*카톡 불러온 사진 서버 저장*/
+																/*카톡 불러온 사진 서버 저장
 												                  $.ajax({
 																		url:$.ctx()+'/image/kakaoProfile/',
 																		method:'post',
@@ -224,7 +138,7 @@ hyungjun.permision = (()=>{
 																			sessionStorage.setItem("nickname", res.properties['nickname']);
 																		},
 																		error:(m1,m2,m3)=>{alert(m3);}
-																	});
+																	});*/
 													            /*카톡 불러온 사진 서버 저장*/
 															},
 															error:(m1,m2,m3)=>{alert(m3);}
@@ -283,6 +197,10 @@ hyungjun.permision = (()=>{
 						if(!member_id || !name || !nickname || !password || !birthdate || !phone || !address){	
 							$('#joinIdAlert').empty();
 							validate ="입력되지 않은 항목이 있습니다.";
+							$('<div/>').text(validate).appendTo('#joinIdAlert');
+						} else if(birthdate.length!=8 || !birthdate){
+							$('#joinIdAlert').empty();
+							validate ="생년월일을 ex)890505-1 형식으로 입력해주세요.";
 							$('<div/>').text(validate).appendTo('#joinIdAlert');
 						} else {
 							$.ajax({
@@ -450,11 +368,6 @@ hyungjun.permision = (()=>{
 													let cpw = $('#currentPassword').val();
 													let pw1 = $('#changePassword1').val();
 													let pw2 = $('#changePassword2').val();
-													
-												/*
-												 * 1.현재번호 일치 2.현재번호와 변경비밀번호 달라야
-												 * 함 3.변경비밀번호1과 변경비밀번호2와 달라야 함
-												 */
 													if(!cpw || !pw1 || !pw2 ){	
 														$('#modifyAlert').remove();
 														$('<div/>').html('입력되지 않은 항목이 있습니다.').addClass('validAlert').attr({id:'modifyAlert'}).appendTo('.modal-body');
@@ -501,7 +414,6 @@ hyungjun.permision = (()=>{
 													}
 												});
 											});	
-											
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain2'}).appendTo('#content');		
 								$('<div/>').addClass('nav-tabsHead').html('간편로그인 연결 계정').attr({id:'nav-tabsHead2'}).appendTo('#nav-tabsHeadMain2');
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'modifyExternalService'}).appendTo('#nav-tabsHead2');
@@ -532,7 +444,6 @@ hyungjun.permision = (()=>{
 												});
 											});
 									}
-							
 							$('<div/>').addClass('nav-tabsHeadMain').attr({id:'nav-tabsHeadMain3'}).appendTo('#content');							
 								$('<div/>').addClass('nav-tabsHead').html('회원탈퇴').attr({id:'nav-tabsHead3', style:'padding-bottom:50px'}).appendTo('#nav-tabsHeadMain3');	
 									$('<li/>').addClass('info_lists').attr({style:'padding-left:130px',id:'memberWithdrawal'}).appendTo('#nav-tabsHead3');
@@ -565,7 +476,6 @@ hyungjun.permision = (()=>{
 											});
 										});
 							});
-						
 					$('<table width="1000px" height="450px"/>').addClass('mypageTable').appendTo('.mypageTableDiv');
 						$('<tr/>').attr({id:'tr1'}).appendTo('.mypageTable');
 							$('<td  width="40%"/>').attr({rowspan:"3"}).appendTo('#tr1').
@@ -773,14 +683,93 @@ hyungjun.permision = (()=>{
 							        // 업로드 파일 테이블 목록에서 삭제
 							        $("#fileTr_" + fIndex).remove();
 							    }
-								
 						/* file upload 끝 */
-							    
 				});
 			},
 			error:(m1,m2,m3)=>{alert(m3);}
 		});
 	}
+	var reservationList = d=>{
+		$('#header').empty();
+		$('#content').empty();
+		var top_map = {};
+		$.getJSON($.ctx()+'/member/list/'+sessionStorage.getItem("login"), d=>{
+			$('<div/>').addClass('reserve-main-content').appendTo('#content');
+			$('<div/>').addClass('article-title').html('<h2>숙소예약</h2>').append($('<span/>').html('예약 완료 후, 최근 60일간 내역이 보여집니다.')).appendTo('.reserve-main-content');
+				$('<div/>').addClass('reserve-content').appendTo('.reserve-main-content');
+					$('<section/>').addClass('history-cont').appendTo('.reserve-content');
+						$('<div/>').addClass('history-item-ready-reserve').appendTo('.history-cont');
+							$('<div/>').addClass('info').appendTo('.history-item-ready-reserve');
+						$.each(d.rlist,(i,j)=>{
+							var tday = new Date(j.pay_date);
+						    
+							$('.info').addClass('info_reservelist_'+i).append(
+								$('<div/>').append(
+													$('<a/>').html('<h4>'+ j.accom_name+'</h4>').attr({style:'cursor:pointer;'}).click(e=>{
+														$.getScript($.ctx()+'/resources/js/heetae.js',()=>{
+															let se = {'in_day':null,'out_day':null,'accom_seq':j.accom_seq}
+		                                                    heetae.main.init(se);
+														});
+													}),
+													$('<span/>').html(j.room_no)),
+								$('<div/>').addClass('txt-address').html(j.accom_addr),
+								$('<ul/>').addClass('reserveinfo-list')
+									.append(
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('예약번호'),
+														$('<b/>').html(j.pay_no).attr({style:'padding-left: 30px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('입실'),
+														$('<b/>').html(j.checkin_date).attr({style:'padding-left: 60px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('퇴실'),
+														$('<b/>').html(j.checkout_date).attr({style:'padding-left: 60px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('예약일'),
+														$('<b/>').html(tday).attr({style:'padding-left: 43px'})),
+											$('<li/>').addClass('reserveinfo-item')
+												.append(
+														$('<span/>').html('판매가'),
+														$('<b/>').html(j.pay_price).attr({style:'padding-left: 43px'}))
+									)
+								);
+								$('<div/>').addClass('btnReserveMain').attr({id:'btnReserveMain_'+i}).appendTo('.info_reservelist_'+i);
+									$('<div/>').addClass('btn-primary-btn-btn-cancel').attr({id:'reserveCancelBtn_'+i}).appendTo('#btnReserveMain_'+i);
+									var diff = hyungjun.service.dayDiffCalc(j.checkin_date)
+									if(diff<0 && j.res_check==1){
+										$('<button/>').addClass('btns').attr({'data-target':"#layerpop",'data-toggle':"modal", id:'btns'}).text('예약취소').appendTo('#reserveCancelBtn_'+i)
+										.click(e=>{
+											hyungjun.service.myModal();
+											$('<h4/>').html('예약 취소하기').appendTo('#modalTitle');
+											$('<div/>').html('취소 규정 및 환불규정에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+											$('<div/>').html('개인정보 수집/이용 약관, 개인정보 제 3자 제공 약관을 확인하였으며 이에 동의합니다.').attr({style:'padding-bottom:15px; font-weight: bold'}).appendTo('.modal-body');
+											$('<div/>').addClass('guide-box').appendTo('.modal-body');
+											$('<table/>').addClass('guide-table').appendTo('.guide-box');
+											$('<colgroup/>').addClass('cancelColgroup').append($('<col/>').attr({style:'width:50%'}),$('<col/>').attr({style:'width:50%'})).appendTo('.guide-table');
+											$('<thead/>').append($('<tr/>').append($('<th/>').html('취소기준일'),$('<th/>').html('취소수수료'))).appendTo('.guide-table');
+											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실 1일전 까지'),$('<th/>').html('없음'))).appendTo('.guide-table');
+											$('<tbody/>').append($('<tr/>').append($('<td/>').html('입실일 및 No-Show'),$('<th/>').html('환불불가'))).appendTo('.guide-table');
+											$('<button/>').addClass('radi_button btn_save').attr({id:'reserve_cancel'}).text('예약 취소하기').appendTo('.modal-body')
+												.click(e=>{
+													$.getJSON($.ctx()+'/member/cancel/'+j.pay_no+'/'+sessionStorage.getItem("login"));
+													$('#layerpop').modal('hide');
+													$('#layerpop').on('hidden.bs.modal',()=>{
+														hyungjun.permision.reservationList();
+					                                })
+												});
+										});
+									} else if(diff >= 0 && j.res_check==1){
+										$('<button/>').addClass('btns-deny').text('사용 완료').appendTo('#reserveCancelBtn_'+i);		
+									} else {
+										$('<button/>').addClass('btns-cancel').text('취소 완료').appendTo('#reserveCancelBtn_'+i);
+									}
+						}); /*예약 현황 each 끝*/
+		})
+	};
 	return {login : login, join : join, mypage:mypage, reservationList:reservationList}
 })();
 
@@ -802,7 +791,6 @@ hyungjun.service = {
 				$('<div/>').addClass('carousel-item '+clazz[k-1]).attr({id:'item'+k}).append($("<img/>").attr({src:$.img()+'/banner/banner_main'+k+'.jpg',style:'width:100%;height:500px'}),
 				$('<h3/>').addClass('carousel-caption center').append($('<p></p>'))).appendTo($('#carousel-inner0'));
 			}
-			
 			$('<a/>').addClass('carousel-control-prev').attr({href:'#carousel0',role:'button','data-slide':'prev', id:'carousel-control-prev0'}).appendTo($('#carousel0'));
 			$('<span/>').addClass('carousel-control-prev-icon').attr({'aria-hidden':'true'}).appendTo($('#carousel-control-prev0'));
 			$('<span/>').addClass('sr-only').html('이전').appendTo($('#carousel-control-prev0')).appendTo($('#carousel-control-prev0'));
@@ -812,7 +800,6 @@ hyungjun.service = {
 			$('<span/>').addClass('sr-only').html('다음').appendTo($('#carousel-control-next0')).appendTo($('#carousel-control-next0'));
 			$('.carousel').carousel();
 			/* banner 시작 */	
-			
 			$('<div/>').addClass('centered-left1').html('야놀자와 함께').appendTo('.mainheader');
 			$('<div/>').addClass('centered-left2').html('여행을 떠나볼까요?').appendTo('.mainheader');
 			$('<div/>').addClass('centered-left3').attr({id:'mainInput'}).appendTo('.mainheader');
@@ -825,11 +812,9 @@ hyungjun.service = {
 				$('<div/>').attr({id:'accom_addr'}).html('지역').appendTo('#mainInput');
 					$('<div/>').attr({id:'mainInput2'}).appendTo('#accom_addr');
 						$('<select/>').attr({id:'accomAddr'}).appendTo('#mainInput2');
-						$.each(["서울","경기","인천","강원","제주","대전","충북","충남","세종","부산","울산","경남","대구","경북","광주","전남","전주","전북"],(i,j)=>{
+						$.each(["서울","경기","인천","강원","제주","대전","충청북도","충청남도","세종","부산","울산","경상남도","대구","경상북도","광주","전남","전주","전북"],(i,j)=>{
 							$('<option/>').attr({value:j}).html(j).appendTo('#accomAddr');
 						})
-						
-						/*--------------------------------------------------------------------*/
 						let today = new Date(new Date().getFullYear(),
 								new Date().getMonth(), (new Date().getDate()));
 						let save_end_max_date = new Date();
@@ -841,9 +826,8 @@ hyungjun.service = {
 						let checkout_day = new Date(new Date().getFullYear(),
 								new Date().getMonth(), new Date().getDate()+1);
 						
-						//이곳 캘린더 날짜번경
 						$('<div/>').attr({id:'checkinDate'}).html('체크인').appendTo('#mainInput');
-						$('<div/>').attr({id:'mainInput3'}).appendTo('#checkinDate');	
+						$('<div/>').attr({id:'mainInput3'}).addClass('mainInput3_4').appendTo('#checkinDate');	
 						$('<input/>')
 						.attr({'readonly':'true'
 								,'value':hyungjun.service.date_format(today)
@@ -853,7 +837,7 @@ hyungjun.service = {
 									.appendTo('#mainInput3'))
 									
 						$('<div/>').attr({id:'checkoutDate'}).html('체크아웃').appendTo('#mainInput');
-						$('<div/>').attr({id:'mainInput4'}).appendTo('#checkoutDate');			
+						$('<div/>').attr({id:'mainInput4'}).addClass('mainInput3_4').appendTo('#checkoutDate');			
 						$('<input/>')
 						.attr({'readonly':'true'
 							,'value':hyungjun.service.date_format(checkout_day)
@@ -871,7 +855,6 @@ hyungjun.service = {
 				               return $('#end').val();
 				         }
 						 });
-						
 						$('#end_date').datepicker({
 							minDate: ()=>{
 								let end_min_date = new Date($('#start_date').val().split('-')[0]
@@ -890,8 +873,6 @@ hyungjun.service = {
 								return end_max_date
 				            }
 						});		
-			// 이곳 캘린더 날짜번경
-					
 			$('#start_date')
 			 .datepicker({
 				 minDate: today,
@@ -906,11 +887,8 @@ hyungjun.service = {
 					,$('#start_date').val().split('-')[2]);
 	            }
 			});		
-			
 			$('.gj-icon')
 			.addClass('heetae_hide_ico')
-						
-			
 				$('#start_date')
 				.change(e=>{
 						if($('#start_date').val()!=save_start){
@@ -922,7 +900,6 @@ hyungjun.service = {
 							let ed = new Date($('#end_date').val().split('-')[0]
 							,(($('#end_date').val().split('-')[1])-1)
 							,$('#end_date').val().split('-')[2])
-							
 							
 							if(sd.getTime()>=ed.getTime()){
 								let tsd = sd
@@ -963,11 +940,7 @@ hyungjun.service = {
 								
 							}
 				})
-			
-						/*--------------------------------------------------------------------*/						
-					
-				$('<div/>').attr({id:'mainButton'}).appendTo('#mainInput');
-					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainButton')
+					$('<button/>').attr({type:'button'}).addClass('btn-search-stay color-gradation').html('숙소검색').appendTo('#mainInput')
 					.click(e=>{
                         let imageSrc;
                        let accom_type_eng = $('#accomSelect').val();
@@ -997,10 +970,8 @@ hyungjun.service = {
                                }
                        })
                    });
-            /* header 끝 */
         },
 		content :x=>{
-			/* content 시작 */
 			$('#content').remove();
 			$('<div/>').attr({id:'content'}).appendTo('#wrapper');
 				$('<div/>').addClass('mainContent').appendTo('#content');
@@ -1025,7 +996,6 @@ hyungjun.service = {
 				$('<span/>').addClass('sr-only').html('다음').appendTo($('#carousel-control-next1')).appendTo($('#carousel-control-next1'));
 				$('.carousel').carousel();
 				/* banner 시작 */		
-			/* content 끝 */	
 		},
 		myBenefit : d=>{
 			$('<ul/>').addClass('nav nav-tabs').attr({id:'nav-tabs'}).appendTo('.mypageBottomNav');
@@ -1039,7 +1009,6 @@ hyungjun.service = {
 					$('<ul/>').addClass('info_lists').attr({id:'info_lists2',style:'padding-left:130px;margin-bottom: unset;padding-top: 15px;padding-bottom: 15px;'}).appendTo('#nav-tabsHead2');	
 						$('<li/>').appendTo('#info_lists2').html(d.mbr.point);
 		},
-		
 		footer : d=>{
 			$('#footer').remove()
 			$('<div/>').attr({id:'footer'}).addClass('footer').appendTo('#wrapper');
@@ -1170,7 +1139,6 @@ hyungjun.service = {
 					+'  </div>'
 					+'</div>').appendTo('#content');
 		},
-		
 		nav : d =>{
 			$('#nav').remove()
 			$('<div/>').attr({id:'nav'}).appendTo($('#wrapper'));
@@ -1247,7 +1215,6 @@ hyungjun.service = {
 		        text += possible.charAt(Math.floor(Math.random() * possible.length));
 		    return text;
 		},
-		
 		dayDiffCalc : d=>{
 			var oldToday = new Date();
 			var currentYear = oldToday.getFullYear();
@@ -1294,7 +1261,6 @@ hyungjun.router = {
 			                    '다섯명의 비트캠프 수강생이 작업한 프로젝트 작품으로\n'+
 			                    '숙박예약사이트 야놀자를 모티브로하여 구현하였습니다.'
 						    );
-						    
 				hyungjun.main.init();
 			}
 		);
@@ -1345,6 +1311,5 @@ hyungjun.router = {
 			e.preventDefault();
 			hyungjun.permision.join();
 			});
-		/* 클릭 이벤트 끝 */
 		}
 };

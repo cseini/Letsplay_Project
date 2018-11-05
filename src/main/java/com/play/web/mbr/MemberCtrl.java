@@ -1,5 +1,6 @@
 package com.play.web.mbr;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,18 +26,23 @@ public class MemberCtrl {
 	@Autowired Util2 util2;
 	@Autowired HashMap<String,Object>map;
 	@Autowired List<HashMap<String, Object>> rlist;
+	String savedName ="";
 	
 	@PostMapping("/join")
-	public void join(@RequestBody Member param) {
+	public void join(@RequestBody Member param) throws IOException {
 		if(param.getBirthdate()!=null) {
-			param.setProfileimg("default.jpg");
 			param.setAge(util2.ageAndGender(param).getAge());
 			param.setGender(util2.ageAndGender(param).getGender());
-			param.setKakao("1");
 			mbrMap.post(param);
 		} else {
-			param.setKakao("2");  // 카톡 가입일 경우 2번임
-			mbrMap.post(param);
+/*			URL url = new URL(mbr.getProfileimg());
+			String ext = mbr.getProfileimg().substring(mbr.getProfileimg().lastIndexOf(".")+1,mbr.getProfileimg().length()); 
+			BufferedImage img = ImageIO.read(url);
+	        savedName = UUID.randomUUID() + "." +ext;
+	        File file=new File(uploadPath,savedName);
+	        ImageIO.write(img, ext, file);
+	        mbr.setProfileimg(savedName);*/
+	        mbrMap.post(param);
 		}
 	}
 	

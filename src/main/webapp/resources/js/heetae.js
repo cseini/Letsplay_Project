@@ -48,14 +48,12 @@ heetae.main =(x=>{
 					new Date().getMonth(), new Date().getDate()+1);
 		}else{ 
 			checkin_day = new Date(x.in_day.split('-')[0]
-			,(x.in_day.split('-')[1])
+			,(x.in_day.split('-')[1]-1)
 			,x.in_day.split('-')[2])
-			checkin_day.setDate(checkin_day.getDate())
 			
 			checkout_day = new Date(x.out_day.split('-')[0]
-			,(x.out_day.split('-')[1])
+			,(x.out_day.split('-')[1]-1)
 			,x.out_day.split('-')[2])
-			checkout_day.setDate(checkout_day.getDate())
 		}
 		let mathes = (checkout_day-checkin_day)/(24 * 60 * 60 * 1000);
 		checking_day = mathes+'박'+(mathes+1)+'일'
@@ -896,7 +894,7 @@ heetae.main =(x=>{
 
 				$('<input/>')
 				.attr({'readonly':'true'
-						,'value':heetae.detail.date_format(today)
+						,'value':heetae.detail.date_format(checkin_day)
 						,'id':'start_date'})
 				.appendTo($('<div>')
 							.addClass('heetae_check_middle_con1')
@@ -1536,7 +1534,7 @@ heetae.detail = {
 														data:JSON.stringify({
 															member_id:sessionStorage.getItem("login")
 															,room_seq:x.list.room_seq
-															,pay_price:x.list.room_price
+															,pay_price:x.list.room_price*ts
 															,pay_type:pay_types
 															,checkin_date:$('#start_date').val()
 															,checkout_date:$('#end_date').val()

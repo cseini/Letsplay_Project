@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+.mainInput3_4{
+	padding-left: 10%;
+}
+
+
 .custom-login-btn {
 	cursor: pointer;
 	padding-top: 10px;
@@ -362,11 +367,7 @@
 }
 
 .mainheader {
-	border: none;
-	border-right: 0px;
-	border-top: 0px;
-	boder-left: 0px;
-	boder-bottom: 0px;
+    border: none;
 }
 
 .loginBox {
@@ -466,70 +467,60 @@
 }
 
 #mainInput {
-	padding-top: 10px;
-	background-color: white;
-	text-align: center;
-	font-family: "Apple SD Gothic Neo", "Nanum Barun Gothic",
-		"NanumBarunGothic", sans-serif !important;
+    width: 62%;
+    height: 128px;
+    padding-top: 1%;
+    background-color: white;
 }
 
 #accom_type {
-	width: 300px;
-	height: 120px;
-	float: left;
-	color: #484848;
-	display: inline-block;
-	text-align: center;
-	font-size: 16px;
-	border: none;
-	border-right: 0px;
-	border-top: 0px;
-	boder-left: 0px;
-	boder-bottom: 0px;
+    width: 15;
+    float: left;
+    width: 24%;
+    color: #484848;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    border-right: 0px;
+    border-top: 0px;
+    boder-left: 0px;
+    boder-bottom: 0px;
 }
 
 #accom_addr {
-	width: 300px;
-	height: 120px;
-	float: left;
-	color: #484848;
-	display: inline-block;
-	font-size: 16px;
-	border: none;
-	border-right: 0px;
-	border-top: 0px;
-	boder-left: 0px;
-	boder-bottom: 0px;
+    width: 24%;
+    float: left;
+    color: #484848;
+    font-size: 16px;
+    boder-left: 0px;
+    boder-bottom: 0px;
+    text-align: center;
 }
 
 #checkinDate {
-	width: 180px;
-	height: 120px;
-	float: left;
-	color: #484848;
-	display: inline-block;
-	text-align: center;
-	font-size: 16px;
+    width: 22%;
+    float: left;
+    color: #484848;
+    text-align: center;
+    font-size: 16px;
 }
-
 #checkoutDate {
-	width: 180px;
-	height: 120px;
-	float: left;
-	color: #484848;
-	display: inline-block;
-	text-align: center;
-	font-size: 16px;
+    width: 22%;
+    float: left;
+    color: #484848;
+    text-align: center;
+    font-size: 16px;
 }
 
 #accomSelect {
-	padding-left: 40%;
-	height: 85px;
-	color: #222;
-	font-size: 26px;
-	text-align: center;
-	border: 0;
-	width: 100%;
+    padding-left: 40%;
+    height: 85px;
+    color: #222;
+    font-size: 26px;
+    text-align: center;
+    border: 0;
+    width: 100%;
 }
 
 #accomAddr {
@@ -572,7 +563,7 @@
 	text-decoration: none;
 }
 
-nav {
+.nav {
 	height: 70px;
 }
 
@@ -593,26 +584,28 @@ nav {
 }
 
 .centered-left1 {
-	position: absolute;
-	top: 140px;
-	font-size: 60px;
-	color: #ffffff;
-	margin-left: 15%;
+    position: absolute;
+    top: 150px;
+    font-size: 60px;
+    color: #ffffff;
+    margin-left: 15%;
+    font-weight: bold;
 }
 
 .centered-left2 {
-	position: absolute;
-	top: 220px;
-	font-size: 60px;
-	color: #ffffff;
-	margin-left: 15%;
+    position: absolute;
+    top: 229px;
+    font-size: 60px;
+    color: #ffffff;
+    margin-left: 15%;
+    font-weight: bold;
 }
 
 .centered-left3 {
-	position: absolute;
-	top: 360px;
-	color: #000000;
-	margin-left: 15%;
+    position: absolute;
+    color: #000000;
+    margin-left: 15%;
+    top: 350px;
 }
 
 .btn-search-stay {
@@ -713,7 +706,7 @@ nav {
 .footer-inner {
     position: relative;
     padding: 32px 0 35px;
-    width: 1180px;
+    width: 80%;
     margin: auto;
 }
 

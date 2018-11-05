@@ -46,7 +46,7 @@ public class ImageCtrl {
 		mbrMap.update(mbr);
 		return savedName;
 	}
-	@PostMapping("/kakaoProfile/")
+/*	@PostMapping("/kakaoProfile/")
 	public String uploadKakaoProfile(@RequestBody Member mbr) throws Exception {
 		URL url = new URL(mbr.getProfileimg());
 		String ext = mbr.getProfileimg().substring(mbr.getProfileimg().lastIndexOf(".")+1,mbr.getProfileimg().length()); 
@@ -58,7 +58,7 @@ public class ImageCtrl {
 		mbr.setMember_id(mbr.getMember_id());
 		mbrMap.update(mbr);
 		return savedName;
-	}
+	}*/
 	
 	private String uploadPhoto(String originalName, byte[] fileData, String member_id) throws Exception {
 		savedName = UUID.randomUUID() + "." + originalName.split("\\.")[1];		

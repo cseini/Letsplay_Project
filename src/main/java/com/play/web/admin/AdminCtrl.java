@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.play.web.cmm.Util;
+
 @RestController
 public class AdminCtrl {
 
@@ -33,9 +35,11 @@ public class AdminCtrl {
 	@GetMapping("/admin/sales")
 	public Map<String,Object> sales(){
 		map.clear();
-		
 		map.put("sumHotel", admMap.getSumHotel());
 		map.put("sumMotel", admMap.getSumMotel());
+		
+		Util.log.accept("호텔"+map.get("sumHotel").toString());
+		Util.log.accept("모텔"+map.get("sumMotel").toString());
 
 		return map;
 	}
