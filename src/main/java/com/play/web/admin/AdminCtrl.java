@@ -37,10 +37,6 @@ public class AdminCtrl {
 		map.clear();
 		map.put("sumHotel", admMap.getSumHotel());
 		map.put("sumMotel", admMap.getSumMotel());
-		
-		Util.log.accept("호텔"+map.get("sumHotel").toString());
-		Util.log.accept("모텔"+map.get("sumMotel").toString());
-
 		return map;
 	}
 
