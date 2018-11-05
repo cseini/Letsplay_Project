@@ -812,7 +812,7 @@ hyungjun.service = {
 				$('<div/>').attr({id:'accom_addr'}).html('지역').appendTo('#mainInput');
 					$('<div/>').attr({id:'mainInput2'}).appendTo('#accom_addr');
 						$('<select/>').attr({id:'accomAddr'}).appendTo('#mainInput2');
-						$.each(["서울","경기","인천","강원","제주","대전","충북","충남","세종","부산","울산","경남","대구","경북","광주","전남","전주","전북"],(i,j)=>{
+						$.each(["서울","경기","인천","강원","제주","대전","충청북도","충청남도","세종","부산","울산","경상남도","대구","경상북도","광주","전남","전주","전북"],(i,j)=>{
 							$('<option/>').attr({value:j}).html(j).appendTo('#accomAddr');
 						})
 						let today = new Date(new Date().getFullYear(),

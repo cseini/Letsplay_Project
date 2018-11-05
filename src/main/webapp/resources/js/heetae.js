@@ -1534,7 +1534,7 @@ heetae.detail = {
 														data:JSON.stringify({
 															member_id:sessionStorage.getItem("login")
 															,room_seq:x.list.room_seq
-															,pay_price:x.list.room_price
+															,pay_price:x.list.room_price*ts
 															,pay_type:pay_types
 															,checkin_date:$('#start_date').val()
 															,checkout_date:$('#end_date').val()

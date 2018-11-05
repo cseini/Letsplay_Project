@@ -106,7 +106,7 @@ taehyeong.main =(x=>{
 			imageSrc = taehyeong.change.marker_img(x.accom_type)
 			$('#radio1_writer0').click(()=>{
 				k = 0; y = 0;
-				$.ajax({
+				$.ajax({ 
                     url:$.ctx()+'taehyeong/search',
                     method:'post',
                     contentType : 'application/json',
