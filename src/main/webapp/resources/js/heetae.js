@@ -18,7 +18,7 @@ heetae.main =(x=>{
 	var setContentView =x=>{
 		let img, w ,nav ,header ,content , footer
 		,accom,accom2,input_accom_seq,checkin_day,checkout_day,today,rating_grade,button_check
-		,save_start,save_end,save_acom_start,save_acom_end,checking_day,save_end_max_date,save_form_data
+		,save_start,save_end,save_acom_start,save_acom_end,checking_day,save_end_max_date,save_form_data,save_form_check
 		,review_count,save_review_count,buy_check;
 		var save_checkdate
 		button_check = "accom"
@@ -35,6 +35,8 @@ heetae.main =(x=>{
 		save_end_max_date = today
 		rating_grade=5;
 		review_count = 1;
+		save_form_data = new FormData();
+		save_form_check = false;
 		if(x.accom_seq==null){
 			input_accom_seq = 3;
 		}else{
@@ -431,27 +433,8 @@ heetae.main =(x=>{
 								                formData.append('files', fileList[uploadFileList[i]]);
 								            }
 								            save_form_data = formData
+								            save_form_check = true
 								            $('#layerpop').modal('hide')
-								            
-								            
-								            /*$.ajax({
-								            	url:$.ctx()+'/accom/profile/'+sessionStorage.getItem("login"),
-								            	dataType:'text',
-								            	type:'post',
-								            	data:formData,
-								            	processData:false,
-								            	contentType:false,
-								                success: d=>{
-								                        $('#layerpop').modal('hide')
-								                        $('#layerpop').on('hidden.bs.modal',()=>{
-															sessionStorage.setItem("profileimg",d);
-															hyungjun.permision.mypage();
-						                                })
-								                },
-								                error : e=>{
-								                	alert("ERROR");
-								                }
-								            });*/
 								        }
 									});
 							
@@ -678,30 +661,78 @@ heetae.main =(x=>{
 								'accom_grade':rating_grade,
 							}
 							
+							if(save_form_check==false){
+								$.ajax({
+									url:$.ctx()+'/accom/review/add/',
+									method:'post',
+									contentType:'application/json',
+									data:JSON.stringify({
+										msg_title:$('.heetae_review_input_title').val(),
+										msg_content:$('#heetae_card_textarea').val(),
+										member_id:sessionStorage.getItem("login"),
+										room_seq:$(".heetae_review_select_box option:selected").val(),
+										msg_photo:null,
+										accom_reco:reco,
+										room_grade:rating_grade,
+									}),
+									success:d=>{
+									},
+									error:(m1,m2,m3)=>{
+										alert('에러');
+									},
+									complete: ()=>{
+										let se = {'in_day':null,'out_day':null,'accom_seq':input_accom_seq}
+										save_form_data = new FormData();
+	                                    heetae.main.init(se);
+									}
+								
+								})
+							}else{
+								let m = $('.heetae_review_input_title').val()
+								let c = $('#heetae_card_textarea').val()
+								$.ajax({
+									url:$.ctx()+'/accom/review/image/'+sessionStorage.getItem("login")+'/',
+									method:'post',
+									contentType:'application/json',
+									data:save_form_data,
+									processData: false,
+					                contentType: false,
+									success:d=>{
+										$.ajax({
+											url:$.ctx()+'/accom/review/add/',
+											method:'post',
+											contentType:'application/json',
+											data:JSON.stringify({
+												msg_title:m,
+												msg_content:c,
+												member_id:sessionStorage.getItem("login"),
+												room_seq:$(".heetae_review_select_box option:selected").val(),
+												msg_photo:d,
+												accom_reco:reco,
+												room_grade:rating_grade,
+											}),
+											success:d=>{
+											},
+											error:(m1,m2,m3)=>{
+												alert('에러');
+											},
+											complete: ()=>{
+												let se = {'in_day':null,'out_day':null,'accom_seq':input_accom_seq}
+												save_form_data = new FormData();
+			                                    heetae.main.init(se);
+											}
+										
+										})
+										
+									},
+									error:(m1,m2,m3)=>{
+										alert('에러');
+									},
+								})
+							}
 							
-							$.ajax({
-								url:$.ctx()+'/accom/review/add/',
-								method:'post',
-								contentType:'application/json',
-								data:JSON.stringify({
-									msg_title:$('.heetae_review_input_title').val(),
-									msg_content:$('#heetae_card_textarea').val(),
-									member_id:sessionStorage.getItem("login"),
-									msg_photo:null,
-									room_seq:$(".heetae_review_select_box option:selected").val(),
-									accom_reco:reco,
-									room_grade:rating_grade,
-								}),
-								success:d=>{
-									let se = {'in_day':null,'out_day':null,'accom_seq':input_accom_seq}
-                                    heetae.main.init(se);
-								},
-								error:(m1,m2,m3)=>{
-									alert('에러');
-								}	
-							})
 							
-							save_form_data = null
+							
 							$('.heetae_review_input_title').val('')
 							$('#heetae_card_textarea').val('')
 							$('.heetae_textarea_counter').text('0/138')
@@ -1634,7 +1665,7 @@ heetae.detail = {
 	},
 	review : x=>{
 		let t = true
-		if(x.list.accom_reco!=='1'){
+		if(x.list.accom_reco!='1'){
 			t = false
 		}
 		let dates = new Date(x.list.msg_date)
@@ -1655,7 +1686,7 @@ heetae.detail = {
 			.appendTo('#'+x.id+'_review_item')
 			
 			$('<img/>')
-			.attr('src',$.img()+"/"+x.list.msg_photo)
+			.attr('src',$.img()+"/accom_review/"+x.list.msg_photo)
 			.appendTo('#'+x.id+'_review_item')
 			
 		}else{

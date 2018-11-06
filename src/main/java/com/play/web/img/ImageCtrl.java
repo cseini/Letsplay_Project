@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.play.web.cmm.Util;
 import com.play.web.cmm.Util2;
 import com.play.web.img.Image;
 import com.play.web.mbr.Member;
@@ -40,6 +42,9 @@ public class ImageCtrl {
 	@PostMapping("/profile/{member_id}")
 	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
 		map.clear();
+		Util.log.accept("멤버 아이디 :"+member_id);
+		Util.log.accept("파일 이름 : "+files.getOriginalFilename());
+		Util.log.accept("파일 크기 : "+files.getBytes());
 		String savedName = uploadPhoto(files.getOriginalFilename(), files.getBytes(), member_id);
 		mbr.setProfileimg(savedName);
 		mbr.setMember_id(member_id);

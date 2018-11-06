@@ -16,6 +16,7 @@ public interface AccomMapper {
 	public int count(Map<String, Object> p);
 	public void insertReview(Map<String, Object> p);
 	public void insertReservation(Map<String, Object> p);
+	public void updateReviewImage(Map<String, Object> p);
 	public void delete(Map<String, Object> p);
 	/**************
 	 --  태형 처리한 부분

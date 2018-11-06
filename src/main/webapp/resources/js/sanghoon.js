@@ -7,7 +7,7 @@ sanghoon.main =(()=>{
 		onCreate();
 	};
 	var onCreate =()=>{
-		setContentView();
+		setContentView(); 
 	};
 	var setContentView =()=>{
 		$('#header').empty();

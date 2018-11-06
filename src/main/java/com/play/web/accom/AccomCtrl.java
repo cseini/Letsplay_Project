@@ -1,6 +1,7 @@
 package com.play.web.accom;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +96,7 @@ public class AccomCtrl {
 	}
 	
 	@RequestMapping("/accom/review/add/")
-	public void addReview(@RequestBody Map<String,Object> p){
+	public void addReview(@RequestBody Map<String,Object> p) {
 		p.put("board_id", "review");
 		mpr.insertReview(p);
 	}
@@ -126,18 +127,13 @@ public class AccomCtrl {
 		map.put("checkin_date", priceMap.get("checkin_date"));
 		map.put("checkout_date", priceMap.get("checkout_date"));
 		map.put("imageSrc", priceMap.get("imageSrc"));
-		System.out.println(priceMap);
-		System.out.println(map.get("list"));
 		return map;
 	}
 	
-	@PostMapping("/profile/{member_id}")
+	@PostMapping("/accom/review/image/{member_id}/")
 	public String uploadProfile(MultipartFile files, @PathVariable String member_id) throws Exception {
 		map.clear();
 		String savedName = uploadPhoto(files.getOriginalFilename(), files.getBytes(), member_id);
-		mbr.setProfileimg(savedName);
-		mbr.setMember_id(member_id);
-		mbrMap.update(mbr);
 		return savedName;
 	}
 	private String uploadPhoto(String originalName, byte[] fileData, String member_id) throws Exception {
